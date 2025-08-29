@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "basket-with-fresh-vegetables-white-background-removebg-preview.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "basket-with-fresh-vegetables-white-background-removebg-preview@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "basket-with-fresh-vegetables-white-background-removebg-preview@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

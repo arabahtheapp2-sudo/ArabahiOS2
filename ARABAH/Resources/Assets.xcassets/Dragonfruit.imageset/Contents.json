@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "png-clipart-sliced-dragon-fruit-juice-hylocereus-undatus-hylocereus-megalanthus-pitaya-fruit-durian-natural-foods-food-removebg-preview.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "png-clipart-sliced-dragon-fruit-juice-hylocereus-undatus-hylocereus-megalanthus-pitaya-fruit-durian-natural-foods-food-removebg-preview@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "png-clipart-sliced-dragon-fruit-juice-hylocereus-undatus-hylocereus-megalanthus-pitaya-fruit-durian-natural-foods-food-removebg-preview@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

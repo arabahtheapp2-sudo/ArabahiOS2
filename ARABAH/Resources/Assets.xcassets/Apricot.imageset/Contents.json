@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "apricot-fresh-apricot-slice-of-apricot-isolated-apricot-transparent-background-ai-generated-free-png-removebg-preview.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "apricot-fresh-apricot-slice-of-apricot-isolated-apricot-transparent-background-ai-generated-free-png-removebg-preview@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "apricot-fresh-apricot-slice-of-apricot-isolated-apricot-transparent-background-ai-generated-free-png-removebg-preview@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
