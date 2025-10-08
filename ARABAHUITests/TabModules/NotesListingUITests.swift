@@ -98,4 +98,3 @@ final class NotesListingUITests: XCTestCase {
         confirmButton.tap()
     }
 }
-

@@ -31,7 +31,7 @@ final class ReportViewModelTests: XCTestCase {
 
     func testReportSuccess() {
         // Arrange
-        let mockResponse = ReportModal(success: true, code: 200, message: "Reported",body: nil)
+        let mockResponse = ReportModal(success: true, code: 200, message: "Reported", body: nil)
         mockService.reportAPIPublisher = Just(mockResponse)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -229,4 +229,3 @@ final class ReportViewModelTests: XCTestCase {
     }
 
 }
-

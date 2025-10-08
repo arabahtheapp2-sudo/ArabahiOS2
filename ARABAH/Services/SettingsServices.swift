@@ -16,7 +16,7 @@ protocol SettingsServicesProtocol {
     func getFaqListAPI() -> AnyPublisher<FaqModal, NetworkError>
 
     /// Fetches the list of support tickets.
-    func getTicketAPI() -> AnyPublisher<getTicketModal, NetworkError>
+    func getTicketAPI() -> AnyPublisher<GetTicketModal, NetworkError>
 
     /// Changes the user's language preference.
     /// - Parameter languageType: The language code string (e.g., "en", "ar").
@@ -57,7 +57,7 @@ final class SettingsServices: SettingsServicesProtocol {
     }
 
     /// Retrieves user's submitted support tickets.
-    func getTicketAPI() -> AnyPublisher<getTicketModal, NetworkError> {
+    func getTicketAPI() -> AnyPublisher<GetTicketModal, NetworkError> {
         return networkService.request(
             endpoint: .ticketList,
             method: .get,

@@ -31,7 +31,7 @@ final class AddRatingViewModelTests: XCTestCase {
 
     func testSubmitReviewSuccess() {
         // Arrange
-        let modal = AddCommentModal(success: true, code: 200, message: "Review Added",body: nil)
+        let modal = AddCommentModal(success: true, code: 200, message: "Review Added", body: nil)
         mockService.createRatingAPIPublisher = Just(modal)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -101,7 +101,7 @@ final class AddRatingViewModelTests: XCTestCase {
 
     func testRetrySubmitsLastInput() {
         // Arrange
-        let modal = AddCommentModal(success: true, code: 200, message: "Retry Success",body: nil)
+        let modal = AddCommentModal(success: true, code: 200, message: "Retry Success", body: nil)
         mockService.createRatingAPIPublisher = Just(modal)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -234,4 +234,3 @@ final class AddRatingViewModelTests: XCTestCase {
 
     
 }
-

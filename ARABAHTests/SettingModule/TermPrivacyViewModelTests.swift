@@ -18,13 +18,7 @@ final class TermPrivacyViewModelTests: XCTestCase {
         // Given
         let mockService = MockSettingsService()
         let body = TermsPrivacyModelBody(
-            id: "1",
-            type:0,
-            title: "Terms & Conditions",
-            description: "الشروط والأحكام",
-            descriptionArabic: "",
-            updatedAt: ""
-        )
+            id: "1", type:0, title: "Terms & Conditions", description: "الشروط والأحكام", descriptionArabic: "", updatedAt: "" )
         
         mockService.fetchContentPublisher = Just(TermsPrivacyModel(
             success: true,
@@ -212,31 +206,13 @@ final class TermPrivacyViewModelTests: XCTestCase {
         // Given
         let mockService = MockSettingsService()
         let termsContent = TermsPrivacyModelBody(
-            id: "1",
-            type:0,
-            title: "Terms & Conditions",
-            description: "الشروط والأحكام",
-            descriptionArabic: "",
-            updatedAt: ""
-        )
+            id: "1", type:0, title: "Terms & Conditions", description: "الشروط والأحكام", descriptionArabic: "", updatedAt: "")
         
         let privacyContent = TermsPrivacyModelBody(
-            id: "1",
-            type:2,
-            title: "Privacy Policy",
-            description: "لشروط والأحكامسياسة الخصوصية,",
-            descriptionArabic: "",
-            updatedAt: ""
-        )
+            id: "1", type:2, title: "Privacy Policy", description: "لشروط والأحكامسياسة الخصوصية,", descriptionArabic: "", updatedAt: "")
         
         let aboutContent = TermsPrivacyModelBody(
-            id: "1",
-            type:1,
-            title: "About Us",
-            description: "لشروط والأحكامسياسة الخصوصيةمعلومات عنا",
-            descriptionArabic: "",
-            updatedAt: ""
-        )
+            id: "1", type:1, title: "About Us", description: "لشروط والأحكامسياسة الخصوصيةمعلومات عنا", descriptionArabic: "", updatedAt: "")
         
         // Test for Terms (type 0)
         mockService.fetchContentPublisher = Just(TermsPrivacyModel(

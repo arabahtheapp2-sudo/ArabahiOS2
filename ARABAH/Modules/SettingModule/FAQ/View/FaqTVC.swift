@@ -18,7 +18,7 @@ class FaqTVC: UITableViewCell {
     @IBOutlet weak var imgArrow: UIImageView!
     
     /// Label to display the FAQ question title
-    @IBOutlet weak var FaqHeadingLbl: UILabel!
+    @IBOutlet weak var faqHeadingLbl: UILabel!
     
     /// Button that triggers the expand/collapse action when tapped
     @IBOutlet weak var onClickBtn: UIButton!
@@ -32,7 +32,7 @@ class FaqTVC: UITableViewCell {
         super.prepareForReuse()
         // Reset FAQ content
         lblBody.text = nil
-        FaqHeadingLbl.text = nil
+        faqHeadingLbl.text = nil
         // Reset arrow to default (collapsed) state
         imgArrow.transform = .identity // Or set to collapsed image if using static
         imgArrow.image = UIImage(named: "ic_arrow_up") // Replace with your default

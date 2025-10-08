@@ -18,15 +18,15 @@ class LocationPermissionManager {
         switch locationManager.authorizationStatus {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
-            print("notDetermined")
+            // notDetermined
         case .restricted, .denied:
             viewController.dismiss(animated: false)
             showLocationSettingsAlert(from: viewController)
-            print("restricted, .denied")
+           // restricted, .denied
         case .authorizedAlways, .authorizedWhenInUse:
             locationManager.startUpdatingLocation()
             locationManager.requestLocation()
-            print("authorizedAlways, .authorizedWhenInUse")
+           // authorizedAlways, .authorizedWhenInUse
         @unknown default:
             break
         }
@@ -40,9 +40,7 @@ class LocationPermissionManager {
             preferredStyle: .alert
         )
         
-        //alert.addAction(UIAlertAction(title: RegexTitles.cancel, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: RegexTitles.settings, style: .default, handler: { [weak self] _ in
-            guard let self = self else { return }
+        alert.addAction(UIAlertAction(title: RegexTitles.settings, style: .default, handler: { _ in
             guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
             if UIApplication.shared.canOpenURL(settingsURL) {
                 UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
@@ -52,4 +50,3 @@ class LocationPermissionManager {
         viewController.present(alert, animated: true, completion: nil)
     }
 }
-

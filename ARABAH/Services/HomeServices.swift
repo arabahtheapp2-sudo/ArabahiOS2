@@ -45,7 +45,7 @@ protocol HomeServicesProtocol {
     func shoppingListAPI() -> AnyPublisher<GetShoppingListModal, NetworkError>
     
     /// Deletes an item from shopping list
-    func shoppingListDeleteAPI(id: String) -> AnyPublisher<shoppinglistDeleteModal, NetworkError>
+    func shoppingListDeleteAPI(id: String) -> AnyPublisher<ShoppinglistDeleteModal, NetworkError>
     
     /// Clears all items from shopping list
     func shoppingListClearAllAPI() -> AnyPublisher<CommentModal, NetworkError>
@@ -219,7 +219,7 @@ final class HomeServices: HomeServicesProtocol {
         )
     }
     
-    func shoppingListDeleteAPI(id: String) -> AnyPublisher<shoppinglistDeleteModal, NetworkError> {
+    func shoppingListDeleteAPI(id: String) -> AnyPublisher<ShoppinglistDeleteModal, NetworkError> {
         let parameters = ["id": id]
         return networkService.request(
             endpoint: .shoppingProductDelete,

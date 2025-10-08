@@ -194,7 +194,10 @@ final class ContactUsViewModelTests: XCTestCase {
         // Then
         wait(for: [expectation], timeout: 2.0)
     }
-    
+ 
+}
+
+extension ContactUsViewModelTests {
     // MARK: - Retry Tests
     
     func testRetryContactUs() {
@@ -375,6 +378,4 @@ final class ContactUsViewModelTests: XCTestCase {
         XCTAssertEqual(emittedStates[1], .loading)
         XCTAssertEqual(emittedStates[2], .success(expected))
     }
-
-    
 }

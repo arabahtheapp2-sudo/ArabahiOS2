@@ -33,14 +33,12 @@ struct Brand: Codable, Equatable {
     var brandname, brandnameArabic: String?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case brandname = "Brandname"
         case brandnameArabic = "BrandnameArabic"
         case deleted, createdAt, updatedAt
-        case v = "__v"
     }
 
     init(from decoder: Decoder) throws {
@@ -51,7 +49,6 @@ struct Brand: Codable, Equatable {
         self.deleted = try container.decodeIfPresent(Bool.self, forKey: .deleted)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
 
         let currentLang = L102Language.currentAppleLanguageFull()
         switch currentLang {
@@ -68,13 +65,11 @@ struct Brand: Codable, Equatable {
 struct Stores: Codable, Equatable {
     let id, image, createdAt: String?
     let updatedAt: String?
-    let v: Int?
     var nameArabic, name: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case name, image, createdAt, updatedAt
-        case v = "__v"
         case nameArabic
     }
 
@@ -85,7 +80,6 @@ struct Stores: Codable, Equatable {
         self.image = try container.decodeIfPresent(String.self, forKey: .image)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         self.nameArabic = try container.decodeIfPresent(String.self, forKey: .nameArabic)
 
         let currentLang = L102Language.currentAppleLanguageFull()

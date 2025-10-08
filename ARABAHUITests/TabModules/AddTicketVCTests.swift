@@ -55,4 +55,3 @@ final class AddTicketVCTests: XCTestCase {
         XCTAssertTrue(alert.waitForExistence(timeout: 3), "Validation alert should appear for empty fields")
     }
 }
-

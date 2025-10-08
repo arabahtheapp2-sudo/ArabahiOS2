@@ -155,13 +155,12 @@ extension DealsOffVC: UITableViewDelegate, UITableViewDataSource {
             let dealImageUrl = viewModel.dealImageUrl(at: indexPath.row)
             let storeImageUrl = viewModel.storeImageUrl(at: indexPath.row)
 
-            cell.imgView.sd_setImage(with: URL(string: dealImageUrl), placeholderImage: UIImage(named: "Placeholder")) { [weak self] _, _, _, _ in
-                guard let _ = self else { return }
+            cell.imgView.sd_setImage(with: URL(string: dealImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+               
                 cell.imgView.hideSkeleton()
             }
 
-            cell.imageStore.sd_setImage(with: URL(string: storeImageUrl), placeholderImage: UIImage(named: "Placeholder")) { [weak self] _, _, _, _ in
-                guard let _ = self else { return }
+            cell.imageStore.sd_setImage(with: URL(string: storeImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
                 cell.imageStore.hideSkeleton()
             }
         }

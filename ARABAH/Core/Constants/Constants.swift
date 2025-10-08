@@ -9,10 +9,7 @@ import UIKit
 
 // MARK: - Typealiases
 /// Alias for dictionary parameters used in API requests
-public typealias parameters = [String:Any]
-
-/// Closure type for success callbacks with no parameters
-typealias successResponse = (()->())
+public typealias Parameters = [String: Any]
 
 // MARK: - Global Variables & Constants
 enum AppConstants {
@@ -20,12 +17,14 @@ enum AppConstants {
     static let appName = "ARABAH"
     
     /// Base URL for image loading
-    static let imageURL = "https://admin.arabahtheapp.com"
+    static var imageURL: String {
+        guard let appImgURL = Bundle.main.object(forInfoDictionaryKey: "AppMainURL") as? String,
+              !appImgURL.isEmpty else {
+            return ""
+        }
+        return appImgURL
+    }
 }
-
-
-/// Reference to the application delegate for app-wide access
-let applicationDelegate = UIApplication.shared.delegate as! AppDelegate
 
 
 // MARK: - UserDefaults Keys Enumeration
@@ -87,7 +86,7 @@ enum RegexTitles {
     static let permissionDenied = NSLocalizedString("Permission Denied", comment: "")
     static let retry = NSLocalizedString("Retry", comment: "")
     static let cancel = NSLocalizedString("Cancel", comment: "")
-    static let OK = NSLocalizedString("OK", comment: "")
+    static let okTitle = NSLocalizedString("OK", comment: "")
     static let result = NSLocalizedString("Result", comment: "")
     static let cameraPermissionError = NSLocalizedString("Camera Permission Required", comment: "")
     static let openSettings = NSLocalizedString("Open Settings", comment: "")
@@ -191,7 +190,7 @@ enum PlaceHolderTitleRegex {
     static let seeAll = "See all"
     static let productNewPriceUpdate = "Product New Price Update"
     static let name = "Name"
-    static let no = "No"
+    static let noTitle = "No"
     static let resend = "Resend"
     static let PleaseEnterValidOTP = "Please enter valid OTP"
     static let PleaseEnterValidOTPAR = "الرجاء إدخال OTP صالح"
@@ -213,12 +212,20 @@ enum PlaceHolderTitleRegex {
 /// Computed property to get or set the window's rootViewController
 var rootVC: UIViewController? {
     get {
-        return UIApplication.shared.windows.first?.rootViewController
+        return UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?
+            .rootViewController
     }
     set {
-        UIApplication.shared.windows.first?.rootViewController = newValue
+        if let keyWindow = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow }) {
+            keyWindow.rootViewController = newValue
+            keyWindow.makeKeyAndVisible()
+        }
     }
 }
-
-
 

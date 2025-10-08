@@ -217,10 +217,24 @@
       }
     },
     "Camera" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آلة تصوير"
+          }
+        }
+      }
     },
     "Camera access is denied. Please enable it in settings." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم رفض الوصول إلى الكاميرا. يُرجى تفعيلها من الإعدادات."
+          }
+        }
+      }
     },
     "Camera Permission Required" : {
       "localizations" : {
@@ -277,7 +291,14 @@
       }
     },
     "Choose Option" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختر الخيار"
+          }
+        }
+      }
     },
     "Clear" : {
       "extractionState" : "manual",
@@ -610,10 +631,24 @@
       }
     },
     "Gallery" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "معرض"
+          }
+        }
+      }
     },
     "Go To Settings" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انتقل إلى الإعدادات"
+          }
+        }
+      }
     },
     "Hello" : {
       "extractionState" : "manual",
@@ -705,7 +740,14 @@
       }
     },
     "Location access is required. Please enable location permissions in Settings." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مطلوب الوصول إلى الموقع. يُرجى تفعيل أذونات الموقع في الإعدادات."
+          }
+        }
+      }
     },
     "Location Permission Required" : {
       "extractionState" : "manual",
@@ -763,7 +805,14 @@
       }
     },
     "Max retry attempts reached" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم الوصول إلى الحد الأقصى لمحاولات إعادة المحاولة"
+          }
+        }
+      }
     },
     "Message" : {
       "extractionState" : "manual",
@@ -885,17 +934,6 @@
         }
       }
     },
-    "No Offer Avialable" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لا توجد عروض متاحة"
-          }
-        }
-      }
-    },
     "Notes" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -985,13 +1023,34 @@
       }
     },
     "Permission Denied" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم رفض الإذن"
+          }
+        }
+      }
     },
     "Phone number can only contain digits" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يمكن أن يحتوي رقم الهاتف إلا على أرقام"
+          }
+        }
+      }
     },
     "Photo Library access is denied. Please enable it in settings." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم رفض الوصول إلى مكتبة الصور. يُرجى تفعيله من الإعدادات."
+          }
+        }
+      }
     },
     "Please allow camera access in Settings to scan QR codes." : {
       "localizations" : {

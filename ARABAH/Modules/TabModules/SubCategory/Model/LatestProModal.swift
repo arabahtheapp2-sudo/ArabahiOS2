@@ -16,7 +16,7 @@ struct LatestProModal: Codable, Equatable {
 }
 
 // MARK: - LatestProModalBody
-struct LatestProModalBody: Codable, Equatable{
+struct LatestProModalBody: Codable, Equatable {
     let id: String?
     let userID: String?
     let categoryNames, brandname, brandnameArabic: String?
@@ -30,7 +30,6 @@ struct LatestProModalBody: Codable, Equatable{
     let deleted: Bool?
     let updatedList: [Product]?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -42,7 +41,6 @@ struct LatestProModalBody: Codable, Equatable{
         case prodiuctUnit = "ProdiuctUnit"
         case prodiuctUnitArabic = "ProdiuctUnitArabic"
         case product, deleted, updatedList, createdAt, updatedAt
-        case v = "__v"
         case productUnitId
     }
     
@@ -65,21 +63,17 @@ struct LatestProModalBody: Codable, Equatable{
         } else {
             price = nil
         }
-        
         self.image = try container.decodeIfPresent(String.self, forKey: .image)
         self.qrCode = try container.decodeIfPresent(String.self, forKey: .qrCode)
         if let prodiuctUnit = try? container.decodeIfPresent(String.self, forKey: .prodiuctUnit) {
             self.prodiuctUnit = prodiuctUnit
         }
-        
         if let productUnitId = try? container.decodeIfPresent(ProductUnitIdModel.self, forKey: .productUnitId) {
             self.productUnitId = productUnitId
         }
-        
         if let prodiuctUnitArabic = try? container.decodeIfPresent(String.self, forKey: .prodiuctUnitArabic) {
             self.prodiuctUnitArabic = prodiuctUnitArabic
         }
-        
         let currentLang = L102Language.currentAppleLanguageFull()
         switch currentLang {
         case "ar":
@@ -98,14 +92,11 @@ struct LatestProModalBody: Codable, Equatable{
             }
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
         }
-
-        
         self.product = try container.decodeIfPresent([Product].self, forKey: .product)
         self.deleted = try container.decodeIfPresent(Bool.self, forKey: .deleted)
         self.updatedList = try container.decodeIfPresent([Product].self, forKey: .updatedList)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
     }
 }
 

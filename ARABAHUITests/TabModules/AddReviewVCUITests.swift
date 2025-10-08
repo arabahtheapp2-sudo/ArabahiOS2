@@ -40,7 +40,7 @@ final class AddReviewVCUITests: XCTestCase {
 
         // ⌨️ Enter review text
         reviewTextView.tap()
-        reviewTextView.typeText("This product is amazing! Highly recommend.")
+        reviewTextView.typeText("This product is amazing Highly recommend.")
 
         // 🚀 Tap Submit
         app.buttons["Submit"].tap()
@@ -91,4 +91,3 @@ final class AddReviewVCUITests: XCTestCase {
         XCTAssertTrue(alert.staticTexts.element(boundBy: 0).exists)
     }
 }
-

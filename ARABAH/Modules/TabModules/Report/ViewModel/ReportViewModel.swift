@@ -42,7 +42,7 @@ final class ReportViewModel {
 
     /// Calls the report API after validating the input.
     /// - Parameter input: The input containing `productID` and `message`.
-    func reportAPI(with input: Input,isRetry: Bool) {
+    func reportAPI(with input: Input, isRetry: Bool) {
         // Trim unnecessary whitespace from the message.
         let trimmedMessage = input.message.trimmingCharacters(in: .whitespacesAndNewlines)
         

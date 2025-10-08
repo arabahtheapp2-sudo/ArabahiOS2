@@ -31,12 +31,10 @@ struct Banner: Codable, Equatable {
     let id, image: String?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case image, deleted, createdAt, updatedAt
-        case v = "__v"
     }
 }
 
@@ -47,14 +45,12 @@ struct Categorys: Codable, Equatable {
     let status: Int?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
-    var distance : String?
+    var distance: String?
     var categoryNameArabic: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case categoryName, image, location, status, deleted, createdAt, updatedAt
-        case v = "__v"
         case distance, categoryNameArabic
     }
 
@@ -68,7 +64,6 @@ struct Categorys: Codable, Equatable {
         self.deleted = try container.decodeIfPresent(Bool.self, forKey: .deleted)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         if let value = try? container.decode(String.self, forKey: .categoryNameArabic) {
             categoryNameArabic = value
         } else if let value = try? container.decode(Int.self, forKey: .categoryNameArabic) {
@@ -115,7 +110,6 @@ struct LatestProduct: Codable, Equatable {
     let product: [Product]?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
     var prodiuctUnitArabic, descriptionArabic, nameArabic: String?
     
     enum CodingKeys: String, CodingKey {
@@ -125,8 +119,8 @@ struct LatestProduct: Codable, Equatable {
         case prodiuctUnit = "ProdiuctUnit"
         case productUnitId
         case product, deleted, createdAt, updatedAt, prodiuctUnitArabic, descriptionArabic, nameArabic
-        case v = "__v"
     }
+    
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -155,7 +149,6 @@ struct LatestProduct: Codable, Equatable {
         self.prodiuctUnitArabic = try container.decodeIfPresent(String.self, forKey: .prodiuctUnitArabic)
         self.descriptionArabic = try container.decodeIfPresent(String.self, forKey: .descriptionArabic)
         self.nameArabic = try container.decodeIfPresent(String.self, forKey: .nameArabic)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         let currentLang = L102Language.currentAppleLanguageFull()
 
         switch currentLang {
@@ -204,7 +197,3 @@ struct Product: Codable, Equatable {
         return price.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", price) : String(price)
     }
 }
-
-// MARK: - Test-only initializer for mocking
-
-

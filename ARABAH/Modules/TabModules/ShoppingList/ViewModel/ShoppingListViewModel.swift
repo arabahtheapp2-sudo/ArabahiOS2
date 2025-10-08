@@ -16,7 +16,7 @@ final class ShoppingListViewModel {
     
     /// Published property that notifies subscribers of state changes
     @Published private(set) var getListState: AppState<GetShoppingListModalBody> = .idle
-    @Published private(set) var listDeleteState: AppState<shoppinglistDeleteModal> = .idle
+    @Published private(set) var listDeleteState: AppState<ShoppinglistDeleteModal> = .idle
     @Published private(set) var listClearState: AppState<CommentModal> = .idle
     
     /// Storage for Combine subscriptions
@@ -96,19 +96,22 @@ final class ShoppingListViewModel {
     /// Gets the product name for a specific index
     func productName(at index: Int) -> String {
         guard index >= 0 && index < shoppingList.count else { return "" }
-        return shoppingList[index].productID?.name ?? ""
+        guard let shopList = shoppingList[safe: index] else { return "" }
+        return shopList.productID?.name ?? ""
     }
     
     /// Gets the products for a specific index
     func products(at index: Int) -> [Products] {
         guard index >= 0 && index < shoppingList.count else { return [] }
-        return shoppingList[index].productID?.product ?? []
+        guard let shopList = shoppingList[safe: index] else { return [] }
+        return shopList.productID?.product ?? []
     }
     
     /// Gets the image URL for a product at specific index
     func productImage(at index: Int) -> String? {
         guard index >= 0 && index < shoppingList.count else { return nil }
-        return shoppingList[index].productID?.image
+        guard let shopList = shoppingList[safe: index] else { return nil }
+        return shopList.productID?.image
     }
     
     /// Determines if the row is a header row
@@ -164,7 +167,7 @@ final class ShoppingListViewModel {
                 if case .failure(let error) = completion {
                     self?.listDeleteState = .failure(error)
                 }
-            } receiveValue: { [weak self] (response: shoppinglistDeleteModal) in
+            } receiveValue: { [weak self] (response: ShoppinglistDeleteModal) in
                 self?.listDeleteState = .success(response)
             }
             .store(in: &cancellables)
@@ -273,7 +276,8 @@ final class ShoppingListViewModel {
     /// - Returns: The ID of the deleted product, or nil if index is invalid
     func deleteProduct(at index: Int) -> String? {
         guard index >= 0 && index < shoppingList.count else { return nil }
-        let id = shoppingList[index].productID?.id
+        guard let shopList = shoppingList[safe: index] else { return nil }
+        let id = shopList.productID?.id
         shoppingList.remove(at: index)
         return id
     }

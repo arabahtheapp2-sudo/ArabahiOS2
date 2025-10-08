@@ -20,21 +20,19 @@ struct CreateNotesModalBody: Codable, Equatable {
     let userID: String?
     let notesText: [NotesText]?
     let id: String?
-    let v: Int?
-    let updatedAt:String?
+    let updatedAt: String?
 
     enum CodingKeys: String, CodingKey {
         case userID = "userId"
         case notesText, updatedAt
         case id = "_id"
-        case v = "__v"
     }
 }
 
 // MARK: - NotesText
 struct NotesText: Codable, Equatable {
     let text, id, createdAt: String?
-    let mainId :String?
+    let mainId: String?
 
     enum CodingKeys: String, CodingKey {
         case text, createdAt

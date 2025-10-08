@@ -41,71 +41,77 @@ final class Store: TokenProvider {
     // MARK: - Secure Login Flag
     
     /// A flag (as String) indicating if the login was via a secure method.
-    class var isfromsecure: String? {
-        set {
-            Store.saveValue(newValue, .loginvalue)
-        }
+    static var isfromsecure: String? {
         get {
             return Store.getValue(.loginvalue) as? String
         }
+        set {
+            Store.saveValue(newValue, .loginvalue)
+        }
+        
     }
     
     // MARK: - Language Preference
     
     /// Indicates whether Arabic language is selected.
     /// Stored as Bool in UserDefaults, defaults to false.
-    class var isArabicLang: Bool {
-        set {
-            Store.saveValue(newValue, .isArabicLang)
-        }
+    static var isArabicLang: Bool {
         get {
             return Store.getValue(.isArabicLang) as? Bool ?? false
         }
+        set {
+            Store.saveValue(newValue, .isArabicLang)
+        }
+        
     }
     
     // MARK: - Filter Data
     
     /// User-selected filter criteria stored as an array of Strings.
-    class var filterdata: [String]? {
-        set {
-            Store.saveValue(newValue, .filterdata)
-        }
+    static var filterdata: [String]? {
         get {
             return Store.getValue(.filterdata) as? [String]
         }
+        set {
+            Store.saveValue(newValue, .filterdata)
+        }
+        
     }
     
     /// Store-specific filter data as an array of Strings.
-    class var filterStore: [String]? {
-        set {
-            Store.saveValue(newValue, .filterStore)
-        }
+    static var filterStore: [String]? {
         get {
             return Store.getValue(.filterStore) as? [String]
         }
+        set {
+            Store.saveValue(newValue, .filterStore)
+        }
+       
     }
     
     /// Brand-specific filter data stored as an array of Strings.
-    class var fitlerBrand: [String]? {
-        set {
-            Store.saveValue(newValue, .fitlerBrand)
-        }
+    static var fitlerBrand: [String]? {
         get {
             return Store.getValue(.fitlerBrand) as? [String]
         }
+        set {
+            Store.saveValue(newValue, .fitlerBrand)
+        }
+        
     }
     
     
     // MARK: - User Details
     
     /// Logged-in user's details serialized as a Codable model.
-    class var userDetails: LoginModal? {
-        set {
-            Store.saveUserDetails(newValue, .userDetails)
-        }
+    static var userDetails: LoginModal? {
         get {
             return Store.getUserDetails(.userDetails)
         }
+        set {
+            Store.saveUserDetails(newValue, .userDetails)
+        }
+        
     }
     
     
@@ -113,13 +119,14 @@ final class Store: TokenProvider {
     
     /// Indicates whether the user has enabled auto-login.
     /// Defaults to false.
-    class var autoLogin: Bool {
-        set {
-            Store.saveValue(newValue, .autoLogin)
-        }
+    static var autoLogin: Bool {
         get {
             return Store.getValue(.autoLogin) as? Bool ?? false
         }
+        set {
+            Store.saveValue(newValue, .autoLogin)
+        }
+        
     }
     
     
@@ -131,14 +138,14 @@ final class Store: TokenProvider {
     /// - Parameters:
     ///   - value: The value to store (optional).
     ///   - key: The DefaultKeys enum key to associate the value with.
-    private class func saveValue(_ value: Any?, _ key: DefaultKeys) {
+    private static func saveValue(_ value: Any?, _ key: DefaultKeys) {
         var data: Data?
         if let value = value {
             // Archive the value securely as Data
             data = try? NSKeyedArchiver.archivedData(withRootObject: value, requiringSecureCoding: true)
         }
         UserDefaults.standard.set(data, forKey: key.rawValue)
-        UserDefaults.standard.synchronize()
+        
     }
     
     /// Saves a Codable user details model securely into UserDefaults.
@@ -146,7 +153,7 @@ final class Store: TokenProvider {
     /// - Parameters:
     ///   - value: Codable model instance to store (optional).
     ///   - key: The DefaultKeys enum key to associate the data with.
-    private class func saveUserDetails<T: Codable>(_ value: T?, _ key: DefaultKeys) {
+    private static func saveUserDetails<T: Codable>(_ value: T?, _ key: DefaultKeys) {
         var data: Data?
         if let value = value {
             data = try? PropertyListEncoder().encode(value)
@@ -158,7 +165,7 @@ final class Store: TokenProvider {
     /// Uses PropertyListDecoder to decode stored Data to the model.
     /// - Parameter key: The DefaultKeys enum key to retrieve data from.
     /// - Returns: Decoded model instance or nil if retrieval/decoding fails.
-    private class func getUserDetails<T: Codable>(_ key: DefaultKeys) -> T? {
+    private static func getUserDetails<T: Codable>(_ key: DefaultKeys) -> T? {
         if let data = self.getValue(key) as? Data {
             let decodedModel = try? PropertyListDecoder().decode(T.self, from: data)
             return decodedModel
@@ -169,14 +176,15 @@ final class Store: TokenProvider {
     /// Retrieves and unarchives stored value from UserDefaults for the given key.
     /// - Parameter key: The DefaultKeys enum key to fetch data from.
     /// - Returns: Unarchived value or empty string if not found.
-    private class func getValue(_ key: DefaultKeys) -> Any {
-        if let data = UserDefaults.standard.value(forKey: key.rawValue) as? Data {
-            if let value = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) {
-                return value
-            } else {
-                return ""
-            }
-        } else {
+    private static func getValue(_ key: DefaultKeys) -> Any {
+        guard let data = UserDefaults.standard.data(forKey: key.rawValue) else { return "" }
+        
+        do {
+            // Use the modern unarchiver API
+            let value = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSString.self, NSNumber.self, NSArray.self, NSDictionary.self], from: data)
+            return value ?? ""
+        } catch {
+            
             return ""
         }
     }
@@ -192,7 +200,7 @@ extension Store {
         Store.filterStore = nil
         Store.isfromsecure = ""
         authToken = nil
-        SecureStorage.delete(.deviceToken)
+        DeviceTokenManager.clearDeviceToken()
         SecureStorage.delete(.authToken)
     }
 }

@@ -13,7 +13,7 @@ protocol NetworkServiceProtocol {
         endpoint: APIEndpoint,
         method: HTTPMethod,
         parameters: RequestParameters?,
-        urlAppendData: urlAppendData?,
+        urlAppendData: UrlAppendData?,
         headers: [String: String]?
     ) -> AnyPublisher<T, NetworkError>
 }

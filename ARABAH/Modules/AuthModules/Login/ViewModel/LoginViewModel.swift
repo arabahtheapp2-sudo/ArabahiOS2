@@ -33,7 +33,7 @@ final class LoginViewModel {
     // MARK: - Public Methods
     
     /// Performs login using country code and phone number.
-    func login(countryCode: String, phoneNumber: String)  {
+    func login(countryCode: String, phoneNumber: String) {
         // Save input for retry
         self.previousInput = (countryCode, phoneNumber)
         self.retryCount = 0
@@ -96,5 +96,3 @@ final class LoginViewModel {
         }
     }
 }
-
-

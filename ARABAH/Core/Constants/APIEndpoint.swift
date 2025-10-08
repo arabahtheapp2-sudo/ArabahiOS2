@@ -57,8 +57,11 @@ enum APIEndpoint {
     
     /// The base URL for all endpoints
     var baseURL: String {
-        return "https://admin.arabahtheapp.com/api/"
-        
+        guard let appURL = Bundle.main.object(forInfoDictionaryKey: "AppBaseURL") as? String,
+              !appURL.isEmpty else {
+            return ""
+        }
+        return appURL
     }
     
     /// The path component for each endpoint
@@ -84,7 +87,7 @@ enum APIEndpoint {
         case .createSearch: return "CreateSerach"
         case .searchFilter: return "searchfilter"
         case .searchList: return "SearchList"
-        case .searchDelete : return "SerachDelete"
+        case .searchDelete: return "SerachDelete"
         case .subCategoryProduct: return "SubCategoryProduct"
         case .latestProduct: return "LatestProduct"
         case .similarProducts: return "similarProducts"
@@ -115,8 +118,8 @@ enum APIEndpoint {
     var isMultipart: Bool {
         switch self {
         case .signup: return true
-        case .verifyOtp : return true
-        case .resentOtp : return true
+        case .verifyOtp: return true
+        case .resentOtp: return true
         case .getProfile: return false
         case .priceNotification: return true
         case .deleteAccount: return true
@@ -134,7 +137,7 @@ enum APIEndpoint {
         case .createSearch: return true
         case .searchFilter: return true
         case .searchList: return false
-        case .searchDelete : return true
+        case .searchDelete: return true
         case .subCategoryProduct: return false
         case .latestProduct: return false
         case .similarProducts: return false

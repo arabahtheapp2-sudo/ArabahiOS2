@@ -20,11 +20,11 @@ class ProfileVC: UIViewController {
     @IBOutlet weak var tblVw: UITableView!
     
     // MARK: - Properties
-    private let viewModel = ProfileViewModel()
-    private var cancellables = Set<AnyCancellable>()
+     let viewModel = ProfileViewModel()
+     var cancellables = Set<AnyCancellable>()
     
     // Section titles and icons for profile menu
-    private let sectionTitles = [
+     let sectionTitles = [
         PlaceHolderTitleRegex.priceNotifications,
         PlaceHolderTitleRegex.raiseTicket,
         PlaceHolderTitleRegex.favouriteProduct,
@@ -39,7 +39,7 @@ class ProfileVC: UIViewController {
         PlaceHolderTitleRegex.deleteAccount
     ]
     
-    private let sectionIcons = [
+     let sectionIcons = [
         "notification", "ticket", "heart", "Layer 2", "notes-2",
         "document", "Group 38144", "info", "contact-mail", "Qutions", "exit", "Image 59"
     ]
@@ -102,7 +102,7 @@ class ProfileVC: UIViewController {
     // MARK: - Actions
     
     // Navigates to Edit Profile screen
-    @IBAction func BtnEditProfile(_ sender: UIButton) {
+    @IBAction func btnEditProfile(_ sender: UIButton) {
         navigateToEditProfile()
     }
     
@@ -117,7 +117,7 @@ class ProfileVC: UIViewController {
         case .success(let value):
             updateUI(with: value)
             hideLoadingIndicator()
-        case .failure(_):
+        case .failure:
             hideLoadingIndicator()
         case .validationError(let error):
             hideLoadingIndicator()
@@ -132,7 +132,7 @@ class ProfileVC: UIViewController {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             showNotificationUpdateSuccess()
             tblVw.reloadData()
@@ -153,7 +153,7 @@ class ProfileVC: UIViewController {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             navigateToLogin()
         case .failure(let error):
@@ -172,7 +172,7 @@ class ProfileVC: UIViewController {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             CommonUtilities.shared.showAlert(message: RegexMessages.userLogout, isSuccess: .success)
             navigateToLogin()
@@ -186,7 +186,7 @@ class ProfileVC: UIViewController {
     }
     
     // Send API request to update notification status
-    private func updateNotificationStatus(status: Int) {
+    func updateNotificationStatus(status: Int) {
         viewModel.performAction(input: ProfileViewModel.Input(
             notificationStatus: status,
             actionType: .updateNotification(status)
@@ -226,18 +226,22 @@ class ProfileVC: UIViewController {
     // Navigate to Login screen after logout or delete
     private func navigateToLogin() {
         guard let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginVC") as? LoginVC else { return }
-        let navController = MainNavigationController(rootViewController: loginVC)
-        navController.isNavigationBarHidden = true
-        UIApplication.shared.keyWindow?.rootViewController = navController
+        let nav = UINavigationController(rootViewController: loginVC)
+        nav.isNavigationBarHidden = true
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.rootViewController = nav
+            window.makeKeyAndVisible()
+        }
     }
     
     // Generic navigation method
-    private func navigateTo(_ identifier: String, header: Int? = nil) {
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: identifier) else { return }
-        if let termsVC = vc as? TermsConditionVC, let header = header {
+     func navigateTo(_ identifier: String, header: Int? = nil) {
+        guard let viewController = storyboard?.instantiateViewController(withIdentifier: identifier) else { return }
+        if let termsVC = viewController as? TermsConditionVC, let header = header {
             termsVC.contentType = header
         }
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     // MARK: - Helpers
@@ -265,123 +269,6 @@ class ProfileVC: UIViewController {
     private func handleUpdateStatusError(_ error: NetworkError) {
         CommonUtilities.shared.showAlertWithRetry(title: AppConstants.appName, message: error.localizedDescription) { [weak self] (_) in
             self?.viewModel.retryUpdateNotiStatus()
-        }
-    }
-}
-
-// MARK: - TableView Extension
-extension ProfileVC: UITableViewDelegate, UITableViewDataSource {
-    
-    // Number of rows
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sectionTitles.count
-    }
-    
-    // Cell setup
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileTVC", for: indexPath) as? ProfileTVC else {
-            return UITableViewCell()
-        }
-        configureCell(cell, at: indexPath)
-        return cell
-    }
-    
-    // Configure each cell based on row
-    private func configureCell(_ cell: ProfileTVC, at indexPath: IndexPath) {
-        cell.lblHeading.text = NSLocalizedString(sectionTitles[indexPath.row], comment: "")
-        cell.imgView.image = UIImage(named: sectionIcons[indexPath.row])
-        
-        switch indexPath.row {
-        case 0: // Notification
-            cell.btnOnOff.isHidden = false
-            configureNotificationCell(cell)
-        case 2, 9: // Favorites or FAQ
-            cell.btnOnOff.isHidden = true
-            cell.viewBottom.isHidden = false
-        case 10, 11: // Logout or Delete
-            cell.btnOnOff.isHidden = true
-            configureActionCell(cell, at: indexPath)
-        default:
-            cell.btnOnOff.isHidden = true
-            configureDefaultCell(cell)
-        }
-        
-        let nextImageName = Store.isArabicLang ? "ic_next_screen 1" : "ic_next_screen"
-        cell.btnNext.setImage(UIImage(named: nextImageName), for: .normal)
-    }
-    
-    private func configureNotificationCell(_ cell: ProfileTVC) {
-        cell.btnNext.isHidden = true
-        cell.viewBottom.isHidden = true
-        
-        cell.btnOnOff.isSelected = Store.userDetails?.body?.isNotification == 1
-        cell.lblHeading.textColor = .black
-        cell.btnOnOff.accessibilityIdentifier = "notificationToggle"
-        cell.btnOnOff.addTarget(self, action: #selector(notificationToggleTapped(_:)), for: .touchUpInside)
-    }
-    
-    private func configureActionCell(_ cell: ProfileTVC, at indexPath: IndexPath) {
-        cell.btnNext.isHidden = true
-        cell.viewBottom.isHidden = true
-        cell.lblHeading.textColor = indexPath.row == 11 ? #colorLiteral(red: 0.788, green: 0.204, blue: 0.204, alpha: 1) : .black
-    }
-    
-    private func configureDefaultCell(_ cell: ProfileTVC) {
-        cell.lblHeading.textColor = .black
-        cell.btnNext.isHidden = false
-        cell.btnOnOff.isHidden = true
-        cell.viewBottom.isHidden = true
-    }
-    
-    // Handle row selection
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        handleRowSelection(at: indexPath)
-    }
-    
-    // Notification toggle button tapped
-    @objc private func notificationToggleTapped(_ sender: UIButton) {
-        let newStatus = Store.userDetails?.body?.isNotification == 1 ? 0 : 1
-        updateNotificationStatus(status: newStatus)
-    }
-    
-    // Navigate based on selected row
-    private func handleRowSelection(at indexPath: IndexPath) {
-        switch indexPath.row {
-        case 1: navigateTo("RaiseTicketVC")
-        case 2: navigateTo("FavProductVC")
-        case 3: navigateTo("ChangeLangVC")
-        case 4: navigateTo("NotesListingVC")
-        case 5: navigateTo("TermsConditionVC", header: 3)
-        case 6: navigateTo("TermsConditionVC", header: 2)
-        case 7: navigateTo("TermsConditionVC", header: 1)
-        case 8: navigateTo("ContactUsVC")
-        case 9: navigateTo("FaqVC")
-        case 10: showConfirmationPopup(type: .logout)
-        case 11: showConfirmationPopup(type: .deleteAccount)
-        default: break
-        }
-    }
-    
-    // Show logout/delete confirmation popup
-    private func showConfirmationPopup(type: ConfirmationType) {
-        guard let popupVC = storyboard?.instantiateViewController(withIdentifier: "popUpVC") as? popUpVC else { return }
-        popupVC.check = type
-        popupVC.modalPresentationStyle = .overFullScreen
-        popupVC.confirmationHandler = { [weak self] confirmed in
-            guard confirmed else { return }
-            self?.handleConfirmedAction(for: type)
-        }
-        present(popupVC, animated: false)
-    }
-    
-    // Handle confirmed popup action
-    private func handleConfirmedAction(for type: ConfirmationType) {
-        switch type {
-        case .logout:
-            viewModel.performAction(input: ProfileViewModel.Input(notificationStatus: nil, actionType: .logout))
-        case .deleteAccount:
-            viewModel.performAction(input: ProfileViewModel.Input(notificationStatus: nil, actionType: .deleteAccount))
-        default: break
         }
     }
 }

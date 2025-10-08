@@ -30,11 +30,11 @@ class CommentVC: UIViewController {
     
     
     // MARK: - Functions
-    func setAccessibilityIdentifier(){
+    func setAccessibilityIdentifier() {
         tblViewComment.accessibilityIdentifier = "tblViewComment"
     }
     
-    private func setNoData(){
+    private func setNoData() {
         // Additional setup can be done here if needed
         if comments?.count == 0 {
             // Show no data message when comment list is empty
@@ -74,7 +74,7 @@ extension CommentVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         // Set up cell with the corresponding comment data
-        cell.setupObj = comments?[indexPath.row]
+        cell.setupObj = comments?[safe: indexPath.row]
         return cell
     }
 }

@@ -199,7 +199,7 @@ final class SearchCatViewModelTests: XCTestCase {
             .dropFirst()
             .sink { state in
                 if case .failure(let error) = state {
-                    XCTAssertEqual(error, .badRequest(message:("Something went wrong")))
+                    XCTAssertEqual(error, .badRequest(message: ("Something went wrong")))
                     expectation.fulfill()
                 }
             }
@@ -266,4 +266,3 @@ final class SearchCatViewModelTests: XCTestCase {
 
 
 }
-

@@ -55,7 +55,7 @@ struct Validator {
     }
     
     /// Validates Edit Profile
-    static func validateEditProfile(_ name: String,_ email: String) -> ValidationResult {
+    static func validateEditProfile(_ name: String, _ email: String) -> ValidationResult {
         guard !name.trimmingCharacters(in: .whitespaces).isEmpty else {
             return .failure(.emptyName)
         }
@@ -72,7 +72,7 @@ struct Validator {
     }
     
     /// Validates Contact Us
-    static func validateContactUs(_ name: String,_ email: String,_ message: String) -> ValidationResult {
+    static func validateContactUs(_ name: String, _ email: String, _ message: String) -> ValidationResult {
         guard !name.trimmingCharacters(in: .whitespaces).isEmpty else {
             return .failure(.emptyName)
         }
@@ -93,7 +93,7 @@ struct Validator {
     }
     
     /// Validates Add Ticket
-    static func validateAddTicket(_ title: String,_ description: String) -> ValidationResult {
+    static func validateAddTicket(_ title: String, _ description: String) -> ValidationResult {
         guard !title.trimmingCharacters(in: .whitespaces).isEmpty else {
             return .failure(.emptytittle)
         }
@@ -150,7 +150,7 @@ struct Validator {
             switch self {
             case .emptyPhoneNumber:
                 return RegexMessages.emptyPhoneNumber
-            case .invalidPhoneNumberLength(_, _):
+            case .invalidPhoneNumberLength:
                 return RegexMessages.invalidPhoneNumber
             case .invalidPhoneNumberFormat:
                 return RegexMessages.invalidPhoneNumberFormat

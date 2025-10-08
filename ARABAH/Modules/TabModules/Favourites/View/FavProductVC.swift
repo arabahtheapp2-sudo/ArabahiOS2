@@ -103,7 +103,7 @@ class FavProductVC: UIViewController {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             CommonUtilities.shared.showAlert(message: RegexMessages.productDislike, isSuccess: .success)
         case .failure(let error):
@@ -121,7 +121,7 @@ class FavProductVC: UIViewController {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
         case .failure(let error):
             hideLoadingIndicator()
@@ -172,13 +172,15 @@ extension FavProductVC: UICollectionViewDelegate, UICollectionViewDataSource, UI
         }
         
         // Configure cell with product data
-        if let model = viewModel.likedBody?[indexPath.row] {
+        if let model = viewModel.likedBody?[safe: indexPath.row] {
             cell.setupObj = model
             // Set favorite button state based on product status
             cell.btnFav.isSelected = model.status == 0
             cell.btnFav.tag = indexPath.row
             // Add target for favorite button tap
-            cell.btnFav.addTarget(self, action: #selector(BtnLike(_:)), for: .touchUpInside)
+            cell.btnFav.addTarget(self, action: #selector(btnLike(_:)), for: .touchUpInside)
+        } else {
+            cell.setupObj = nil
         }
         
         return cell
@@ -187,10 +189,12 @@ extension FavProductVC: UICollectionViewDelegate, UICollectionViewDataSource, UI
     // MARK: - Delegate
     
     /// Handles favorite button tap in collection view cells
-    @objc func BtnLike(_ sender: UIButton) {
-        let productID = viewModel.likedBody?[sender.tag].productID?.id ?? ""
-        // Call like/dislike API for the tapped product
-        viewModel.likeDislikeAPI(productID: productID)
+    @objc func btnLike(_ sender: UIButton) {
+       if let productData = viewModel.likedBody?[safe: sender.tag], let productID = productData.id {
+            // Call like/dislike API for the tapped product
+            viewModel.likeDislikeAPI(productID: productID)
+        }
+       
     }
     
     /// Returns size for collection view items
@@ -202,8 +206,8 @@ extension FavProductVC: UICollectionViewDelegate, UICollectionViewDataSource, UI
     /// Handles product selection in collection view
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // Navigate to product detail screen
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
-        vc.prodcutid = viewModel.likedBody?[indexPath.row].productID?.id ?? ""
-        self.navigationController?.pushViewController(vc, animated: true)
+        guard let likedBody = viewModel.likedBody?[safe: indexPath.row], let productId = likedBody.productID?.id, let subCatDetailVC = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
+        subCatDetailVC.prodcutid = productId
+        self.navigationController?.pushViewController(subCatDetailVC, animated: true)
     }
 }

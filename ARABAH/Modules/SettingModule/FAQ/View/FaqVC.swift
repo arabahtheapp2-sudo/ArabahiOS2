@@ -139,15 +139,21 @@ extension FaqVC: UITableViewDelegate, UITableViewDataSource {
         cell.lblBody.accessibilityIdentifier = "faqAnswerLabel"
         
         // Set the question title
-        cell.FaqHeadingLbl.text = viewModel.faqList?[indexPath.row].question ?? ""
         
-        // Conditionally show or hide the answer based on selection
-        cell.lblBody.text = selectIndex == indexPath.row ? viewModel.faqList?[indexPath.row].answer ?? "" : ""
+        
+        if let faqData = viewModel.faqList?[safe: indexPath.row] {
+            cell.faqHeadingLbl.text = faqData.question ?? ""
+            cell.lblBody.text = selectIndex == indexPath.row ? faqData.answer ?? "" : ""
+        } else {
+            cell.faqHeadingLbl.text = ""
+            cell.lblBody.text = ""
+        }
         
         // Set arrow direction icon (up if expanded, down otherwise)
         cell.imgArrow.image = selectIndex == indexPath.row ? UIImage(named: "ic_arrow_up") : UIImage(named: "ic_arrow_down")
         
         // Button action to toggle selection
+        cell.onClickBtn.removeTarget(nil, action: nil, for: .allEvents)
         cell.onClickBtn.addTarget(self, action: #selector(tickUntick), for: .touchUpInside)
         cell.onClickBtn.tag = indexPath.row
         

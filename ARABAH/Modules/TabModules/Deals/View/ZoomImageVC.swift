@@ -27,12 +27,9 @@ class ZoomImageVC: UIViewController, UIScrollViewDelegate {
     }
     
     // MARK: Setup view
-    private func setupView(){
+    private func setupView() {
         // Load image asynchronously with placeholder while loading
-        img.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "Placeholder")) { [weak self]  _, _, _, _ in
-            guard let _ = self else { return }
-            // Completion handler can be used for further actions after image load if needed
-        }
+        img.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "Placeholder"))
         
         // Configure scroll view zoom scale limits
         scroll.minimumZoomScale = 1.0

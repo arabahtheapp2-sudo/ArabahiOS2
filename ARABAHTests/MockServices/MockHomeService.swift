@@ -68,8 +68,8 @@ final class MockHomeService: HomeServicesProtocol {
         return shoppingListAPIPublisher ?? Fail(error: .networkError("Mock not configured")).eraseToAnyPublisher()
     }
     
-    var shoppingListDeleteAPIPublisher: AnyPublisher<shoppinglistDeleteModal, NetworkError>?
-    func shoppingListDeleteAPI(id: String) -> AnyPublisher<ARABAH.shoppinglistDeleteModal, ARABAH.NetworkError> {
+    var shoppingListDeleteAPIPublisher: AnyPublisher<ShoppinglistDeleteModal, NetworkError>?
+    func shoppingListDeleteAPI(id: String) -> AnyPublisher<ARABAH.ShoppinglistDeleteModal, ARABAH.NetworkError> {
         return shoppingListDeleteAPIPublisher ?? Fail(error: .networkError("Mock not configured")).eraseToAnyPublisher()
     }
     

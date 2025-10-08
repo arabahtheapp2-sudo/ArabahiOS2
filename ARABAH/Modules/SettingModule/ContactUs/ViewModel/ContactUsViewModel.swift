@@ -21,8 +21,14 @@ final class ContactUsViewModel {
     /// Service instance to make API calls
     private let settingsServices: SettingsServicesProtocol
     
+    struct PreviousParams {
+        var name: String
+        var email: String
+        var message: String
+    }
+    
     /// Stores previous input params for retry in case of failure
-    var previousParams: (name: String, email: String, message: String)?
+    var previousParams: PreviousParams?
     
     private var retryCount = 0
     private let maxRetryCount = 3
@@ -42,7 +48,7 @@ final class ContactUsViewModel {
     ///   - message: Message to be sent
     func contactUsAPI(name: String, email: String, message: String) {
         // Store input for potential retry
-        self.previousParams = (name: name, email: email, message: message)
+        self.previousParams = PreviousParams(name: name, email: email, message: message)
         self.retryCount = 0
         // Validate input before proceeding
         guard validateInputs(name: name, email: email, message: message) else {

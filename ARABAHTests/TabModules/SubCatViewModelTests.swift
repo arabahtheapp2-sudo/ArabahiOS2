@@ -41,7 +41,7 @@ final class SubCatViewModelTests: XCTestCase {
         viewModel.$subCatProductState
             .dropFirst()
             .sink { state in
-                if state == .success(response){
+                if state == .success(response) {
                     expectation.fulfill()
                 }
             }
@@ -142,7 +142,7 @@ final class SubCatViewModelTests: XCTestCase {
         Store.shared.authToken = "valid_token"
         viewModel.check = 1
 
-        let response = AddShoppingModal(success: true, code: 200, message: "Added",body: nil)
+        let response = AddShoppingModal(success: true, code: 200, message: "Added", body: nil)
         mockService.addShoppingAPIPublisher = Just(response)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -245,4 +245,3 @@ final class SubCatViewModelTests: XCTestCase {
     }
 
 }
-

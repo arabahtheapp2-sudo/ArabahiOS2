@@ -166,7 +166,7 @@ final class NotesViewModel {
     }
 
     /// Fetches details for a specific note
-    func getNotesDetailAPI(id: String,isRetry: Bool) {
+    func getNotesDetailAPI(id: String, isRetry: Bool) {
         
         if isRetry {
             guard notesDetailRetryCount < maxRetryCount else {
@@ -206,7 +206,7 @@ final class NotesViewModel {
     }
 
     /// Deletes a specific note
-    func notesDeleteAPI(id: String,isRetry: Bool) {
+    func notesDeleteAPI(id: String, isRetry: Bool) {
 
         if isRetry {
             guard notesDeleteRetryCount < maxRetryCount else {
@@ -233,7 +233,7 @@ final class NotesViewModel {
     }
 
     /// Creates or updates a note
-    func createNotesAPI(id: String,isRetry: Bool) {
+    func createNotesAPI(id: String, isRetry: Bool) {
         
         if isRetry {
             guard createNoteRetryCount < maxRetryCount else {
@@ -269,7 +269,7 @@ final class NotesViewModel {
                     .store(in: &cancellables)
             }
         } catch {
-            print("JSON Encoding error: \(error)")
+            // JSON Encoding error
             // Consider adding error state handling here
         }
     }

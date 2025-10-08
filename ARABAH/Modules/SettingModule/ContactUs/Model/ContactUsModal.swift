@@ -22,13 +22,11 @@ struct ContactUsModalBody: Codable, Equatable {
     let message, countryCode: String?
     let deleted: Bool?
     let id, createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case userID = "userId"
         case name, email, phone, message, countryCode, deleted
         case id = "_id"
         case createdAt, updatedAt
-        case v = "__v"
     }
 }

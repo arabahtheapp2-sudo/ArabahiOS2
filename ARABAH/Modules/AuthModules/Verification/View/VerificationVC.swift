@@ -105,7 +105,7 @@ class VerificationVC: UIViewController {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             handleResendSuccess()
             hideLoadingIndicator()
         case .failure(let error):
@@ -124,7 +124,7 @@ class VerificationVC: UIViewController {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             handleVerificationSuccess()
             hideLoadingIndicator()
         case .failure(let error):
@@ -234,11 +234,11 @@ class VerificationVC: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? TabBarController else { return }
         
-        let navController = UINavigationController(rootViewController: tabBarController)
-        navController.isNavigationBarHidden = true
-        
-        if let window = UIApplication.shared.keyWindow {
-            window.rootViewController = navController
+        let nav = UINavigationController(rootViewController: tabBarController)
+        nav.isNavigationBarHidden = true
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.rootViewController = nav
             window.makeKeyAndVisible()
         }
     }
@@ -255,14 +255,14 @@ extension VerificationVC: UITextFieldDelegate, BackspaceTextFieldDelegate {
         if string.isEmpty {
             // Handle backspace
             textField.text = ""
-            if let index = txtFldCollection.firstIndex(of: textField as! OtpTextField), index > 0 {
+            if let otpTextField = textField as? OtpTextField, let index = txtFldCollection.firstIndex(of: otpTextField), index > 0 {
                 txtFldCollection[index - 1].becomeFirstResponder()
             }
             return false
         } else {
             // Handle digit input and move forward
             textField.text = string
-            if let index = txtFldCollection.firstIndex(of: textField as! OtpTextField), index < txtFldCollection.count - 1 {
+            if let otpTextField = textField as? OtpTextField, let index = txtFldCollection.firstIndex(of: otpTextField), index < txtFldCollection.count - 1 {
                 txtFldCollection[index + 1].becomeFirstResponder()
             } else {
                 textField.resignFirstResponder()

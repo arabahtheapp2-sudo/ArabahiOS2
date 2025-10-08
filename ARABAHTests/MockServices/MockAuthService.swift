@@ -54,8 +54,4 @@ final class MockAuthService: AuthServicesProtocol {
         return logoutPublisher ?? Fail(error: .networkError("Mock not configured")).eraseToAnyPublisher()
     }
     
-    
-   
 }
-
-

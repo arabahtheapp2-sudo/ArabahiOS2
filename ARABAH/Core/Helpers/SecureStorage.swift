@@ -8,6 +8,27 @@
 import Foundation
 import Security
 
+
+final class DeviceTokenManager {
+
+    /// Returns the device token stored in Keychain, if any
+    static var current: String? {
+        return SecureStorage.get(.deviceToken)
+    }
+
+    /// Save device token securely
+    static func save(_ token: String) {
+        SecureStorage.save(token, for: .deviceToken, accessible: kSecAttrAccessibleAfterFirstUnlock)
+    }
+
+    /// Remove device token from storage
+    static func clearDeviceToken() {
+        SecureStorage.delete(.deviceToken)
+    }
+}
+
+
+
 final class SecureStorage {
     
     enum Key: String {
@@ -38,7 +59,7 @@ final class SecureStorage {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key.rawValue,
-            kSecReturnData as String: kCFBooleanTrue!,
+            kSecReturnData as String: kCFBooleanTrue as Any,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
         
@@ -64,5 +85,3 @@ final class SecureStorage {
         return status == errSecSuccess
     }
 }
-
-

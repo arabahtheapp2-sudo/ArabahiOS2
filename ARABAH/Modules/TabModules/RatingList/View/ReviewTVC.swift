@@ -11,7 +11,7 @@ import SDWebImage
 
 class ReviewTVC: UITableViewCell {
     
-    //MARK: OUTLETS
+    // MARK: - OUTLETS
     @IBOutlet weak var userImg: UIImageView!
     @IBOutlet weak var userNameLbl: UILabel!
     @IBOutlet weak var reviewLbl: UILabel!
@@ -29,7 +29,12 @@ class ReviewTVC: UITableViewCell {
             ratingView.rating = Double(ratingListing?.rating ?? 0)
             let formato = DateFormatter()
             formato.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-            formato.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+            if let utcTimeZone = TimeZone(identifier: "UTC") {
+                formato.timeZone = utcTimeZone
+            } else {
+               // Failed to create UTC timezone
+                formato.timeZone = TimeZone.current // fallback
+            }
             formato.formatterBehavior = .default
             let date = formato.date(from: ratingListing?.createdAt ?? "")
             formato.timeZone = TimeZone.current

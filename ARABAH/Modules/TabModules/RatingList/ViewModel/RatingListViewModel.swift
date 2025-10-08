@@ -71,7 +71,7 @@ final class RatingListViewModel {
                 self.ratingBody = nil
                 self.ratingList = []
                 self.averageRatingText = "0.0"
-                self.totalReviewsText = "0 Ratings"
+                self.totalReviewsText = "0 \(PlaceHolderTitleRegex.ratings)"
                 self.showNoDataMessage = true
             }
         } receiveValue: { [weak self] (response: GetRaitingModal) in

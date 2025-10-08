@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - LikeProductModal
-struct LikeProductModal: Codable,Equatable {
+struct LikeProductModal: Codable, Equatable {
     let success: Bool?
     let code: Int?
     let message: String?
@@ -23,35 +23,34 @@ struct LikeProductModalBody: Codable, Equatable {
     let deleted: Bool?
     let createdAt, updatedAt: String?
     var product: [UpdatedListElement]?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case userID = "userId"
         case productID = "ProductID"
         case status, deleted, createdAt, updatedAt
-        case v = "__v"
     }
 }
 
 // MARK: - ProductID
 struct ProductID: Codable, Equatable {
     var id, name, price, image: String?
-    var prodiuctUnit, ProdiuctUnitArabic: String?
-    var nameArabic : String
+    var prodiuctUnit, prodiuctUnitArabic: String?
+    var nameArabic: String
     var product: [UpdatedListElement]?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case name, price, image, nameArabic, ProdiuctUnitArabic
+        case name, price, image, nameArabic
+        case prodiuctUnitArabic = "ProdiuctUnitArabic"
         case prodiuctUnit = "ProdiuctUnit"
         case product
     }
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
-        if let ProdiuctUnitArabic = try? container.decode(String.self, forKey: .ProdiuctUnitArabic) {
-            self.ProdiuctUnitArabic = ProdiuctUnitArabic
+        if let prodiuctUnitArabic = try? container.decode(String.self, forKey: .prodiuctUnitArabic) {
+            self.prodiuctUnitArabic = prodiuctUnitArabic
         }
 
         if let product = try? container.decode([UpdatedListElement].self, forKey: .product) {
@@ -67,9 +66,7 @@ struct ProductID: Codable, Equatable {
         case "ar":
             let arabicName = try container.decodeIfPresent(String.self, forKey: .nameArabic)
             self.name = (arabicName?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .nameArabic) : arabicName
-            
-            let arabicProductUnit = try container.decodeIfPresent(String.self, forKey: .ProdiuctUnitArabic)
-            self.prodiuctUnit = (arabicName?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .ProdiuctUnitArabic) : arabicName
+            self.prodiuctUnit = (arabicName?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .prodiuctUnitArabic) : arabicName
         default:
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
             self.prodiuctUnit = try container.decodeIfPresent(String.self, forKey: .prodiuctUnit)

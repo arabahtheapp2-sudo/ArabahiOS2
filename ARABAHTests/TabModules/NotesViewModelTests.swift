@@ -166,7 +166,7 @@ final class NotesViewModelTests: XCTestCase {
     func test_notesDeleteAPI_success() {
         let expectation = XCTestExpectation(description: "notesDeleteAPI success")
 
-        mockService.notesDeleteAPIPublisher = Just(NewCommonString(success: true, code: 200, message: "deleted",body: nil))
+        mockService.notesDeleteAPIPublisher = Just(NewCommonString(success: true, code: 200, message: "deleted", body: nil))
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
 
@@ -275,4 +275,3 @@ final class NotesViewModelTests: XCTestCase {
     
     
 }
-

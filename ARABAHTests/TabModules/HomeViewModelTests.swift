@@ -243,4 +243,3 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.location?.longitude, 77.1)
     }
 }
-

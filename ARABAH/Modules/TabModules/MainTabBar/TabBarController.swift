@@ -26,42 +26,40 @@ class TabBarController: UITabBarController {
 
     /// Customize tab bar item images according to the app's current language setting.
     /// Sets different icons for Arabic and non-Arabic languages to provide localized UI experience.
-     func customizeTabBarAppearance() {
+    func customizeTabBarAppearance() {
+        guard let items = self.tabBar.items, items.count >= 4 else {
+            // Tab bar items are nil or not enough
+            return
+        }
+        
         if Store.isArabicLang == false {
-            // For non-Arabic language, set default tab bar item icons
-            let myTabBarItem1 = (self.tabBar.items?[0])! as UITabBarItem
-            myTabBarItem1.image = UIImage(named: "home1")?.withRenderingMode(.alwaysOriginal)
-            myTabBarItem1.selectedImage = UIImage(named: "home2")?.withRenderingMode(.alwaysOriginal)
+            // Non-Arabic
+            let images = [
+                ("home1", "home2"),
+                ("shoppingList1", "shoppingList2"),
+                ("deals1", "deals2"),
+                ("profile1", "profile2")
+            ]
             
-            let myTabBarItem2 = (self.tabBar.items?[1])! as UITabBarItem
-            myTabBarItem2.image = UIImage(named: "shoppingList1")?.withRenderingMode(.alwaysOriginal)
-            myTabBarItem2.selectedImage = UIImage(named: "shoppingList2")?.withRenderingMode(.alwaysOriginal)
-            
-            let myTabBarItem3 = (self.tabBar.items?[2])! as UITabBarItem
-            myTabBarItem3.image = UIImage(named: "deals1")?.withRenderingMode(.alwaysOriginal)
-            myTabBarItem3.selectedImage = UIImage(named: "deals2")?.withRenderingMode(.alwaysOriginal)
-            
-            let myTabBarItem4 = (self.tabBar.items?[3])! as UITabBarItem
-            myTabBarItem4.image = UIImage(named: "profile1")?.withRenderingMode(.alwaysOriginal)
-            myTabBarItem4.selectedImage = UIImage(named: "profile2")?.withRenderingMode(.alwaysOriginal)
+            for (index, (normal, selected)) in images.enumerated() {
+                items[index].image = UIImage(named: normal)?.withRenderingMode(.alwaysOriginal)
+                items[index].selectedImage = UIImage(named: selected)?.withRenderingMode(.alwaysOriginal)
+            }
             
         } else {
-            // For Arabic language, set localized tab bar item icons
-            let myTabBarItem1 = (self.tabBar.items?[0])! as UITabBarItem
-            myTabBarItem1.image = UIImage(named: "HomeArUn")?.withRenderingMode(.alwaysOriginal)
-            myTabBarItem1.selectedImage = UIImage(named: "HomeAr")?.withRenderingMode(.alwaysOriginal)
+            // Arabic
+            let images = [
+                ("HomeArUn", "HomeAr"),
+                ("ShoppingAR", "ShoppingListAr"),
+                ("DealsArUn", "DealsAr"),
+                ("ProfileArUn", "ProfileAr")
+            ]
             
-            let myTabBarItem2 = (self.tabBar.items?[1])! as UITabBarItem
-            myTabBarItem2.image = UIImage(named: "ShoppingAR")?.withRenderingMode(.alwaysOriginal)
-            myTabBarItem2.selectedImage = UIImage(named: "ShoppingListAr")?.withRenderingMode(.alwaysOriginal)
-            
-            let myTabBarItem3 = (self.tabBar.items?[2])! as UITabBarItem
-            myTabBarItem3.image = UIImage(named: "DealsArUn")?.withRenderingMode(.alwaysOriginal)
-            myTabBarItem3.selectedImage = UIImage(named: "DealsAr")?.withRenderingMode(.alwaysOriginal)
-            
-            let myTabBarItem4 = (self.tabBar.items?[3])! as UITabBarItem
-            myTabBarItem4.image = UIImage(named: "ProfileArUn")?.withRenderingMode(.alwaysOriginal)
-            myTabBarItem4.selectedImage = UIImage(named: "ProfileAr")?.withRenderingMode(.alwaysOriginal)
+            for (index, (normal, selected)) in images.enumerated() {
+                items[index].image = UIImage(named: normal)?.withRenderingMode(.alwaysOriginal)
+                items[index].selectedImage = UIImage(named: selected)?.withRenderingMode(.alwaysOriginal)
+            }
         }
     }
+
 }

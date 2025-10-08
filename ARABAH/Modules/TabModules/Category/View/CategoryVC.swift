@@ -84,9 +84,7 @@ class CategoryVC: UIViewController {
     /// - Parameter state: Current state of the ViewModel
     private func handleStateChange(_ state: AppState<CategoryListModal>) {
         switch state {
-        case .idle:
-            // No action needed in idle state
-            break
+        
         case .loading:
             // Reload collection to show skeleton views
             categoryCollection.reloadData()
@@ -100,6 +98,7 @@ class CategoryVC: UIViewController {
             refreshControl.endRefreshing()
         case .validationError(let error):
             CommonUtilities.shared.showAlert(message: error.localizedDescription, isSuccess: .error)
+        case .idle:
             break
         }
     }
@@ -174,8 +173,7 @@ extension CategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, UICo
 
             // Load category image with SDWebImage
             let catImageUrl = (AppConstants.imageURL) + (model.image ?? "")
-            cell.categoryImg.sd_setImage(with: URL(string: catImageUrl), placeholderImage: UIImage(named: "Placeholder")) { [weak self] _, _, _, _ in
-                guard let _ = self else { return }
+            cell.categoryImg.sd_setImage(with: URL(string: catImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
                 cell.categoryImg.hideSkeleton()
             }
         }
@@ -194,10 +192,10 @@ extension CategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, UICo
         if case .loading = viewModel.state { return }
 
         // Navigate to SubCategoryVC with selected category details
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "SubCategoryVC") as? SubCategoryVC else { return }
-        vc.viewModel.productID = viewModel.categoryBody?[indexPath.row].id ?? ""
-        vc.viewModel.check = 1
-        vc.viewModel.categoryName = viewModel.categoryBody?[indexPath.row].categoryName ?? ""
-        self.navigationController?.pushViewController(vc, animated: true)
+        guard let subCategoryVC = storyboard?.instantiateViewController(withIdentifier: "SubCategoryVC") as? SubCategoryVC else { return }
+        subCategoryVC.viewModel.productID = viewModel.categoryBody?[indexPath.row].id ?? ""
+        subCategoryVC.viewModel.check = 1
+        subCategoryVC.viewModel.categoryName = viewModel.categoryBody?[indexPath.row].categoryName ?? ""
+        self.navigationController?.pushViewController(subCategoryVC, animated: true)
     }
 }

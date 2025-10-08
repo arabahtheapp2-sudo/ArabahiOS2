@@ -15,7 +15,7 @@ class LogoCVC: UICollectionViewCell {
     /// ImageView to display the logo image for a shop or brand.
     @IBOutlet weak var logoImg: UIImageView!
     
-    //MARK: Reset for prepareForReuse()
+    // MARK: - Reset for prepareForReuse()
     override func prepareForReuse() {
         super.prepareForReuse()
         logoImg.image = nil

@@ -10,8 +10,7 @@ import AdvancedPageControl
 
 class WalkThroughVC: UIViewController {
     
-    //MARK: - OUTLETS
-    
+    // MARK: - OUTLETS
     /// View with blur effect at the bottom for styling UI
     @IBOutlet weak var blurEffect: UIView!
     
@@ -19,48 +18,45 @@ class WalkThroughVC: UIViewController {
     @IBOutlet weak var pageController: AdvancedPageControlView!
     
     /// Collection view that displays walkthrough screens
-    @IBOutlet weak var WalkThroughCV: UICollectionView!
+    @IBOutlet weak var walkThroughCV: UICollectionView!
     /// Button that scroll to next index
     @IBOutlet weak var nextButton: UIButton!
-    //MARK: - VARIABLES
     
+    // MARK: - VARIABLES
     /// Array of walkthrough image names (currently one image for testing)
     var imageArray = ["W1"] // You can add "W2", "W3" as needed
     
     /// Currently selected index in the collection view
     var selectedIndex = 0
     
-    //MARK: - VIEW LIFECYCLE
-    
+    // MARK: - VIEW LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
         pageController.isHidden = true // Hide page control if only 1 page exists
         setUp()
     }
 
-    //MARK: - ACTIONS
-    
+    // MARK: - ACTIONS
     /// Triggered when the "Next" button is tapped
     @IBAction func tapOnNextBtn(_ sender: UIButton) {
-        guard let visibleItems = WalkThroughCV.indexPathsForVisibleItems.first else { return }
+        guard let visibleItems = walkThroughCV.indexPathsForVisibleItems.first else { return }
         let currentItem: IndexPath = visibleItems
         let nextItem = IndexPath(item: currentItem.item + 1, section: 0)
         
         // Navigate to Home screen if walkthrough is complete
         if nextItem.item >= imageArray.count {
-            guard let vc = storyboard?.instantiateViewController(withIdentifier: "TabBarController") as? TabBarController else { return }
+            guard let tabVc = storyboard?.instantiateViewController(withIdentifier: "TabBarController") as? TabBarController else { return }
             Store.autoLogin = true
-            navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(tabVc, animated: true)
         } else {
             // Scroll to next item
-            WalkThroughCV.isPagingEnabled = false
-            WalkThroughCV.scrollToItem(at: nextItem, at: .left, animated: true)
-            WalkThroughCV.isPagingEnabled = true
+            walkThroughCV.isPagingEnabled = false
+            walkThroughCV.scrollToItem(at: nextItem, at: .left, animated: true)
+            walkThroughCV.isPagingEnabled = true
         }
     }
     
-    //MARK: - FUNCTIONS
-    
+    // MARK: - FUNCTIONS
     /// Sets up the initial UI and customizations
     func setUp() {
         // Round corners for the blur effect view
@@ -68,10 +64,10 @@ class WalkThroughVC: UIViewController {
         blurEffect.layer.masksToBounds = true
         blurEffect.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         nextButton.accessibilityIdentifier = "Next"
-        WalkThroughCV.accessibilityIdentifier = "WalkThroughCV"
+        walkThroughCV.accessibilityIdentifier = "WalkThroughCV"
         pageController.accessibilityIdentifier = "pageControl"
 
-        SecureStorage.delete(.authToken)
+        DeviceTokenManager.clearDeviceToken()
 
         // Configure the custom page control
         pageController.drawer.numberOfPages = imageArray.count
@@ -93,8 +89,7 @@ class WalkThroughVC: UIViewController {
     }
 }
 
-//MARK: - COLLECTION VIEW DELEGATE & DATA SOURCE
-
+// MARK: - COLLECTION VIEW DELEGATE & DATA SOURCE
 extension WalkThroughVC: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
     /// Number of walkthrough pages
@@ -104,7 +99,7 @@ extension WalkThroughVC: UICollectionViewDelegateFlowLayout, UICollectionViewDat
     
     /// Cell configuration for each walkthrough screen
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = WalkThroughCV.dequeueReusableCell(withReuseIdentifier: "WalkThroughCVC", for: indexPath) as? WalkThroughCVC else {
+        guard let cell = walkThroughCV.dequeueReusableCell(withReuseIdentifier: "WalkThroughCVC", for: indexPath) as? WalkThroughCVC else {
             return UICollectionViewCell()
         }
         cell.img.image = UIImage(named: imageArray[indexPath.row])
@@ -113,18 +108,17 @@ extension WalkThroughVC: UICollectionViewDelegateFlowLayout, UICollectionViewDat
     
     /// Size for each walkthrough item (full width)
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: WalkThroughCV.layer.bounds.width, height: WalkThroughCV.layer.bounds.height)
+        return CGSize(width: walkThroughCV.layer.bounds.width, height: walkThroughCV.layer.bounds.height)
     }
     
     /// Track selected index (optional use)
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.selectedIndex = indexPath.row
-        self.WalkThroughCV.reloadData()
+        self.walkThroughCV.reloadData()
     }
 }
 
-//MARK: - SCROLL VIEW DELEGATE
-
+// MARK: - SCROLL VIEW DELEGATE
 extension WalkThroughVC: UIScrollViewDelegate {
     
     /// Updates page control as the user scrolls between walkthrough pages

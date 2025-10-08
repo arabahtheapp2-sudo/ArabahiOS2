@@ -59,4 +59,3 @@ final class ReportVCTests: XCTestCase {
         XCTAssertTrue(previousView.waitForExistence(timeout: 3), "Previous screen should be shown after dismiss.")
     }
 }
-

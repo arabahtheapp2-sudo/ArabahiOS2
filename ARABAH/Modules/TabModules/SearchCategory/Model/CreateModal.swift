@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - CreateModal
-struct CreateModal: Codable, Equatable{
+struct CreateModal: Codable, Equatable {
     let success: Bool?
     let code: Int?
     let message: String?
@@ -18,16 +18,14 @@ struct CreateModal: Codable, Equatable{
 // MARK: - CreateModalBody
 struct CreateModalBody: Codable, Equatable {
     var userID, name, id, createdAt: String?
-    var nameArabic:String?
+    var nameArabic: String?
     let updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case userID = "userId"
         case name
         case id = "_id"
         case createdAt, updatedAt, nameArabic
-        case v = "__v"
     }
     
     init(from decoder: any Decoder) throws {
@@ -46,6 +44,5 @@ struct CreateModalBody: Codable, Equatable {
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
         self.nameArabic = try container.decodeIfPresent(String.self, forKey: .nameArabic)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
     }
 }

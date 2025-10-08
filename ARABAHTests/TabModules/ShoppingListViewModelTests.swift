@@ -30,7 +30,7 @@ final class ShoppingListViewModelTests: XCTestCase {
     }
 
     func testShoppingListDeleteAPISuccess() {
-        let deleteModal = shoppinglistDeleteModal(success: true, code: 200, message: "Deleted",body: nil)
+        let deleteModal = ShoppinglistDeleteModal(success: true, code: 200, message: "Deleted", body: nil)
         mockService.shoppingListDeleteAPIPublisher = Just(deleteModal)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -73,7 +73,7 @@ final class ShoppingListViewModelTests: XCTestCase {
     }
 
     func testRetryListDeleteAPI() {
-        let deleteModal = shoppinglistDeleteModal(success: true, code: 200, message: "Deleted", body: nil)
+        let deleteModal = ShoppinglistDeleteModal(success: true, code: 200, message: "Deleted", body: nil)
         mockService.shoppingListDeleteAPIPublisher = Just(deleteModal)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -96,7 +96,7 @@ final class ShoppingListViewModelTests: XCTestCase {
     }
 
     func testShoppingListClearAllAPISuccess() {
-        let clearModal = CommentModal(productID: "", comment: "", userID: "", deleted: false, id: "", createdAt: "", updatedAt: "", v: 0)
+        let clearModal = CommentModal(productID: "", comment: "", userID: "", deleted: false, id: "", createdAt: "", updatedAt: "")
         mockService.shoppingListClearAllAPIPublisher = Just(clearModal)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -139,7 +139,7 @@ final class ShoppingListViewModelTests: XCTestCase {
     }
 
     func testRetryShoppingListClearAllAPI() {
-        let clearModal = CommentModal(productID: "", comment: "", userID: "", deleted: false, id: "", createdAt: "", updatedAt: "", v: 0)
+        let clearModal = CommentModal(productID: "", comment: "", userID: "", deleted: false, id: "", createdAt: "", updatedAt: "")
         mockService.shoppingListClearAllAPIPublisher = Just(clearModal)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -237,12 +237,12 @@ final class ShoppingListViewModelTests: XCTestCase {
     }
     
     func testListDeleteStateTransitions() {
-        let deleteModal = shoppinglistDeleteModal(success: true, code: 200, message: "Deleted", body: nil)
+        let deleteModal = ShoppinglistDeleteModal(success: true, code: 200, message: "Deleted", body: nil)
         mockService.shoppingListDeleteAPIPublisher = Just(deleteModal)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
 
-        var states: [AppState<shoppinglistDeleteModal>] = []
+        var states: [AppState<ShoppinglistDeleteModal>] = []
         let expectation = expectation(description: "Delete state transitions")
         expectation.expectedFulfillmentCount = 2 // loading → success
 

@@ -131,6 +131,7 @@ PODS:
     - Starscream (~> 4.0.8)
   - Starscream (4.0.8)
   - SwiftAlgorithms (1.0.0)
+  - SwiftLint (0.59.1)
   - SwiftMessageBar (5.6.1)
   - SwiftMessages (10.0.1):
     - SwiftMessages/App (= 10.0.1)
@@ -154,6 +155,7 @@ DEPENDENCIES:
   - ShimmerSwift (= 2.1.1)
   - SkeletonView (= 1.30.4)
   - Socket.IO-Client-Swift (= 16.1.1)
+  - SwiftLint
   - SwiftMessageBar (= 5.6.1)
   - SwiftMessages (= 10.0.1)
   - SwiftyJSON (~> 4.0)
@@ -197,6 +199,7 @@ SPEC REPOS:
     - Socket.IO-Client-Swift
     - Starscream
     - SwiftAlgorithms
+    - SwiftLint
     - SwiftMessageBar
     - SwiftMessages
     - SwiftyJSON
@@ -239,10 +242,11 @@ SPEC CHECKSUMS:
   Socket.IO-Client-Swift: 3614bea82ba005df1c2ff01154f4004993e05ad7
   Starscream: 19b5533ddb925208db698f0ac508a100b884a1b9
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
+  SwiftLint: 3d48e2fb2a3468fdaccf049e5e755df22fb40c2c
   SwiftMessageBar: bb93132e3cd4c8896a971df1b425a587bc5e26ae
   SwiftMessages: 759b4a0bf5c3a116a0d7e8a34b098ba83c458625
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 
-PODFILE CHECKSUM: b28217f429f3df9978f576bb9f1a1800ec0da485
+PODFILE CHECKSUM: cf7349fad96294dad77f4dc84fd5ff7f41c65e9f
 
 COCOAPODS: 1.16.2

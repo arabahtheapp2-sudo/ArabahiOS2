@@ -62,4 +62,3 @@ final class FilterVCUITests: XCTestCase {
         // Depending on setup, validate something that confirms dismissal
     }
 }
-

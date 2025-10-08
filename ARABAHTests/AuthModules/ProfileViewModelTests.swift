@@ -309,7 +309,10 @@ final class ProfileViewModelTests: XCTestCase {
         
         wait(for: [expectation], timeout: 1.0)
     }
-    
+}
+
+extension ProfileViewModelTests {
+   
     // MARK: - Profile Completion Tests
     
     func testShouldShowCompleteProfile() {
@@ -378,7 +381,7 @@ final class ProfileViewModelTests: XCTestCase {
             XCTFail("Expected .success with profile body")
         }
     }
-
+    
     func testUpdateNotificationStateTransitions() {
         let mockService = MockAuthService()
         
@@ -459,9 +462,4 @@ final class ProfileViewModelTests: XCTestCase {
         XCTAssertEqual(receivedStates[0], .idle)
         XCTAssertEqual(receivedStates[1], .loading)
     }
-
-    
-    
-    
 }
-

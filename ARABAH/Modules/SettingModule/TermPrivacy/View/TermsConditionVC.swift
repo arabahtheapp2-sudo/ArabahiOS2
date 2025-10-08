@@ -134,7 +134,7 @@ class TermsConditionVC: UIViewController {
      Handles back button tap.
      Pops the current view controller to return to the previous screen.
      */
-    @IBAction func BtnBack(_ sender: UIButton) {
+    @IBAction func btnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
 }

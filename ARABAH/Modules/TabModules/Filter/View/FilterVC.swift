@@ -19,10 +19,10 @@ class FilterVC: UIViewController {
     private var cancellables = Set<AnyCancellable>() // For Combine subscriptions
     var latitude = String()                  // User's current latitude
     var longitude = String()                 // User's current longitude
-    var callback: ((String, Bool) -> ())?    // Closure to return filter results
+    var callback: ((String, Bool) -> Void)?    // Closure to return filter results
     
     // Section headers for the table
-    var HeaderSection = [PlaceHolderTitleRegex.categories,
+    var headerSection = [PlaceHolderTitleRegex.categories,
                         PlaceHolderTitleRegex.storeName,
                         PlaceHolderTitleRegex.brandName]
     
@@ -104,7 +104,7 @@ class FilterVC: UIViewController {
     
     private func fetchfilterListing(isRetry: Bool) {
         let input = FilterViewModel.Input(longitude: longitude, latitude: latitude)
-        viewModel.fetchFilterDataAPI(with: input,isRetry: isRetry)
+        viewModel.fetchFilterDataAPI(with: input, isRetry: isRetry)
     }
     
     // MARK: - ALERT & LOADING
@@ -157,7 +157,7 @@ class FilterVC: UIViewController {
 extension FilterVC: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return HeaderSection.count // 3 sections: Categories, Stores, Brands
+        return headerSection.count // 3 sections: Categories, Stores, Brands
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -173,7 +173,7 @@ extension FilterVC: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FilterHeaderTVC") as? FilterHeaderTVC else {
             return UIView()
         }
-        cell.lblHeader.text = HeaderSection[section] // Set section title
+        cell.lblHeader.text = headerSection[safe: section] // Set section title
         return cell.contentView
     }
     
@@ -188,25 +188,40 @@ extension FilterVC: UITableViewDelegate, UITableViewDataSource {
         // Configure cell based on section
         switch indexPath.section {
         case 0: // Categories
-            let category = viewModel.category?[indexPath.row]
-            cell.lblName?.text = category?.categoryName ?? PlaceHolderTitleRegex.unknownCategory
-            let categoryID = category?.id ?? ""
-            cell.btnCheck.setImage(viewModel.selectedCategoryIDs.contains(categoryID) ?
-                UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
+            if let category = viewModel.category?[safe: indexPath.row] {
+                cell.lblName?.text = category.categoryName ?? PlaceHolderTitleRegex.unknownCategory
+                let categoryID = category.id ?? ""
+                cell.btnCheck.setImage(viewModel.selectedCategoryIDs.contains(categoryID) ?
+                                       UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
+            } else {
+                cell.lblName?.text = ""
+                cell.btnCheck.setImage(UIImage(named: "UnCheck"), for: .normal)
+            }
+            
             
         case 1: // Stores
-            let store = viewModel.storeData?[indexPath.row]
-            cell.lblName?.text = store?.name ?? ""
-            let storeID = store?.id ?? ""
-            cell.btnCheck.setImage(viewModel.selectedStoreIDs.contains(storeID) ?
-                UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
+            if let store = viewModel.storeData?[safe: indexPath.row] {
+                cell.lblName?.text = store.name ?? ""
+                let storeID = store.id ?? ""
+                cell.btnCheck.setImage(viewModel.selectedStoreIDs.contains(storeID) ?
+                    UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
+            } else {
+                cell.lblName?.text = ""
+                cell.btnCheck.setImage(UIImage(named: "UnCheck"), for: .normal)
+            }
+            
             
         case 2: // Brands
-            let brand = viewModel.brand?[indexPath.row]
-            cell.lblName?.text = brand?.brandname ?? ""
-            let brandID = brand?.id ?? ""
-            cell.btnCheck.setImage(viewModel.selectedBrandIDs.contains(brandID) ?
-                UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
+            if let brand = viewModel.brand?[safe: indexPath.row] {
+                cell.lblName?.text = brand.brandname ?? ""
+                let brandID = brand.id ?? ""
+                cell.btnCheck.setImage(viewModel.selectedBrandIDs.contains(brandID) ?
+                    UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
+            } else {
+                cell.lblName?.text = ""
+                cell.btnCheck.setImage(UIImage(named: "UnCheck"), for: .normal)
+            }
+            
             
         default:
             break

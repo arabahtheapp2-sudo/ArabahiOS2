@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         auttooLogin()  // Setup initial root view controller based on login status
         
         // Guard statement ensures the scene is a UIWindowScene
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard (scene as? UIWindowScene) != nil else { return }
     }
 
     /// Called when the scene is disconnected.
@@ -64,28 +64,40 @@ extension SceneDelegate {
             // Auto-login enabled: Connect socket and load main TabBarController
             SocketIOManager.sharedInstance.connectSocket()
             let mainStoryBoard = UIStoryboard(name: "Main", bundle: nil)
-            let tabBarController = mainStoryBoard.instantiateViewController(withIdentifier: "TabBarController") as! TabBarController
+            guard let tabBarController = mainStoryBoard.instantiateViewController(withIdentifier: "TabBarController") as? TabBarController else { return }
             let nav = UINavigationController(rootViewController: tabBarController)
             nav.isNavigationBarHidden = true
-            UIApplication.shared.windows.first?.rootViewController = nav
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                window.rootViewController = nav
+                window.makeKeyAndVisible()
+            }
             
         } else if Store.autoLogin == false {
             // Auto-login disabled: Check if app is newly installed
             if UserDefaults.standard.value(forKey: "Installed") as? Int == 1 {
                 // App installed before, show login screen
                 let mainStoryBoard = UIStoryboard(name: "Main", bundle: nil)
-                let loginVC = mainStoryBoard.instantiateViewController(withIdentifier: "LoginVC") as! LoginVC
+                guard let loginVC = mainStoryBoard.instantiateViewController(withIdentifier: "LoginVC") as? LoginVC else { return }
                 let nav = UINavigationController(rootViewController: loginVC)
                 nav.isNavigationBarHidden = true
-                UIApplication.shared.windows.first?.rootViewController = nav
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first {
+                    window.rootViewController = nav
+                    window.makeKeyAndVisible()
+                }
                 
             } else {
                 // First launch: show walkthrough/tutorial screen
                 let mainStoryBoard = UIStoryboard(name: "Main", bundle: nil)
-                let walkthroughVC = mainStoryBoard.instantiateViewController(withIdentifier: "WalkThroughVC") as! WalkThroughVC
+                guard let walkthroughVC = mainStoryBoard.instantiateViewController(withIdentifier: "WalkThroughVC") as? WalkThroughVC else { return }
                 let nav = UINavigationController(rootViewController: walkthroughVC)
                 nav.isNavigationBarHidden = true
-                UIApplication.shared.windows.first?.rootViewController = nav
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first {
+                    window.rootViewController = nav
+                    window.makeKeyAndVisible()
+                }
             }
         }
     }

@@ -22,12 +22,11 @@ struct GetNotificationModalBody: Codable, Equatable {
     let productID: String?
     let message: String?
     let description: String?
-    let description_Arabic: String?
-    let image : String?
+    let descriptionArabic: String?
+    let image: String?
     let notificationRead, type: Int?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -36,8 +35,7 @@ struct GetNotificationModalBody: Codable, Equatable {
         case message, description, image
         case notificationRead = "NotificationRead"
         case type, deleted, createdAt, updatedAt
-        case v = "__v"
-        case description_Arabic
+        case descriptionArabic = "description_Arabic"
     }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -45,15 +43,13 @@ struct GetNotificationModalBody: Codable, Equatable {
         self.userID = try container.decodeIfPresent(String.self, forKey: .userID)
         self.productID = try container.decodeIfPresent(String.self, forKey: .productID)
         self.message = try container.decodeIfPresent(String.self, forKey: .message)
-
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
-        self.description_Arabic = try container.decodeIfPresent(String.self, forKey: .description_Arabic)
+        self.descriptionArabic = try container.decodeIfPresent(String.self, forKey: .descriptionArabic)
         self.image = try container.decodeIfPresent(String.self, forKey: .image)
         self.notificationRead = try container.decodeIfPresent(Int.self, forKey: .notificationRead)
         self.type = try container.decodeIfPresent(Int.self, forKey: .type)
         self.deleted = try container.decodeIfPresent(Bool.self, forKey: .deleted)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
     }
 }

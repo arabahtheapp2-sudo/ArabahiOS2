@@ -37,24 +37,6 @@
         }
       }
     },
-    "1oB-0Z-bpF.normalTitle" : {
-      "comment" : "Class = \"UIButton\"; normalTitle = \"Add\"; ObjectID = \"1oB-0Z-bpF\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "إضافة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Add"
-          }
-        }
-      }
-    },
     "1X6-XW-Gcg.placeholder" : {
       "comment" : "Class = \"UITextField\"; placeholder = \"-\"; ObjectID = \"1X6-XW-Gcg\";",
       "extractionState" : "extracted_with_value",
@@ -109,24 +91,6 @@
         }
       }
     },
-    "2LJ-GB-g3b.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"12\"; ObjectID = \"2LJ-GB-g3b\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "0.00 دولار"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "12"
-          }
-        }
-      }
-    },
     "2oA-Ut-q6J.text" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -140,24 +104,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Phone Number"
-          }
-        }
-      }
-    },
-    "2UU-H8-1Xn.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"gm/Liter\"; ObjectID = \"2UU-H8-1Xn\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "جم/لتر"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "gm/Liter"
           }
         }
       }
@@ -443,24 +389,6 @@
         }
       }
     },
-    "9kB-I7-08r.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"$0.00\"; ObjectID = \"9kB-I7-08r\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "0.00 دولار"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "$0.00"
-          }
-        }
-      }
-    },
     "9Pv-1t-TVP.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Email\"; ObjectID = \"9Pv-1t-TVP\";",
       "extractionState" : "extracted_with_value",
@@ -529,24 +457,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Reason"
-          }
-        }
-      }
-    },
-    "BB5-I7-h3h.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"⃀\"; ObjectID = \"BB5-I7-h3h\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "10.00 دولار"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "⃀"
           }
         }
       }
@@ -623,24 +533,6 @@
         }
       }
     },
-    "bRS-aE-HVR.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"--\"; ObjectID = \"bRS-aE-HVR\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "—"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "--"
-          }
-        }
-      }
-    },
     "bsq-mc-vS4.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Comments\"; ObjectID = \"bsq-mc-vS4\";",
       "extractionState" : "extracted_with_value",
@@ -663,6 +555,12 @@
       "comment" : "Class = \"UILabel\"; text = \"---\"; ObjectID = \"BVp-v7-BRd\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "---"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -689,24 +587,6 @@
         }
       }
     },
-    "cs7-7Y-CqQ.placeholder" : {
-      "comment" : "Class = \"UITextField\"; placeholder = \"Confirm New Password\"; ObjectID = \"cs7-7Y-CqQ\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تأكيد كلمة المرور الجديدة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Confirm New Password"
-          }
-        }
-      }
-    },
     "Css-eV-jFi.normalTitle" : {
       "comment" : "Class = \"UIButton\"; normalTitle = \"Button\"; ObjectID = \"Css-eV-jFi\";",
       "extractionState" : "extracted_with_value",
@@ -729,6 +609,12 @@
       "comment" : "Class = \"UIButton\"; normalTitle = \" \"; ObjectID = \"Ctk-BI-57Y\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " "
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -791,64 +677,16 @@
         }
       }
     },
-    "Due-If-ocu.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"$10.00\"; ObjectID = \"Due-If-ocu\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "10.00 دولار"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "$10.00"
-          }
-        }
-      }
-    },
-    "e3s-51-nxT.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"From $10.00\"; ObjectID = \"e3s-51-nxT\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "من 10.00 دولار"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "From $10.00"
-          }
-        }
-      }
-    },
-    "Eba-8R-RAe.placeholder" : {
-      "comment" : "Class = \"UITextField\"; placeholder = \"Enter Old Password\"; ObjectID = \"Eba-8R-RAe\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "أدخل كلمة المرور القديمة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Enter Old Password"
-          }
-        }
-      }
-    },
     "EF9-1j-sE1.text" : {
       "comment" : "Class = \"UILabel\"; text = \"---\"; ObjectID = \"EF9-1j-sE1\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "---"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -1014,24 +852,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Amit"
-          }
-        }
-      }
-    },
-    "Ffk-KX-rLA.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Historical price\"; ObjectID = \"Ffk-KX-rLA\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "السعر التاريخي"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Historical price"
           }
         }
       }
@@ -1381,24 +1201,6 @@
         }
       }
     },
-    "knV-rb-bIU.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"- Kg/Liter\"; ObjectID = \"knV-rb-bIU\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "كجم/لتر"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "- Kg/Liter"
-          }
-        }
-      }
-    },
     "KX1-LV-y74.placeholder" : {
       "comment" : "Class = \"UITextField\"; placeholder = \"Search\"; ObjectID = \"KX1-LV-y74\";",
       "extractionState" : "extracted_with_value",
@@ -1413,24 +1215,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Search"
-          }
-        }
-      }
-    },
-    "Ljg-TP-Q5m.placeholder" : {
-      "comment" : "Class = \"UITextField\"; placeholder = \"Enter New Password\"; ObjectID = \"Ljg-TP-Q5m\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "أدخل كلمة المرور الجديدة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Enter New Password"
           }
         }
       }
@@ -1593,24 +1377,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Profile"
-          }
-        }
-      }
-    },
-    "OdO-aG-TwS.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Fresh Finds Market\"; ObjectID = \"OdO-aG-TwS\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "سوق الاكتشافات الطازجة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Fresh Finds Market"
           }
         }
       }
@@ -1798,6 +1564,12 @@
       "comment" : "Class = \"UIButton\"; normalTitle = \"Button\"; ObjectID = \"Rda-Z3-9ca\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "---"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -1896,24 +1668,6 @@
         }
       }
     },
-    "soa-Do-jpR.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"$10\"; ObjectID = \"soa-Do-jpR\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "10 دولارات"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "$10"
-          }
-        }
-      }
-    },
     "T92-M0-MJE.text" : {
       "comment" : "Class = \"UILabel\"; text = \"No additionol text\"; ObjectID = \"T92-M0-MJE\";",
       "extractionState" : "extracted_with_value",
@@ -1986,24 +1740,6 @@
         }
       }
     },
-    "Tv2-Ee-xSU.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"$10.00\"; ObjectID = \"Tv2-Ee-xSU\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "10.00 دولار"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "$10.00"
-          }
-        }
-      }
-    },
     "tzd-rk-ZXA.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Hello\"; ObjectID = \"tzd-rk-ZXA\";",
       "extractionState" : "extracted_with_value",
@@ -2069,28 +1805,16 @@
         }
       }
     },
-    "utP-RI-v8P.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"/1 kg\"; ObjectID = \"utP-RI-v8P\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1 كجم"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "/1 kg"
-          }
-        }
-      }
-    },
     "uTq-wp-bJC.text" : {
       "comment" : "Class = \"UILabel\"; text = \"---\"; ObjectID = \"uTq-wp-bJC\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "---"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
@@ -2190,42 +1914,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "---"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "---"
-          }
-        }
-      }
-    },
-    "vYC-Jw-hg0.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Change Password\"; ObjectID = \"vYC-Jw-hg0\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تغيير كلمة المرور"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Change Password"
-          }
-        }
-      }
-    },
-    "W2F-PO-J0i.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"---\"; ObjectID = \"W2F-PO-J0i\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "—-"
           }
         },
         "en" : {
@@ -2448,24 +2136,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Notes"
-          }
-        }
-      }
-    },
-    "YSK-XA-1Ou.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"$12\"; ObjectID = \"YSK-XA-1Ou\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "12 دولارًا"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "$12"
           }
         }
       }

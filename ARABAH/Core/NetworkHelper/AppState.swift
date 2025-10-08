@@ -6,14 +6,10 @@
 //
 
 /// Enum representing various possible UI states
-enum AppState<Value>  {
+enum AppState<Value> {
     case idle                           // Default state, no operation
     case loading                        //  In progress
     case success(Value)                 // Succeeded with response
     case failure(NetworkError)          // Failed with error
     case validationError(NetworkError)  // Validatation failed with error
-
-    
-    
 }
-

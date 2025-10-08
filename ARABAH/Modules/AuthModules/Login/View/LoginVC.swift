@@ -49,7 +49,7 @@ final class LoginVC: UIViewController {
         signInButton.layer.cornerRadius = 8
         guestButton.layer.cornerRadius = 8
         
-        SecureStorage.delete(.authToken)
+        DeviceTokenManager.clearDeviceToken()
     }
     
     private func setupCountryPicker() {
@@ -85,7 +85,6 @@ final class LoginVC: UIViewController {
         case .idle:
             break
         case .loading:
-            print("Loading started")
             showLoadingIndicator()
         case .success(let response):
             hideLoadingIndicator()
@@ -105,9 +104,9 @@ final class LoginVC: UIViewController {
         let countryCode = countryCodeLabel.text?.trimmingCharacters(in: .whitespaces) ?? ""
         let phoneNumber = txtPhoneNumber.text?.trimmingCharacters(in: .whitespaces) ?? ""
         verificationVC.countryCode =  countryCode
-        //response.body?.countryCode ?? ""
+        // response.body?.countryCode ?? ""
         verificationVC.number = phoneNumber
-        //response.body?.phone ?? ""
+        // response.body?.phone ?? ""
         self.navigationController?.pushViewController(verificationVC, animated: true)
     }
     

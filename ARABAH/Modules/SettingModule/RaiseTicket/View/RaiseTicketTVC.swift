@@ -37,7 +37,7 @@ class RaiseTicketTVC: UITableViewCell {
     
     /// Property to hold the ticket data model for this cell
     /// Updates UI elements whenever a new ticket data is set
-    var ticketListing: getTicketModalBody? {
+    var ticketListing: GetTicketModalBody? {
         didSet {
             // Set the description text from the model or empty string if nil
             lblDescription.text = ticketListing?.description ?? ""
@@ -47,7 +47,12 @@ class RaiseTicketTVC: UITableViewCell {
             
             // Original date format as received from the API (UTC time zone)
             formato.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-            formato.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+            if let utcTimeZone = TimeZone(identifier: "UTC") {
+                formato.timeZone = utcTimeZone
+            } else {
+                // Failed to create UTC timezone
+                formato.timeZone = TimeZone.current // fallback
+            }
             formato.formatterBehavior = .default
             
             // Parse the createdAt string into a Date object

@@ -30,11 +30,15 @@
 			</array>
 		</dict>
 	</dict>
-    <key>GooglePlacesAPIKey</key>
-    <string>$(GOOGLE_PLACES_API_KEY)</string>
-    <key>SecretKey</key>
-    <string>$(SECRET_KEY)</string>
-    <key>PublishKey</key>
-    <string>$(PUBLISH_KEY)</string>
+	<key>GooglePlacesAPIKey</key>
+	<string>$(GOOGLE_PLACES_API_KEY)</string>
+	<key>SecretKey</key>
+	<string>$(SECRET_KEY)</string>
+	<key>PublishKey</key>
+	<string>$(PUBLISH_KEY)</string>
+	<key>AppMainURL</key>
+	<string>$(APP_Main_URL)</string>
+	<key>AppBaseURL</key>
+	<string>$(APP_BASE_URL)</string>
 </dict>
 </plist>

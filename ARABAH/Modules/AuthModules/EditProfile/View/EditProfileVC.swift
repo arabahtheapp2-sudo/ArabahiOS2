@@ -15,8 +15,8 @@ import MBProgressHUD
 class EditProfileVC: UIViewController {
     
     // MARK: - Outlets
-    @IBOutlet weak var txtFldEmail: CustomTextField!
-    @IBOutlet weak var txtFldName: CustomTextField!
+    @IBOutlet weak var txtFldEmail: UITextField!
+    @IBOutlet weak var txtFldName: UITextField!
     @IBOutlet weak var viewDotBorder: UIView!
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var countryImg: UIImageView!
@@ -233,10 +233,17 @@ extension EditProfileVC: CountryPickerViewDelegate, CountryPickerViewDataSource 
 
 extension EditProfileVC: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // Restrict input to max 12 digits for the phone number field
         let maxLength = 12
-        let currentString: NSString = numberTF.text! as NSString
-        let newString = currentString.replacingCharacters(in: range, with: string) as NSString
-        return newString.length <= maxLength
+        
+        // Safely get the current text
+        let currentText = textField.text ?? ""
+        
+        // Compute the new text
+        if let stringRange = Range(range, in: currentText) {
+            let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+            return updatedText.count <= maxLength
+        }
+        
+        return false
     }
 }

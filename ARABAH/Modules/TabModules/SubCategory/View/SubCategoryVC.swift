@@ -37,7 +37,7 @@ class SubCategoryVC: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     /// Callback closure to return selected product ID
-    var idCallback: ((String) -> ())?
+    var idCallback: ((String) -> Void)?
     
     // MARK: - VIEW LIFECYCLE
     
@@ -96,15 +96,20 @@ extension SubCategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, U
             cell.btnAdd.showAnimatedGradientSkeleton()
         } else {
             // Configure cell with actual data
-            let item = viewModel.displayItems[indexPath.row]
-            cell.lblName.text = item.name
-            cell.lblProductUnit.text = item.productUnit
-            
-            // Load product image with placeholder
-            cell.imgView.sd_setImage(with: URL(string: item.imageURL), placeholderImage: UIImage(named: "Placeholder")) { [weak self] _, _, _, _ in
-                guard let _ = self else { return }
-                cell.imgView.hideSkeleton()
+            if let item = viewModel.displayItems[safe: indexPath.row] {
+                cell.lblName.text = item.name
+                cell.lblProductUnit.text = item.productUnit
+                
+                // Load product image with placeholder
+                cell.imgView.sd_setImage(with: URL(string: item.imageURL), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+                    cell.imgView.hideSkeleton()
+                }
+            } else {
+                cell.lblName.text = ""
+                cell.lblProductUnit.text = ""
+                cell.imgView.image = UIImage(named: "Placeholder")
             }
+            
             
             // Hide skeletons and set up real data
             cell.lblName.hideSkeleton()
@@ -138,9 +143,9 @@ extension SubCategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, U
             navigationController?.popViewController(animated: false)
         } else {
             // Otherwise, navigate to product detail view
-            guard let vc = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
-            vc.prodcutid = selectedId
-            navigationController?.pushViewController(vc, animated: true)
+            guard let subCatDetailVC = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
+            subCatDetailVC.prodcutid = selectedId
+            navigationController?.pushViewController(subCatDetailVC, animated: true)
         }
     }
 }
@@ -221,7 +226,7 @@ extension SubCategoryVC {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
         case .failure(let error):
             hideLoadingIndicator()
@@ -242,7 +247,7 @@ extension SubCategoryVC {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             refreshControl.endRefreshing()
             subCategoryColl.reloadData()
             setNoDataMsg()
@@ -269,7 +274,7 @@ extension SubCategoryVC {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             refreshControl.endRefreshing()
             subCategoryColl.reloadData()
             setNoDataMsg()
@@ -294,7 +299,7 @@ extension SubCategoryVC {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             refreshControl.endRefreshing()
             subCategoryColl.reloadData()

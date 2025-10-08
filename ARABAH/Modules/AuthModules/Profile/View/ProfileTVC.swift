@@ -41,12 +41,7 @@ class ProfileTVC: UITableViewCell {
         btnOnOff.isHidden = true
         btnOnOff.isSelected = false
     }
-    
-    /// Called when the cell is loaded from the nib or storyboard.
-    override class func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code if needed
-    }
+
     
     // MARK: - ACTIONS
     

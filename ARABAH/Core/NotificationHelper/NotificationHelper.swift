@@ -14,16 +14,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     /// Request user authorization for push notifications and register for remote notifications if granted
     func registerForPushNotifications() {
         UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, _) in
             if granted {
-                print("Permission granted: \(granted)")
+                // Permission ermission granted
                 // Register for remote notifications on main thread
-                DispatchQueue.main.async { [weak self] in
-                    guard let _ = self else { return }
+                DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
             } else {
-                print("Permission denied: \(granted)")
+                // Permission denied
             }
         }
     }
@@ -31,24 +30,21 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     /// Called when the app successfully registers for remote notifications.
     /// Converts device token data to string and stores it for later use.
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let tokenParts = deviceToken.map { data -> String in
-            return String(format: "%02.2hhx", data)
-        }
+        let tokenParts = deviceToken.map { String(format: "%02.2hhx", $0) }
         let token = tokenParts.joined()
-        SecureStorage.save(token, for: .deviceToken, accessible: kSecAttrAccessibleAfterFirstUnlock)
+        DeviceTokenManager.save(token)
         
     }
     
     /// Called when the app fails to register for remote notifications.
     /// Logs the error and sets a fallback device token.
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Failed to register for remote notifications with error: \(error)")
+        // Failed to register for remote notifications with error
     }
     
     /// Called when a notification is received while the app is in the foreground.
     /// Determines how the notification should be presented.
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
         completionHandler([.sound, .banner, .badge])  // Show alert with sound and badge even in foreground
     }
     
@@ -63,21 +59,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         if statusType == 1 {
-            // MARK: - Navigate to SubCatDetailVC on "SEND QUOTE" notification type
-            let vc = storyboard.instantiateViewController(withIdentifier: "SubCatDetailVC") as! SubCatDetailVC
-            vc.prodcutid = productID ?? ""
+            guard let subCatDetailVC = storyboard.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
+            subCatDetailVC.prodcutid = productID ?? ""
             
-            // Get topmost view controller and push or present the target VC accordingly
-            if let topVC = UIApplication.shared.windows.first?.rootViewController {
-                if let navController = topVC as? UINavigationController {
-                    navController.pushViewController(vc, animated: true)
-                } else if let navController = topVC.navigationController {
-                    navController.pushViewController(vc, animated: true)
+            // Find the top-most visible ViewController
+            if let topVC = UIApplication.shared.topMostViewController() {
+                if let navController = topVC.navigationController {
+                    navController.pushViewController(subCatDetailVC, animated: true)
                 } else {
-                    topVC.present(vc, animated: true, completion: nil)
+                    topVC.present(subCatDetailVC, animated: true)
                 }
             }
         }
+
         completionHandler()
     }
 }

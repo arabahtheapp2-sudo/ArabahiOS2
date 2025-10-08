@@ -50,4 +50,3 @@ final class WithoutAuthVCUITests: XCTestCase {
         XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Did not navigate to TabBarController.")
     }
 }
-

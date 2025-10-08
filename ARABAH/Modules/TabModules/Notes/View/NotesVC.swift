@@ -66,17 +66,21 @@ extension NotesVC: UITableViewDelegate, UITableViewDataSource, UITextViewDelegat
             return UITableViewCell()  // Fallback for invalid cell
         }
 
-        let note = viewModel.texts[indexPath.row].text ?? ""
-
-        // Configure placeholder text for empty cells
-        if note.isEmpty {
-            cell.txtView.text = PlaceHolderTitleRegex.enterTextHere
-            cell.txtView.textColor = .lightGray
+        if let data = viewModel.texts[safe: indexPath.row] {
+            // Configure placeholder text for empty cells
+            let note = data.text ?? ""
+            if note.isEmpty {
+                cell.txtView.text = PlaceHolderTitleRegex.enterTextHere
+                cell.txtView.textColor = .lightGray
+            } else {
+                cell.txtView.text = note
+                cell.txtView.textColor = .black
+            }
         } else {
-            cell.txtView.text = note
             cell.txtView.textColor = .black
+            cell.txtView.text = ""
         }
-
+        
         cell.txtView.delegate = self  // Handle text changes
         cell.txtView.tag = indexPath.row  // Track which cell is being edited
         cell.txtView.isScrollEnabled = false  // Allow dynamic cell height
@@ -210,7 +214,7 @@ extension NotesVC {
              break
          case .loading:
              showLoadingIndicator()
-         case .success(_):
+         case .success:
              self.navigationController?.popViewController(animated: true)  // Return to previous screen
          case .failure(let error):
              hideLoadingIndicator()
@@ -230,7 +234,7 @@ extension NotesVC {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             notesTbl.reloadData()  // Refresh with loaded note
             setNoDataMsg(count: viewModel.texts.count)
@@ -257,8 +261,7 @@ extension NotesVC {
 
     /// Shows error alert with retry option
     private func showRetryAlert(error: NetworkError, retryAction: @escaping () -> Void) {
-        CommonUtilities.shared.showAlertWithRetry(title: AppConstants.appName, message: error.localizedDescription) { [weak self] _ in
-            guard let _ = self else { return }
+        CommonUtilities.shared.showAlertWithRetry(title: AppConstants.appName, message: error.localizedDescription) { _ in
             retryAction()
         }
     }

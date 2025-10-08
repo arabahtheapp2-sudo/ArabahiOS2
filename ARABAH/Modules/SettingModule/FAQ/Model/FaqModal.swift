@@ -19,12 +19,12 @@ struct FaqModal: Codable, Equatable {
 struct FaqModalBody: Codable, Equatable {
     var id, question, questionArabic, answer: String?
     let answerArabic, createdAt, updatedAt: String?
-    let v: Int?
+  
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case question, questionArabic, answer, answerArabic, createdAt, updatedAt
-        case v = "__v"
+       
     }
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -45,6 +45,6 @@ struct FaqModalBody: Codable, Equatable {
         
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
+        
     }
 }

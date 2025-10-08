@@ -22,7 +22,7 @@ class CustomButton: UIButton {
                     self.setImage(tmImage, for: UIControl.State())
                     self.tintColor = imageColor
                     
-                }else if let image = self.backgroundImage(for: UIControl.State()) {
+                } else if let image = self.backgroundImage(for: UIControl.State()) {
                     let tmImage  = image.withRenderingMode(.alwaysTemplate)
                     self.setBackgroundImage(tmImage, for: UIControl.State())
                     self.tintColor = imageColor
@@ -56,10 +56,8 @@ class CustomButton: UIButton {
             layer.shadowOffset = shadowOffset
         }
     }
-    @IBInspectable public var shadowRadius : CGFloat = 3
-    {
-        didSet
-        {
+    @IBInspectable public var shadowRadius: CGFloat = 3 {
+        didSet {
             layer.shadowRadius = shadowRadius
         }
     }
@@ -67,32 +65,26 @@ class CustomButton: UIButton {
     @IBInspectable public var borderColor: UIColor =  UIColor.clear {
         didSet {
             layer.borderColor = borderColor.cgColor
-            //mkLayer.setMaskLayerCornerRadius(cornerRadius)
         }
     }
     @IBInspectable public var borderWidth: CGFloat =  0 {
         didSet {
             layer.borderWidth = borderWidth
-            //mkLayer.setMaskLayerCornerRadius(cornerRadius)
         }
     }
-    @IBInspectable public var masksToBounds : Bool = false
-    {
-        didSet
-        {
+    @IBInspectable public var masksToBounds: Bool = false {
+        didSet {
             layer.masksToBounds = masksToBounds
         }
     }
     
-    @IBInspectable public var clipsToBound : Bool = false
-    {
-        didSet
-        {
+    @IBInspectable public var clipsToBound: Bool = false {
+        didSet {
             self.clipsToBounds = clipsToBound
         }
     }
 
-    // MARK - initilization
+    // MARK: - initilization
     override public init(frame: CGRect) {
         super.init(frame: frame)
         setupLayer()
@@ -103,17 +95,29 @@ class CustomButton: UIButton {
         setupLayer()
     }
     
-    // MARK - setup methods
+    // MARK: - setup methods
     private func setupLayer() {
-        
-        adjustsImageWhenHighlighted = false
-        
+        if #available(iOS 15.0, *) {
+            var config = self.configuration ?? UIButton.Configuration.plain()
+            config.showsActivityIndicator = false
+            self.configuration = config
+            
+            self.configurationUpdateHandler = { button in
+                if button.isHighlighted {
+                    button.alpha = 0.7
+                } else {
+                    button.alpha = 1.0
+                }
+            }
+        } else {
+            // For older iOS versions
+            self.adjustsImageWhenHighlighted = false
+        }
     }
 
     override open func layoutSubviews() {
         super.layoutSubviews()
-        if isShadow == true
-        {
+        if isShadow == true {
             let shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
             layer.masksToBounds = masksToBounds
             layer.shadowColor = shadowColor.cgColor
@@ -122,11 +126,10 @@ class CustomButton: UIButton {
             layer.shadowPath = shadowPath.cgPath
         }
         
-        if isGradient == true
-        {
+        if isGradient == true {
             gradientLayer.frame = self.bounds
             gradientLayer.colors = [firstColor.cgColor, secondColor.cgColor]
-            if isHorizontalGradient{
+            if isHorizontalGradient {
                 //                       gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
                 //                       gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
                 gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.4)
@@ -139,28 +142,28 @@ class CustomButton: UIButton {
         }
     }
     
-    @IBInspectable public var isGradient : Bool = false{
-        didSet{
+    @IBInspectable public var isGradient: Bool = false {
+        didSet {
             self.setNeedsDisplay()
         }
     }
-    @IBInspectable public var isHorizontalGradient : Bool = true{
-        didSet{
+    @IBInspectable public var isHorizontalGradient: Bool = true {
+        didSet {
             self.setNeedsDisplay()
         }
     }
-    @IBInspectable public var firstColor : UIColor = UIColor.orange{
-        didSet{
+    @IBInspectable public var firstColor: UIColor = UIColor.orange {
+        didSet {
             self.setNeedsDisplay()
         }
     }
-    @IBInspectable public var secondColor : UIColor  = UIColor.yellow{
-        didSet{
+    @IBInspectable public var secondColor: UIColor  = UIColor.yellow {
+        didSet {
             self.setNeedsDisplay()
         }
     }
-    @IBInspectable public var thirdColor : UIColor = UIColor.orange{
-        didSet{
+    @IBInspectable public var thirdColor: UIColor = UIColor.orange {
+        didSet {
             self.setNeedsDisplay()
         }
     }
@@ -169,18 +172,9 @@ class CustomButton: UIButton {
         return CAGradientLayer()
     }()
     
-    func set(gradientColors firstColor:UIColor , secondColor:UIColor){
+    func set(gradientColors firstColor: UIColor, secondColor: UIColor) {
         self.firstColor = firstColor
         self.secondColor = secondColor
         self.setNeedsLayout()
-    }
-}
-class ButtonWithImage: UIButton {
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if imageView != nil {
-            imageEdgeInsets = UIEdgeInsets(top: 5, left:5 , bottom: 5, right: (bounds.width - 35))
-            titleEdgeInsets = UIEdgeInsets(top: 0, left: (imageView?.frame.width)!, bottom: 0, right: 0)
-        }
     }
 }

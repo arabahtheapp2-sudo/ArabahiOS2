@@ -59,18 +59,17 @@ struct CommentElement: Codable {
     let productID: String?
     let userID: UserID?
     var comment: String?
-    var commentArabic :String?
+    var commentArabic: String?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case productID = "ProductID"
         case userID = "userId"
         case comment, deleted, createdAt, updatedAt, commentArabic
-        case v = "__v"
     }
+    
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -81,7 +80,6 @@ struct CommentElement: Codable {
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
         self.commentArabic = try container.decodeIfPresent(String.self, forKey: .commentArabic)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         let currentLang = L102Language.currentAppleLanguageFull()
         switch currentLang {
         case "ar":
@@ -162,7 +160,6 @@ struct BodyProduct: Codable {
     let deleted: Bool?
     let updatedList: [UpdatedListElement]?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -174,9 +171,9 @@ struct BodyProduct: Codable {
         case prodiuctUnit = "ProdiuctUnit"
         case prodiuctUnitArabic = "ProdiuctUnitArabic"
         case product, deleted, updatedList, createdAt, updatedAt
-        case v = "__v"
         case productUnitId
     }
+    
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -213,7 +210,6 @@ struct BodyProduct: Codable {
         self.updatedList = try container.decodeIfPresent([UpdatedListElement].self, forKey: .updatedList)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         let currentLang = L102Language.currentAppleLanguageFull()
         switch currentLang {
         case "ar":
@@ -248,7 +244,6 @@ struct SimilarProduct: Codable {
     let deleted: Bool?
     let updatedList: [UpdatedListElement]?
     let createdAt, updatedAt: String?
-    let v: Int?
     var brandID: String?
 
     enum CodingKeys: String, CodingKey {
@@ -261,10 +256,10 @@ struct SimilarProduct: Codable {
         case prodiuctUnit = "ProdiuctUnit"
         case prodiuctUnitArabic = "ProdiuctUnitArabic"
         case product, deleted, updatedList, createdAt, updatedAt
-        case v = "__v"
         case brandID = "BrandID"
         case productUnitId
     }
+    
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -296,7 +291,6 @@ struct SimilarProduct: Codable {
         self.updatedList = try container.decodeIfPresent([UpdatedListElement].self, forKey: .updatedList)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         if let brandID = try? container.decodeIfPresent(String.self, forKey: .brandID) {
             self.brandID = brandID
         }

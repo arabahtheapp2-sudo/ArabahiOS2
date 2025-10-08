@@ -73,4 +73,3 @@ final class SubCategoryVCTests: XCTestCase {
         }
     }
 }
-

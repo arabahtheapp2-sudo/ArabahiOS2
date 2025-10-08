@@ -44,4 +44,3 @@ final class OfferVCTests: XCTestCase {
         }
     }
 }
-

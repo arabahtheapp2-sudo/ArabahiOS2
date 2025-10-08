@@ -56,4 +56,3 @@ final class CategoryVCTests: XCTestCase {
         XCTAssertTrue(subCategoryLabel.waitForExistence(timeout: 5), "SubCategoryVC should be presented after tapping a category")
     }
 }
-

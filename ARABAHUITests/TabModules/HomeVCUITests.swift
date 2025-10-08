@@ -105,4 +105,3 @@ final class HomeVCUITests: XCTestCase {
         }
     }
 }
-

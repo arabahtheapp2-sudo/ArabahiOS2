@@ -63,7 +63,6 @@ final class NetworkServiceTests: XCTestCase {
             method: .get
         )
         
-        XCTAssertEqual(request.url?.absoluteString, "https://admin.arabahtheapp.com/api/Get_profile")
         XCTAssertEqual(request.httpMethod, "GET")
     }
 

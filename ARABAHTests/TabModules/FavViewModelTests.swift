@@ -179,4 +179,3 @@ final class FavViewModelTests: XCTestCase {
 
 
 }
-

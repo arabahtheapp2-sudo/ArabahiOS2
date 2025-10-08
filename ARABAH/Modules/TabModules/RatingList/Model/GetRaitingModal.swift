@@ -30,21 +30,19 @@ struct Ratinglist: Codable, Equatable {
     let review: String?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case productID = "ProductID"
         case userID = "userId"
         case rating, review, deleted, createdAt, updatedAt
-        case v = "__v"
     }
 }
 
 // MARK: - UserID
 struct UserID: Codable, Equatable {
     var id, name, image: String?
-    var nameArabic : String?
+    var nameArabic: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"

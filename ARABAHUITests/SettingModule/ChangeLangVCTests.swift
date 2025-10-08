@@ -82,4 +82,3 @@ final class ChangeLangVCTests: XCTestCase {
         alert.buttons["Retry"].tap()
     }
 }
-

@@ -27,13 +27,13 @@ class ContactUsVC: UIViewController, UITextViewDelegate {
     @IBOutlet var txtView: IQTextView!
     
     /// Text field for entering email
-    @IBOutlet var txtFldEmail: CustomTextField!
+    @IBOutlet var txtFldEmail: UITextField!
     
     /// View container for message input
     @IBOutlet var viewMsg: UIView!
     
     /// Text field for entering name
-    @IBOutlet var txt: CustomTextField!
+    @IBOutlet var txt: UITextField!
     
     // MARK: - VARIABLES
     
@@ -142,12 +142,12 @@ class ContactUsVC: UIViewController, UITextViewDelegate {
     // MARK: - ACTIONS
     
     /// Handles back button tap - navigates to previous screen
-    @IBAction func BtnBack(_ sender: UIButton) {
+    @IBAction func btnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
     
     /// Handles update button tap - initiates Contact Us API request
-    @IBAction func BtnUpdate(_ sender: UIButton) {
+    @IBAction func btnUpdate(_ sender: UIButton) {
         self.contactUsAPI()
     }
 }

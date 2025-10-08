@@ -8,9 +8,9 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
     var picker = UIImagePickerController()
     var alert = UIAlertController(title: "Choose Option", message: nil, preferredStyle: .actionSheet)
     var viewController: UIViewController?
-    var pickImageCallback: ((UIImage) -> ())?
-    var pickMultipleImageCallback: (([UIImage]) -> ())?
-    var pickVideoCallback: ((Bool, URL?, UIImage?) -> ())?
+    var pickImageCallback: ((UIImage) -> Void)?
+    var pickMultipleImageCallback: (([UIImage]) -> Void)?
+    var pickVideoCallback: ((Bool, URL?, UIImage?) -> Void)?
     var isPickVideoImage = false
     static let shared = ImagePickerManager()
 
@@ -21,14 +21,14 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
         super.init()
     }
 
-    func pickImage(_ viewController: UIViewController, _ callback: @escaping ((UIImage) -> ())) {
+    func pickImage(_ viewController: UIViewController, _ callback: @escaping ((UIImage) -> Void)) {
         pickImageCallback = callback
         self.viewController = viewController
         alert = UIAlertController(title: RegexTitles.chooseOption, message: nil, preferredStyle: .actionSheet)
-        let cameraAction = UIAlertAction(title: RegexTitles.camera, style: .default) { UIAlertAction in
+        let cameraAction = UIAlertAction(title: RegexTitles.camera, style: .default) { _ in
             self.checkCameraPermissions()
         }
-        let galleryAction = UIAlertAction(title: RegexTitles.gallery, style: .default) { UIAlertAction in
+        let galleryAction = UIAlertAction(title: RegexTitles.gallery, style: .default) { _ in
             self.checkGalleryPermissions()
         }
         let cancelAction = UIAlertAction(title: RegexTitles.cancel, style: .cancel, handler: nil)
@@ -38,7 +38,10 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
         alert.addAction(galleryAction)
         alert.addAction(cancelAction)
         if let popoverController = alert.popoverPresentationController {
-            popoverController.sourceView = self.viewController!.view
+            if let sourceVC = self.viewController {
+                popoverController.sourceView = sourceVC.view
+            }
+            
         }
         viewController.present(alert, animated: true, completion: nil)
     }
@@ -91,8 +94,7 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
 
     func showPermissionDeniedAlert(message: String) {
         let alert = UIAlertController(title: RegexTitles.permissionDenied, message: message, preferredStyle: .alert)
-        let settingsAction = UIAlertAction(title: RegexTitles.settings, style: .default) { [weak self] _ in
-            guard let _ = self else { return }
+        let settingsAction = UIAlertAction(title: RegexTitles.settings, style: .default) { _ in
             if let url = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(url)
             }
@@ -106,22 +108,22 @@ class ImagePickerManager: NSObject, UIImagePickerControllerDelegate, UINavigatio
     func openCamera() {
         alert.dismiss(animated: true, completion: nil)
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let sourceVC = self.viewController else { return }
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 self.picker.sourceType = .camera
-                self.viewController!.present(self.picker, animated: true, completion: nil)
+                sourceVC.present(self.picker, animated: true, completion: nil)
             } else {
-                print("You don't have a camera")
+               // You don't have a camera
             }
         }
     }
 
     func openGallery() {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let sourceVC = self.viewController else { return }
             self.alert.dismiss(animated: true, completion: nil)
             self.picker.sourceType = .photoLibrary
-            self.viewController!.present(self.picker, animated: true, completion: nil)
+            sourceVC.present(self.picker, animated: true, completion: nil)
         }
     }
 

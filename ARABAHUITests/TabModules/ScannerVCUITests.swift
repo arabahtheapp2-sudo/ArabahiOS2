@@ -86,4 +86,3 @@ final class ScannerVCUITests: XCTestCase {
         XCTAssertFalse(app.otherElements["SimulateScanButtonAccessibilityID"].exists)
     }
 }
-

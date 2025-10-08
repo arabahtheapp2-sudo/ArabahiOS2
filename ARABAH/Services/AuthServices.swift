@@ -55,7 +55,7 @@ final class AuthServices: AuthServicesProtocol {
 
     /// Logs in a user with phone number and country code.
     func loginUser(countryCode: String, phoneNumber: String) -> AnyPublisher<LoginModal, NetworkError> {
-        let deviceToken = SecureStorage.get(.deviceToken) ?? "error in token"
+        let deviceToken = DeviceTokenManager.current ?? "error in token"
         let parameters: RequestParameters = [
             "countryCode": countryCode,
             "phone": phoneNumber,
@@ -69,7 +69,7 @@ final class AuthServices: AuthServicesProtocol {
     
     /// Verifies the OTP entered by the user.
     func verifyOTP(otp: String, phoneNumberWithCode: String) -> AnyPublisher<LoginModal, NetworkError> {
-        let deviceToken = SecureStorage.get(.deviceToken) ?? "error in token"
+        let deviceToken = DeviceTokenManager.current ?? "error in token"
         let parameters: [String: Any] = [
             "otp": otp,
             "phoneNnumberWithCode": phoneNumberWithCode,

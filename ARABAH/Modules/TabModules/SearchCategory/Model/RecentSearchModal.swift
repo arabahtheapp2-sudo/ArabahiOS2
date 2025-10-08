@@ -20,14 +20,12 @@ struct RecentSearchModalBody: Codable, Equatable {
     let id: String?
     let userID: String?
     let name, createdAt, updatedAt: String?
-    var nameArabic:String? 
-    let v: Int?
+    var nameArabic: String? 
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case userID = "userId"
         case name, createdAt, updatedAt, nameArabic
-        case v = "__v"
     }
 
     init(from decoder: any Decoder) throws {
@@ -45,7 +43,5 @@ struct RecentSearchModalBody: Codable, Equatable {
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
         self.nameArabic = try container.decodeIfPresent(String.self, forKey: .nameArabic)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
     }
 }
-

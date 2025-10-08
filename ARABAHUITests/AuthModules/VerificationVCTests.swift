@@ -35,8 +35,8 @@ class VerificationVCTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["verification.phoneNumberLabel"].exists)
         
         // Verify all OTP text fields exist
-        for i in 1...4 {
-            XCTAssertTrue(app.textFields["verification.otpTextField\(i)"].exists)
+        for index in 1...4 {
+            XCTAssertTrue(app.textFields["verification.otpTextField\(index)"].exists)
         }
         
         // Verify the border views exist
@@ -63,8 +63,8 @@ class VerificationVCTests: XCTestCase {
         XCTAssertTrue(verifyButton.isEnabled)
         
         // Verify all OTP fields are empty
-        for i in 1...4 {
-            let otpField = app.textFields["verification.otpTextField\(i)"]
+        for index in 1...4 {
+            let otpField = app.textFields["verification.otpTextField\(index)"]
             XCTAssertEqual(otpField.value as? String, "")
         }
     }
@@ -202,8 +202,8 @@ class VerificationVCTests: XCTestCase {
         XCTAssertEqual(timerLabel.label, "05:00")
         
         // Verify OTP fields are cleared
-        for i in 1...4 {
-            let otpField = app.textFields["verification.otpTextField\(i)"]
+        for index in 1...4 {
+            let otpField = app.textFields["verification.otpTextField\(index)"]
             XCTAssertEqual(otpField.value as? String, "")
         }
         

@@ -47,7 +47,7 @@ final class FilterViewModel {
     
     /// Fetches filter data from the server
     /// - Parameter input: Contains location coordinates for filtering
-    func fetchFilterDataAPI(with input: Input,isRetry: Bool = false) {
+    func fetchFilterDataAPI(with input: Input, isRetry: Bool = false) {
         if isRetry {
             guard retryCount < maxRetryCount else {
                 state = .validationError(.validationError(RegexMessages.retryMaxCount))

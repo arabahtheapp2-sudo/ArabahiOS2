@@ -116,99 +116,102 @@ extension ShoppingListTVC: UICollectionViewDataSource, UICollectionViewDelegate,
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        // MARK: - Shop Logos
         if collectionView.tag == 0 {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LogoCVC", for: indexPath) as? LogoCVC else {
-                return UICollectionViewCell()
-            }
+            return configureLogoCell(for: collectionView, at: indexPath)
+        } else if itemLbl.text == PlaceHolderTitleRegex.totalBasket {
+            return configureTotalBasketCell(for: collectionView, at: indexPath)
+        } else {
+            return configureProductCell(for: collectionView, at: indexPath)
+        }
+    }
 
-            if shopImages.isEmpty {
-                // Show skeleton loading
-                cell.logoImg.isSkeletonable = true
-                cell.logoImg.showAnimatedGradientSkeleton()
-            } else {
-                // Load shop image
-                cell.logoImg.hideSkeleton()
-                let image = (AppConstants.imageURL) + (shopImages[indexPath.row].image ?? "")
+    private func configureLogoCell(for collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LogoCVC", for: indexPath) as? LogoCVC else {
+            return UICollectionViewCell()
+        }
+        if shopImages.isEmpty {
+            cell.logoImg.isSkeletonable = true
+            cell.logoImg.showAnimatedGradientSkeleton()
+        } else {
+            cell.logoImg.hideSkeleton()
+            if let data = shopImages[safe: indexPath.row] {
+                let imageURL = (AppConstants.imageURL) + (data.image ?? "")
                 cell.logoImg.sd_imageIndicator = SDWebImageActivityIndicator.gray
-                cell.logoImg.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "Placeholder"))
-            }
-            return cell
-        }
-
-        // MARK: - Total Basket Summary
-        else if itemLbl.text == PlaceHolderTitleRegex.totalBasket {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PriceCVC", for: indexPath) as? PriceCVC else {
-                return UICollectionViewCell()
-            }
-
-            if shopSummry?.isEmpty ?? true {
-                // Show skeletons while loading
-                cell.bgView.isSkeletonable = true
-                cell.bgView.layer.cornerRadius = cell.bgView.frame.height / 2
-                cell.bgView.clipsToBounds = true
-                cell.bgView.showAnimatedGradientSkeleton()
-                cell.lblBestPrice.isSkeletonable = true
-                cell.lblBestPrice.showAnimatedGradientSkeleton()
+                cell.logoImg.sd_setImage(with: URL(string: imageURL), placeholderImage: UIImage(named: "Placeholder"))
             } else {
-                cell.bgView.hideSkeleton()
-                cell.lblBestPrice.hideSkeleton()
-
-                let totalPrice = shopSummry?[indexPath.row].totalPrice ?? 0
-                let nonZeroPrices = shopSummry?.compactMap { $0.totalPrice }.filter { $0 > 0 } ?? []
-                let minPrice = nonZeroPrices.min() ?? 0
-
-                if totalPrice == 0 {
-                    cell.priceLbl.text = "-"
-                } else {
-                    // Format price cleanly (remove trailing zeros)
-                    let formatted = (totalPrice.truncatingRemainder(dividingBy: 1) == 0) ?
-                        String(format: "%.0f", totalPrice) :
-                        String(format: "%.2f", totalPrice).replacingOccurrences(of: #"0+$"#, with: "", options: .regularExpression)
-                    cell.priceLbl.text = formatted
-                }
-
-                // Highlight if this is the best price
-                if totalPrice > 0 && totalPrice == minPrice {
-                    cell.bgView.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
-                    cell.priceLbl.textColor = .white
-                    cell.lblBestPrice.isHidden = false
-                    cell.lblBestPrice.text = PlaceHolderTitleRegex.bestBasket
-                } else {
-                    cell.bgView.backgroundColor = .clear
-                    cell.priceLbl.textColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
-                    cell.lblBestPrice.isHidden = true
-                }
+                cell.logoImg.image = UIImage(named: "Placeholder")
             }
-
-            return cell
         }
+        return cell
+    }
 
-        // MARK: - Product Prices
-        else {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PriceCVC", for: indexPath) as? PriceCVC else {
-                return UICollectionViewCell()
-            }
-
-            guard let currentProduct = product?[indexPath.row] else {
-                // Show placeholder
-                cell.priceLbl.text = "--"
-                cell.bgView.backgroundColor = .clear
-                cell.priceLbl.textColor = .black
-                return cell
-            }
-
+    private func configureTotalBasketCell(for collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PriceCVC", for: indexPath) as? PriceCVC else {
+            return UICollectionViewCell()
+        }
+        if shopSummry?.isEmpty ?? true {
+            cell.bgView.isSkeletonable = true
+            cell.bgView.layer.cornerRadius = cell.bgView.frame.height / 2
+            cell.bgView.clipsToBounds = true
+            cell.bgView.showAnimatedGradientSkeleton()
+            cell.lblBestPrice.isSkeletonable = true
+            cell.lblBestPrice.showAnimatedGradientSkeleton()
+        } else {
             cell.bgView.hideSkeleton()
             cell.lblBestPrice.hideSkeleton()
+            if let data = shopSummry?[safe: indexPath.row] {
+                let totalPrice = data.totalPrice ?? 0
+                let nonZeroPrices = shopSummry?.compactMap { $0.totalPrice }.filter { $0 > 0 } ?? []
+                let minPrice = nonZeroPrices.min() ?? 0
+                cell.priceLbl.text = formattedPrice(totalPrice)
+                updateBestPriceUI(for: cell, totalPrice: totalPrice, minPrice: minPrice)
+            } else {
+                resetPriceCell(cell)
+            }
+        }
+        return cell
+    }
 
+    private func formattedPrice(_ price: Double) -> String {
+        guard price != 0 else { return "-" }
+        return price.truncatingRemainder(dividingBy: 1) == 0
+            ? String(format: "%.0f", price)
+            : String(format: "%.2f", price).replacingOccurrences(of: #"0+$"#, with: "", options: .regularExpression)
+    }
+
+    private func updateBestPriceUI(for cell: PriceCVC, totalPrice: Double, minPrice: Double) {
+        if totalPrice > 0 && totalPrice == minPrice {
+            cell.bgView.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            cell.priceLbl.textColor = .white
+            cell.lblBestPrice.isHidden = false
+            cell.lblBestPrice.text = PlaceHolderTitleRegex.bestBasket
+        } else {
+            cell.bgView.backgroundColor = .clear
+            cell.priceLbl.textColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            cell.lblBestPrice.isHidden = true
+        }
+    }
+
+    private func resetPriceCell(_ cell: PriceCVC) {
+        cell.priceLbl.text = ""
+        cell.bgView.backgroundColor = .clear
+        cell.priceLbl.textColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+        cell.lblBestPrice.isHidden = true
+    }
+
+
+    private func configureProductCell(for collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PriceCVC", for: indexPath) as? PriceCVC else {
+                return UICollectionViewCell()
+            }
+        
+        
+        if let currentProduct = product?[safe: indexPath.row] {
             // Find matching shop
             if let shopIndex = shopImages.firstIndex(where: { $0.id == currentProduct.shopName?.id }) {
-                let image = (AppConstants.imageURL) + (shopImages[shopIndex].image ?? "")
-
+                _ = (AppConstants.imageURL) + (shopImages[shopIndex].image ?? "")
                 let filterObj = product?.filter { $0.shopName?.name == shopImages[shopIndex].name }
                 let price = filterObj?.first?.price ?? 0
-
                 if price == 0 {
                     cell.priceLbl.text = "-"
                 } else {
@@ -217,16 +220,13 @@ extension ShoppingListTVC: UICollectionViewDataSource, UICollectionViewDelegate,
                         String(format: "%.2f", price).replacingOccurrences(of: #"0+$"#, with: "", options: .regularExpression)
                     cell.priceLbl.text = formatted
                 }
-
                 // Highlight lowest price among all product entries with same name
                 if let selectedProductName = productName {
                     let currentLang = L102Language.currentAppleLanguageFull()
                     let filteredProducts = product?.filter {
                         currentLang == "ar" ? ($0.nameArabic == selectedProductName) : ($0.name == selectedProductName)
                     } ?? []
-
                     let minPrice = filteredProducts.min(by: { ($0.price ?? 0) < ($1.price ?? 0) })?.price ?? 0
-
                     if currentProduct.price == minPrice && price != 0 {
                         cell.bgView.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
                         cell.priceLbl.textColor = .white
@@ -246,11 +246,15 @@ extension ShoppingListTVC: UICollectionViewDataSource, UICollectionViewDelegate,
                 cell.priceLbl.text = "--"
                 cell.priceLbl.textColor = .black
             }
-
-            return cell
+        } else {
+            // Show placeholder
+            cell.priceLbl.text = "--"
+            cell.bgView.backgroundColor = .clear
+            cell.priceLbl.textColor = .black
         }
+        return cell
     }
-
+    
     // MARK: - Layout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if cellColl.tag == 0 {
@@ -270,10 +274,8 @@ extension Array where Element: Equatable {
     /// Removes duplicate elements while preserving order
     func removingDuplicates() -> [Element] {
         var uniqueElements = [Element]()
-        for element in self {
-            if !uniqueElements.contains(element) {
-                uniqueElements.append(element)
-            }
+        for element in self where !uniqueElements.contains(element) {
+            uniqueElements.append(element)
         }
         return uniqueElements
     }

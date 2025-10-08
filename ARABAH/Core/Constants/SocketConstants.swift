@@ -10,14 +10,11 @@ import Foundation
 /// These include the base URL and various key strings used in socket events and payloads
 enum SocketKeys: String {
     
-    /// Base URL for the socket server connection
-    case socketBaseUrl = "https://admin.arabahtheapp.com/"
-    
     /// Key for user identifier used in socket payloads
     case userId = "UserId"
     
     /// Key for product identifier used in socket payloads
-    case Productid = "Productid"
+    case productid = "Productid"
     
     /// Key for comment data sent through socket
     case comment = "comment"
@@ -35,7 +32,7 @@ enum SocketEmitters: String {
     case connectUser = "connect_user"
     
     /// Event name for sending product comment data
-    case Product_Comment = "Product_Comment"
+    case productComment = "Product_Comment"
     
     /// Returns the raw string value of the enum case
     var instance: String {
@@ -50,7 +47,7 @@ enum SocketListeners: String {
     case connectListener = "connect_user"
     
     /// Event name for receiving updated product comment lists
-    case Product_Comment_list = "Product_Comment"
+    case productCommentList = "Product_Comment"
     
     /// Returns the raw string value of the enum case
     var instance: String {

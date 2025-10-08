@@ -18,12 +18,8 @@ class WithoutAuthVC: UIViewController {
     
     // MARK: - Variables
     var isMoveToHome: Bool = false                  // Flag to determine whether to move to home screen on skip
-    var callback: (()->())?                          // Optional callback executed after sign-in dismissal
-    
-    // MARK: - Lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    var callback: (() -> Void)?                          // Optional callback executed after sign-in dismissal
+
     
     // MARK: - Actions
     
@@ -44,16 +40,15 @@ class WithoutAuthVC: UIViewController {
         if isMoveToHome == true {
             // Navigate to the home tab bar controller as root
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let vc = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? TabBarController {
+            if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? TabBarController {
                 Store.autoLogin = true
                 
                 // Create a navigation controller with the tab bar controller as root
-                let newNavigationController = UINavigationController(rootViewController: vc)
-                newNavigationController.isNavigationBarHidden = true
-                
-                // Replace the application's root view controller with this navigation controller
-                if let window = UIApplication.shared.keyWindow {
-                    window.rootViewController = newNavigationController
+                let nav = UINavigationController(rootViewController: tabBarController)
+                nav.isNavigationBarHidden = true
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first {
+                    window.rootViewController = nav
                     window.makeKeyAndVisible()
                 }
             }
@@ -77,10 +72,13 @@ class WithoutAuthVC: UIViewController {
         // Disable interactive pop gesture
         controller.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
-        // Set navigation controller as the root view controller
-        UIApplication.shared.windows.first?.rootViewController = navigationController
-        UIApplication.shared.windows.first?.makeKeyAndVisible()
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.rootViewController = navigationController
+            window.makeKeyAndVisible()
+        }
     }
+    
     func setupView() {
         // Set localized title for the skip button
         skipSignInBtn.setLocalizedTitleButton(key: PlaceHolderTitleRegex.skipSignIn)

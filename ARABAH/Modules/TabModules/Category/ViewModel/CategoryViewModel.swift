@@ -93,7 +93,7 @@ final class CategoryViewModel {
     /// - Parameter index: Index of the desired category.
     /// - Returns: The `Categorys` object at the specified index, or `nil` if out of bounds.
     func categoryCell(for index: Int) -> Categorys? {
-        return categoryBody?[index]
+        return categoryBody?[safe: index]
     }
 
     /// Returns the total number of category items.

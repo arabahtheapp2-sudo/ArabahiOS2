@@ -50,24 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 // MARK: - Helper to get the top-most ViewController in the app's view hierarchy
 
 extension UIApplication {
-    /// Returns the top-most view controller from the given controller (or rootViewController by default)
-    class func topViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
-        if let navigationController = controller as? UINavigationController {
-            return topViewController(controller: navigationController.visibleViewController)
-        }
-        if let tabController = controller as? UITabBarController {
-            if let selected = tabController.selectedViewController {
-                return topViewController(controller: selected)
-            }
-        }
-        if let presented = controller?.presentedViewController {
-            return topViewController(controller: presented)
-        }
-        return controller
-    }
-}
-
-extension UIApplication {
     /// Changes the root view controller with optional animation
     /// - Parameters:
     ///   - controller: The new root view controller
@@ -82,22 +64,44 @@ extension UIApplication {
         options: UIView.AnimationOptions = .transitionCrossDissolve,
         completion: (() -> Void)? = nil
     ) {
-        guard let window = shared.windows.first(where: { $0.isKeyWindow }) else {
+        
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first else {
             return
         }
+        
         
         if animated {
             UIView.transition(with: window, duration: duration, options: options, animations: {
                 let oldState = UIView.areAnimationsEnabled
                 UIView.setAnimationsEnabled(false)
                 window.rootViewController = controller
+                window.makeKeyAndVisible()
                 UIView.setAnimationsEnabled(oldState)
             }, completion: { _ in
                 completion?()
             })
         } else {
             window.rootViewController = controller
+            window.makeKeyAndVisible()
             completion?()
         }
+    }
+}
+
+extension UIApplication {
+    func topMostViewController(base: UIViewController? = nil) -> UIViewController? {
+        let baseVC = base ?? connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?.rootViewController
+        
+        if let nav = baseVC as? UINavigationController {
+            return topMostViewController(base: nav.visibleViewController)
+        } else if let tab = baseVC as? UITabBarController {
+            return topMostViewController(base: tab.selectedViewController)
+        } else if let presented = baseVC?.presentedViewController {
+            return topMostViewController(base: presented)
+        }
+        return baseVC
     }
 }

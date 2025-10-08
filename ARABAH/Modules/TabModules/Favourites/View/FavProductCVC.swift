@@ -22,7 +22,7 @@ class FavProductCVC: UICollectionViewCell {
     @IBOutlet weak var prodName: UILabel!
     
     /// ImageView to display the product image
-    @IBOutlet weak var ProdImg: UIImageView!
+    @IBOutlet weak var prodImg: UIImageView!
     
     /// Button to toggle favorite status of the product
     @IBOutlet weak var btnFav: UIButton!
@@ -36,10 +36,10 @@ class FavProductCVC: UICollectionViewCell {
             let imageIndex = (AppConstants.imageURL) + (self.setupObj?.productID?.image ?? "")
             
             // Show activity indicator while image loads
-            self.ProdImg.sd_imageIndicator = SDWebImageActivityIndicator.gray
+            self.prodImg.sd_imageIndicator = SDWebImageActivityIndicator.gray
             
             // Load the product image asynchronously with placeholder
-            self.ProdImg.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder"))
+            self.prodImg.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder"))
             
             // Set product name label from model
             self.prodName.text = self.setupObj?.productID?.name ?? ""
@@ -85,7 +85,7 @@ class FavProductCVC: UICollectionViewCell {
         super.prepareForReuse()
         
         // Reset image to placeholder to avoid old image flicker
-        ProdImg.image = nil
+        prodImg.image = nil
         
         // Clear labels
         prodUnit.text = ""

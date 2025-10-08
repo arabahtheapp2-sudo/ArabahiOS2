@@ -19,7 +19,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
         let mockService = MockSettingsService()
         
         
-        mockService.getTicketAPIPublisher = Just(getTicketModal(
+        mockService.getTicketAPIPublisher = Just(GetTicketModal(
             success: true,
             code: 200,
             message: "Success",
@@ -91,7 +91,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
     func testGetTicketAPIEmptyResponse() {
         // Given
         let mockService = MockSettingsService()
-        mockService.getTicketAPIPublisher = Just(getTicketModal(
+        mockService.getTicketAPIPublisher = Just(GetTicketModal(
             success: true,
             code: 200,
             message: "Success",
@@ -142,7 +142,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
                     initialFailureExpectation.fulfill()
                     
                     // After initial failure, set up success response for retry
-                    mockService.getTicketAPIPublisher = Just(getTicketModal(
+                    mockService.getTicketAPIPublisher = Just(GetTicketModal(
                         success: true,
                         code: 200,
                         message: "Success",
@@ -182,7 +182,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
         let mockService = MockSettingsService()
         
         
-        mockService.getTicketAPIPublisher = Just(getTicketModal(
+        mockService.getTicketAPIPublisher = Just(GetTicketModal(
             success: true,
             code: 200,
             message: "Success",
@@ -212,7 +212,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
     func testStateSequenceOnSuccess() {
         // Given
         let mockService = MockSettingsService()
-        mockService.getTicketAPIPublisher = Just(getTicketModal(
+        mockService.getTicketAPIPublisher = Just(GetTicketModal(
             success: true,
             code: 200,
             message: "Success",
@@ -222,7 +222,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
         
         let viewModel = RaiseTicketViewModel(settingsServices: mockService)
         
-        var emittedStates: [AppState<getTicketModal>] = []
+        var emittedStates: [AppState<GetTicketModal>] = []
         let expectation = XCTestExpectation(description: "Should emit correct state transitions")
         expectation.expectedFulfillmentCount = 3
 
@@ -254,7 +254,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
         // Given
         let mockService = MockSettingsService()
         
-        mockService.getTicketAPIPublisher = Just(getTicketModal(
+        mockService.getTicketAPIPublisher = Just(GetTicketModal(
             success: true,
             code: 200,
             message: "OK",
@@ -295,7 +295,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
         let idleExpectation = XCTestExpectation(description: "State should reset to idle before retry")
         let successExpectation = XCTestExpectation(description: "Retry should succeed")
 
-        var stateHistory: [AppState<getTicketModal>] = []
+        var stateHistory: [AppState<GetTicketModal>] = []
         
         viewModel.$state
             .sink { state in
@@ -305,7 +305,7 @@ final class RaiseTicketViewModelTests: XCTestCase {
                     failureExpectation.fulfill()
 
                     // Set success response for retry
-                    mockService.getTicketAPIPublisher = Just(getTicketModal(
+                    mockService.getTicketAPIPublisher = Just(GetTicketModal(
                         success: true,
                         code: 200,
                         message: "OK",
@@ -336,4 +336,3 @@ final class RaiseTicketViewModelTests: XCTestCase {
     
     
 }
-

@@ -32,7 +32,7 @@ final class AddTicketViewModelTests: XCTestCase {
     func test_submitTicket_success() {
         let expectation = XCTestExpectation(description: "Ticket submitted successfully")
 
-        let mockResponse = ReportModal(success: true,code: 200, message: "Ticket submitted",body: nil)
+        let mockResponse = ReportModal(success: true, code: 200, message: "Ticket submitted", body: nil)
         mockService.addTicketAPIPublisher = Just(mockResponse)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -115,7 +115,7 @@ final class AddTicketViewModelTests: XCTestCase {
     func test_retryLastSubmission_successfulRetry() {
         let expectation = XCTestExpectation(description: "Retry submission succeeds")
 
-        let response = ReportModal(success: true,code: 200, message: "Retried and submitted",body: nil)
+        let response = ReportModal(success: true, code: 200, message: "Retried and submitted", body: nil)
         mockService.addTicketAPIPublisher = Just(response)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -284,4 +284,3 @@ final class AddTicketViewModelTests: XCTestCase {
 
     
 }
-

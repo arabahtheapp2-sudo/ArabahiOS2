@@ -29,7 +29,7 @@ class OfferVC: UIViewController {
         setupView()
     }
     
-    private func setupView(){
+    private func setupView() {
         offersTbl.accessibilityIdentifier = "offersTbl"
         if product?.count == 0 {
             offersTbl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
@@ -63,41 +63,47 @@ extension OfferVC: UITableViewDelegate, UITableViewDataSource {
         guard let cell = offersTbl.dequeueReusableCell(withIdentifier: "OfferTVC", for: indexPath) as? OfferTVC else { return UITableViewCell() }
         
         // Safely get the product for the current row
-        let product = self.product?[indexPath.row]
-        
-        // Determine if current product has the lowest or highest price and update label accordingly
-        if product?.price == self.product?.map({ $0.price ?? 0 }).min() {
-            cell.lblHighLowPrice.text = PlaceHolderTitleRegex.lowestPrice
-        } else if product?.price == self.product?.map({ $0.price ?? 0 }).max() {
-            cell.lblHighLowPrice.text = PlaceHolderTitleRegex.highestPrice
-        } else {
-            cell.lblHighLowPrice.text = ""
-        }
-        
-        // Extract price value; default to 0 if nil
-        let minValue = product?.price ?? 0
-        
-        // Format the price to display without trailing zeros if decimal, or no decimals if whole number
-        if minValue == 0 {
-            cell.priceLbl.text = "⃀ 0"  // Display zero price with currency symbol
-        } else {
-            let formatted = (minValue.truncatingRemainder(dividingBy: 1) == 0) ?
-                String(format: "%.0f", minValue) : // No decimals for whole numbers
-                String(format: "%.2f", minValue) // Two decimals for fractional numbers
-                    .replacingOccurrences(of: #"0+$"#, with: "", options: .regularExpression) // Remove trailing zeros
-            
-            cell.priceLbl.text = "⃀ \(formatted)"  // Display formatted price with currency symbol
-        }
-        
-        // Set the unit quantity text for the product
-        cell.productUnit = self.productQty
-        
-        // Set the store image if available
-        if let imageName = product?.shopName?.image {
-            let image = (AppConstants.imageURL) + (imageName)
-            if cell.storeImage != nil {
-                cell.storeImage.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "Placeholder"))
+        if let product = self.product?[safe: indexPath.row] {
+            // Determine if current product has the lowest or highest price and update label accordingly
+            if product.price == self.product?.map({ $0.price ?? 0 }).min() {
+                cell.lblHighLowPrice.text = PlaceHolderTitleRegex.lowestPrice
+            } else if product.price == self.product?.map({ $0.price ?? 0 }).max() {
+                cell.lblHighLowPrice.text = PlaceHolderTitleRegex.highestPrice
+            } else {
+                cell.lblHighLowPrice.text = ""
             }
+            
+            // Extract price value; default to 0 if nil
+            let minValue = product.price ?? 0
+            
+            // Format the price to display without trailing zeros if decimal, or no decimals if whole number
+            if minValue == 0 {
+                cell.priceLbl.text = "⃀ 0"  // Display zero price with currency symbol
+            } else {
+                let formatted = (minValue.truncatingRemainder(dividingBy: 1) == 0) ?
+                    String(format: "%.0f", minValue) : // No decimals for whole numbers
+                    String(format: "%.2f", minValue) // Two decimals for fractional numbers
+                        .replacingOccurrences(of: #"0+$"#, with: "", options: .regularExpression) // Remove trailing zeros
+                
+                cell.priceLbl.text = "⃀ \(formatted)"  // Display formatted price with currency symbol
+            }
+             // Set the unit quantity text for the product
+            cell.productUnit = self.productQty
+            
+            // Set the store image if available
+            if let imageName = product.shopName?.image {
+                let image = (AppConstants.imageURL) + (imageName)
+                if cell.storeImage != nil {
+                    cell.storeImage.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "Placeholder"))
+                }
+            }
+            
+            
+        } else {
+            cell.productUnit = ""
+            cell.priceLbl.text = ""
+            cell.lblHighLowPrice.text = ""
+            cell.storeImage.image =  UIImage(named: "Placeholder")
         }
         
         return cell

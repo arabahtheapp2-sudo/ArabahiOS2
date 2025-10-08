@@ -16,7 +16,7 @@ struct NotificationCellModel {
 
     init(body: GetNotificationModalBody, baseURL: String, isArabic: Bool) {
         self.title = (body.message ?? "").replacingOccurrences(of: PlaceHolderTitleRegex.productNewPriceUpdate, with: "")
-        self.description = isArabic ? (body.description_Arabic ?? "") : (body.description ?? "")
+        self.description = isArabic ? (body.descriptionArabic ?? "") : (body.description ?? "")
         self.imageURL = baseURL + (body.image ?? "")
         self.productID = body.productID ?? ""
 

@@ -92,7 +92,7 @@ final class NotificationViewModelTests: XCTestCase {
     
     func testNotificationDeleteSuccess() {
         // Given
-        let response = NewCommonString(success: true, code: 200, message: "Deleted",body: nil)
+        let response = NewCommonString(success: true, code: 200, message: "Deleted", body: nil)
         mockService.notificationDeleteAPIPublisher = Just(response)
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
@@ -247,8 +247,4 @@ final class NotificationViewModelTests: XCTestCase {
             XCTFail("Expected failure state")
         }
     }
-    
-    
-    
 }
-

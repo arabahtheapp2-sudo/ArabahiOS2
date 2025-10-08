@@ -89,18 +89,18 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
     // MARK: - ACTIONS
     
     /// Filter button action - presents filter view controller
-    @IBAction func BtnFilter(_ sender: UIButton) {
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "FilterVC") as? FilterVC else { return }
-        vc.latitude = self.latitude
-        vc.longitude = self.longitude
-        vc.callback = { [weak self] (_, _) in
+    @IBAction func btnFilter(_ sender: UIButton) {
+        guard let filterVC = storyboard?.instantiateViewController(withIdentifier: "FilterVC") as? FilterVC else { return }
+        filterVC.latitude = self.latitude
+        filterVC.longitude = self.longitude
+        filterVC.callback = { [weak self] (_, _) in
             guard let self = self else { return }
             let name = txtFldSearch.text
             viewModel.updateSearchQuery(name ?? "")
             viewModel.fetchSearchResults(isRetry: false)
         }
-        vc.modalPresentationStyle = .overCurrentContext
-        self.navigationController?.present(vc, animated: false)
+        filterVC.modalPresentationStyle = .overCurrentContext
+        self.navigationController?.present(filterVC, animated: false)
     }
 
     /// Back button action - pops the view controller
@@ -151,12 +151,12 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             viewModel.recentSearchAPI(isRetry: false)
         case .failure(let error):
             hideLoadingIndicator()
-            showRetry(error: error,retry: viewModel.retryDeleteHistory )
+            showRetry(error: error, retry: viewModel.retryDeleteHistory )
         case .validationError(let error):
             CommonUtilities.shared.showAlert(message: error.localizedDescription, isSuccess: .error)
             hideLoadingIndicator()
@@ -170,7 +170,7 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             setNoData(count: viewModel.recentModel?.count ?? 0)
             recentSearchTbl.reloadData()
@@ -196,7 +196,7 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             self.viewRecentSearch.isHidden = true
             hideLoadingIndicator()
             updateSearchResultUI()
@@ -219,7 +219,7 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
         case .failure(let error):
             hideLoadingIndicator()
@@ -234,8 +234,7 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
 
     /// Shows retry alert with the given error message
     private func showRetry(error: NetworkError, retry: (() -> Void)? = nil) {
-        CommonUtilities.shared.showAlertWithRetry(title: AppConstants.appName, message: error.localizedDescription) { [weak self] _ in
-            guard let _ = self else { return }
+        CommonUtilities.shared.showAlertWithRetry(title: AppConstants.appName, message: error.localizedDescription) {  _ in
             retry?()
         }
     }
@@ -311,10 +310,16 @@ extension SearchCategoryVC: UITableViewDelegate, UITableViewDataSource {
 
     /// Configures recent search table view cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchTVC", for: indexPath) as! RecentSearchTVC
-        cell.lblName.text = viewModel.recentModel?[indexPath.row].name ?? ""
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchTVC", for: indexPath) as? RecentSearchTVC else {
+             return UITableViewCell()
+        }
+        if let data = viewModel.recentModel?[safe: indexPath.row] {
+            cell.lblName.text = data.name ?? ""
+        } else {
+            cell.lblName.text = ""
+        }
         cell.btnCross.tag = indexPath.row
-        cell.btnCross.addTarget(self, action: #selector(DeleteBtn(_:)), for: .touchUpInside)
+        cell.btnCross.addTarget(self, action: #selector(deleteBtn(_:)), for: .touchUpInside)
         return cell
     }
 
@@ -330,56 +335,8 @@ extension SearchCategoryVC: UITableViewDelegate, UITableViewDataSource {
     }
 
     /// Handles delete button action for recent search items
-    @objc func DeleteBtn(_ sender: UIButton) {
+    @objc func deleteBtn(_ sender: UIButton) {
         let id = viewModel.recentModel?[sender.tag].id ?? ""
         viewModel.historyDeleteAPI(with: id)
-    }
-}
-
-// MARK: - CollectionView Delegate & DataSource
-
-extension SearchCategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
-    /// Returns number of items in collection view
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (collectionView == searchCollectionCateogy) ? (viewModel.category?.count ?? 0) : (viewModel.product?.count ?? 0)
-    }
-
-    /// Configures collection view cell
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == searchCollectionCateogy {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchCategoryCVC", for: indexPath) as! SearchCategoryCVC
-            let item = viewModel.category?[indexPath.row]
-            cell.imgView.sd_setImage(with: URL(string: (AppConstants.imageURL) + (item?.image ?? "")), placeholderImage: UIImage(named: "Placeholder"))
-            cell.lblName.text = item?.categoryName ?? ""
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SearchProductCVC", for: indexPath) as! SearchProductCVC
-            let item = viewModel.product?[indexPath.row]
-            cell.imgView.sd_setImage(with: URL(string: (AppConstants.imageURL) + (item?.image ?? "")), placeholderImage: UIImage(named: "Placeholder"))
-            cell.lblName.text = item?.name ?? ""
-            cell.lblPrice.text = viewModel.formattedPrice(for: item!)
-            return cell
-        }
-    }
-
-    /// Returns size for collection view item
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width / 2, height: 174)
-    }
-
-    /// Handles selection of collection view item
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == searchCollectionCateogy {
-            let vc = storyboard?.instantiateViewController(withIdentifier: "SubCategoryVC") as! SubCategoryVC
-            vc.viewModel.productID = viewModel.category?[indexPath.row].id ?? ""
-            vc.viewModel.categoryName = viewModel.category?[indexPath.row].categoryName ?? ""
-            vc.viewModel.check = 1
-            navigationController?.pushViewController(vc, animated: true)
-        } else {
-            let vc = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as! SubCatDetailVC
-            vc.prodcutid = viewModel.product?[indexPath.row].id ?? ""
-            navigationController?.pushViewController(vc, animated: true)
-        }
     }
 }

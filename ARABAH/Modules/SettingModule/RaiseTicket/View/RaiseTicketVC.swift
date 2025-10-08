@@ -54,7 +54,7 @@ class RaiseTicketVC: UIViewController {
     // MARK: - PRIVATE METHODS
     
     /// Sets accessibility identifiers for UI test automation
-    private func setupAccessibility(){
+    private func setupAccessibility() {
         ticketTblView.accessibilityIdentifier = "ticketTblView"
         addTicketBtn.accessibilityIdentifier = "addTicketBtn"
         btnBack.accessibilityIdentifier = "btnBack"
@@ -71,7 +71,7 @@ class RaiseTicketVC: UIViewController {
     }
     
     /// Responds to ViewModel state changes and updates the view accordingly
-    private func handleStateChange(_ state: AppState<getTicketModal>) {
+    private func handleStateChange(_ state: AppState<GetTicketModal>) {
         switch state {
         case .idle:
             break // Do nothing
@@ -124,8 +124,8 @@ class RaiseTicketVC: UIViewController {
     
     /// Navigates to the Add Ticket screen to raise a new support request
     @IBAction func didTapAddTicketBtn(_ sender: UIButton) {
-        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "AddTicketVC") as? AddTicketVC else { return }
-        self.navigationController?.pushViewController(vc, animated: true)
+        guard let addTicketVC = self.storyboard?.instantiateViewController(withIdentifier: "AddTicketVC") as? AddTicketVC else { return }
+        self.navigationController?.pushViewController(addTicketVC, animated: true)
     }
 }
 
@@ -143,9 +143,9 @@ extension RaiseTicketVC: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "RaiseTicketTVC", for: indexPath) as? RaiseTicketTVC else {
             return UITableViewCell()
         }
-        
         // Populate cell with ticket data
-        cell.ticketListing = viewModel.ticketBody?[indexPath.row]
+        cell.ticketListing = viewModel.ticketBody?[safe: indexPath.row]
+        
         return cell
     }
 }

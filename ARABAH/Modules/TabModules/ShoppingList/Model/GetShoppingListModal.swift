@@ -80,14 +80,12 @@ struct ShoppingList: Codable {
     var productID: ProductIDS?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case userID = "userId"
         case productID = "ProductID"
         case deleted, createdAt, updatedAt
-        case v = "__v"
     }
 }
 
@@ -99,17 +97,17 @@ struct ProductIDS: Codable {
     var product: [Products]?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
-    var ProdiuctUnitArabic : String?
+    var prodiuctUnitArabic: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case userID = "userId"
         case categoryNames, name, description, price, image, qrCode, nameArabic
         case prodiuctUnit = "ProdiuctUnit"
-        case product, deleted, createdAt, updatedAt, ProdiuctUnitArabic
-        case v = "__v"
+        case prodiuctUnitArabic = "ProdiuctUnitArabic"
+        case product, deleted, createdAt, updatedAt
     }
+    
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -117,12 +115,11 @@ struct ProductIDS: Codable {
         self.categoryNames = try container.decodeIfPresent(String.self, forKey: .categoryNames)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
-        //self.price = try container.decodeIfPresent(String.self, forKey: .price)
-        if let value = try? container.decode(String.self, forKey: .price){
+        if let value = try? container.decode(String.self, forKey: .price) {
             price = value
-        } else if let value = try? container.decode(Double.self, forKey: .price){
+        } else if let value = try? container.decode(Double.self, forKey: .price) {
             price = "\(value)"
-        } else if let value = try? container.decode(Int.self, forKey: .price){
+        } else if let value = try? container.decode(Int.self, forKey: .price) {
             price = "\(value)"
         }
         self.image = try container.decodeIfPresent(String.self, forKey: .image)
@@ -134,7 +131,7 @@ struct ProductIDS: Codable {
             let arabicName = try container.decodeIfPresent(String.self, forKey: .nameArabic)
             self.name = (arabicName?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .nameArabic) : arabicName
             
-            let arabicProductUnit = try container.decodeIfPresent(String.self, forKey: .ProdiuctUnitArabic)
+            let arabicProductUnit = try container.decodeIfPresent(String.self, forKey: .prodiuctUnitArabic)
             self.prodiuctUnit = (arabicProductUnit?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .prodiuctUnit) : arabicProductUnit
         default:
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
@@ -144,7 +141,6 @@ struct ProductIDS: Codable {
         self.deleted = try container.decodeIfPresent(Bool.self, forKey: .deleted)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
     }
 }
 
@@ -192,15 +188,14 @@ struct Products: Codable {
 
 // MARK: - ShopName
 struct ShopName: Codable, Equatable {
-    var id, name,nameArabic, image, createdAt: String?
+    var id, name, nameArabic, image, createdAt: String?
     let updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case name, image,nameArabic, createdAt, updatedAt
-        case v = "__v"
+        case name, image, nameArabic, createdAt, updatedAt
     }
+    
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -209,7 +204,6 @@ struct ShopName: Codable, Equatable {
         self.nameArabic = try container.decodeIfPresent(String.self, forKey: .nameArabic)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         let currentLang = L102Language.currentAppleLanguageFull()
         switch currentLang {
         case "ar":

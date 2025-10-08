@@ -45,11 +45,17 @@ public class Reachability {
             }
         }
         
+        guard let reachability = defaultRouteReachability else {
+               //  Failed to create reachability reference
+                return false
+            }
+        
+        
         // Prepare a variable to hold reachability flags
         var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
         
         // Retrieve the flags; if failed, no network connection
-        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
+        if SCNetworkReachabilityGetFlags(reachability, &flags) == false {
             return false
         }
         

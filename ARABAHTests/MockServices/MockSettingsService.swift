@@ -17,8 +17,8 @@ final class MockSettingsService: SettingsServicesProtocol {
         return getFaqListAPIPublisher ?? Fail(error: .networkError("Mock not configured")).eraseToAnyPublisher()
     }
     
-    var getTicketAPIPublisher: AnyPublisher<getTicketModal, NetworkError>?
-    func getTicketAPI() -> AnyPublisher<ARABAH.getTicketModal, ARABAH.NetworkError> {
+    var getTicketAPIPublisher: AnyPublisher<GetTicketModal, NetworkError>?
+    func getTicketAPI() -> AnyPublisher<ARABAH.GetTicketModal, ARABAH.NetworkError> {
         return getTicketAPIPublisher ?? Fail(error: .networkError("Mock not configured")).eraseToAnyPublisher()
     }
     

@@ -29,23 +29,22 @@ struct CategorySearchModalBody: Codable {
 // MARK: - Producted
 struct Producted: Codable {
     let id, userID, categoryNames, name: String?
-    var nameArabic : String?
+    var nameArabic: String?
     var price: String?
     let description, image, qrCode: String?
     var prodiuctUnit: String?
-    var ProdiuctUnitArabic : String?
+    var prodiuctUnitArabic: String?
     var product: [UpdatedListElement]?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case userID = "userId"
-        case categoryNames, name, description, price, image, qrCode, nameArabic, ProdiuctUnitArabic
+        case categoryNames, name, description, price, image, qrCode, nameArabic
+        case prodiuctUnitArabic = "ProdiuctUnitArabic"
         case prodiuctUnit = "ProdiuctUnit"
         case product, deleted, createdAt, updatedAt
-        case v = "__v"
     }
     
     init(from decoder: any Decoder) throws {
@@ -67,8 +66,8 @@ struct Producted: Codable {
             let arabicName = try container.decodeIfPresent(String.self, forKey: .nameArabic)
             self.name = (arabicName?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .nameArabic) : arabicName
             
-            let Productunit = try container.decodeIfPresent(String.self, forKey: .ProdiuctUnitArabic)
-            self.prodiuctUnit = (Productunit?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .ProdiuctUnitArabic) : Productunit
+            let productunit = try container.decodeIfPresent(String.self, forKey: .prodiuctUnitArabic)
+            self.prodiuctUnit = (productunit?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .prodiuctUnitArabic) : productunit
         default:
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
             self.prodiuctUnit = try container.decodeIfPresent(String.self, forKey: .prodiuctUnit)
@@ -92,6 +91,5 @@ struct Producted: Codable {
         self.deleted = try container.decodeIfPresent(Bool.self, forKey: .deleted)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
     }
 }

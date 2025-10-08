@@ -27,7 +27,13 @@ final class EditProfileViewModel {
     
     
     /// Holds the most recent input so we can retry if needed.
-     var recentInputs: (name: String, email: String, needImageUpdate: Bool, image: UIImage)?
+    struct RecentInputs {
+        let name: String
+        let email: String
+        let needImageUpdate: Bool
+        let image: UIImage
+    }
+    var recentInputs: RecentInputs?
     
     // MARK: - Initialization
     
@@ -46,7 +52,7 @@ final class EditProfileViewModel {
     ///   - image: Updated profile image
     func completeProfleAPI(name: String, email: String, needImageUpdate: Bool, image: UIImage) {
         // Store the inputs in case we need to retry
-        self.recentInputs = (name: name, email: email, needImageUpdate: needImageUpdate, image: image)
+        self.recentInputs = RecentInputs(name: name, email: email, needImageUpdate: needImageUpdate, image: image)
         
         // Validate name and email before proceeding
         guard validateInputs(name: name, email: email) else {

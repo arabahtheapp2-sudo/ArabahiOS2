@@ -94,4 +94,3 @@ final class SubCatDetailVCUITests: XCTestCase {
         XCTAssertFalse(backBtn.exists)
     }
 }
-

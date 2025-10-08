@@ -119,7 +119,7 @@ final class CategoryViewModelTests: XCTestCase {
     func testCategoryCellAccess() {
         // Given
         
-        //viewModel.categoryBody = [CategoryListModalBody.init(category: nil)]
+        // viewModel.categoryBody = [CategoryListModalBody.init(category: nil)]
 
         // When
         let result = viewModel.categoryCell(for: 0)
@@ -215,11 +215,6 @@ final class CategoryViewModelTests: XCTestCase {
         // Empty state by default
         let cell = viewModel.categoryCell(for: 5)
         XCTAssertNil(cell)
-    }
-
-
-    
-    
+    }    
     
 }
-

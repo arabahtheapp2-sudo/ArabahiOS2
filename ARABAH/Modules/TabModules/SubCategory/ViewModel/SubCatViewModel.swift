@@ -89,14 +89,14 @@ final class SubCatViewModel {
 
     /// Fetches subcategory products for the given category ID
     /// - Parameter cateogyID: The ID of the category to fetch products for
-    func subCatProduct(cateogyID: String,isRetry: Bool) {
+    func subCatProduct(cateogyID: String, isRetry: Bool) {
         if isRetry {
             guard subCatProductRetryCount < maxRetryCount else {
                 subCatProductState = .validationError(.validationError(RegexMessages.retryMaxCount))
                 return
             }
             subCatProductRetryCount += 1
-        }else {
+        } else {
             subCatProductRetryCount = 0
         }
         
@@ -172,7 +172,7 @@ final class SubCatViewModel {
 
     /// Fetches similar products for the given product ID
     /// - Parameter id: The ID of the product to find similar items for
-    func getSimilarProductAPI(id: String,isRetry: Bool) {
+    func getSimilarProductAPI(id: String, isRetry: Bool) {
         
         if isRetry {
             guard getSimilarProductRetryCount < maxRetryCount else {
@@ -216,7 +216,7 @@ final class SubCatViewModel {
     /// - Parameter index: The index of the product in the current display items
     func addProductToCart(at index: Int) {
         guard Store.shared.authToken?.isEmpty == false else {
-            if let topVC = UIApplication.topViewController() {
+            if let topVC = UIApplication.shared.topMostViewController() {
                 topVC.authNil()
             }
             return

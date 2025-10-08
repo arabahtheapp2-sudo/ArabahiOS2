@@ -16,7 +16,7 @@ final class NetworkService: NetworkServiceProtocol {
     private let boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW"
     private let tokenProvider: TokenProvider
     
-     init(configuration: URLSessionConfiguration = .default,tokenProvider: TokenProvider = Store.shared) {
+     init(configuration: URLSessionConfiguration = .default, tokenProvider: TokenProvider = Store.shared) {
         session = URLSession(configuration: configuration)
         self.tokenProvider = tokenProvider
     }
@@ -27,7 +27,7 @@ final class NetworkService: NetworkServiceProtocol {
         endpoint: APIEndpoint,
         method: HTTPMethod,
         parameters: RequestParameters? = nil,
-        urlAppendData: urlAppendData? = nil,
+        urlAppendData: UrlAppendData? = nil,
         headers: [String: String]? = nil
     ) throws -> URLRequest {
         var urlString = endpoint.baseURL + endpoint.path
@@ -146,22 +146,21 @@ final class NetworkService: NetworkServiceProtocol {
         endpoint: APIEndpoint,
         method: HTTPMethod = .get,
         parameters: RequestParameters? = nil,
-        urlAppendData: urlAppendData? = nil,
-        headers: [String: String]? = nil,
+        urlAppendData: UrlAppendData? = nil,
+        headers: [String: String]? = nil
     ) -> AnyPublisher<T, NetworkError> {
+        
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(.sessionExpired))
                 return
             }
             
-            // Check network connectivity
             guard Reachability.isConnectedToNetwork() else {
                 promise(.failure(.noInternetConnection))
                 return
             }
             
-            // Build and validate request
             let request: URLRequest
             do {
                 request = try self.buildRequest(
@@ -176,62 +175,69 @@ final class NetworkService: NetworkServiceProtocol {
                 return
             }
             
+            self.executeRequest(request, promise: promise)
             
-            
-            // Execute request
-            self.session.dataTask(with: request) { [weak self] data, response, error in
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    // Handle errors
-                    if let error = error {
-                        promise(.failure(.networkError(error.localizedDescription)))
-                        return
-                    }
-                    
-                    guard let httpResponse = response as? HTTPURLResponse else {
-                        promise(.failure(.invalidResponse))
-                        return
-                    }
-                    
-                    guard let data = data else {
-                        promise(.failure(.noData))
-                        return
-                    }
-                    // Handle HTTP status codes
-                    switch httpResponse.statusCode {
-                    case 200...299:
-                        do {
-                            let decoded = try JSONDecoder().decode(T.self, from: data)
-                            promise(.success(decoded))
-                        } catch {
-                            promise(.failure(.decodingFailed))
-                        }
-                        
-                    case 401:
-                        self.handleUnauthorized()
-                        promise(.failure(.unauthorized))
-                        
-                    case 403:
-                        promise(.failure(.forbidden))
-                        
-                    case 400:
-                        if let errorMessage = self.parseErrorMessage(from: data) {
-                            promise(.failure(.badRequest(message: errorMessage)))
-                        } else {
-                            promise(.failure(.badRequest(message: nil)))
-                        }
-                        
-                    default:
-                        if let errorMessage = self.parseErrorMessage(from: data) {
-                            promise(.failure(.serverError(message: errorMessage)))
-                        } else {
-                            promise(.failure(.serverError(message: nil)))
-                        }
-                    }
-                }
-            }.resume()
         }.eraseToAnyPublisher()
     }
+
+    
+    private func executeRequest<T: Decodable>(
+        _ request: URLRequest,
+        promise: @escaping (Result<T, NetworkError>) -> Void
+    ) {
+        session.dataTask(with: request) { [weak self] data, response, error in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    promise(.failure(.networkError(error.localizedDescription)))
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    promise(.failure(.invalidResponse))
+                    return
+                }
+                
+                guard let data = data else {
+                    promise(.failure(.noData))
+                    return
+                }
+                
+                self.handleHTTPResponse(httpResponse, data: data, promise: promise)
+            }
+        }.resume()
+    }
+
+    
+    private func handleHTTPResponse<T: Decodable>(
+        _ response: HTTPURLResponse,
+        data: Data,
+        promise: @escaping (Result<T, NetworkError>) -> Void
+    ) {
+        switch response.statusCode {
+        case 200...299:
+            do {
+                let decoded = try JSONDecoder().decode(T.self, from: data)
+                promise(.success(decoded))
+            } catch {
+                promise(.failure(.decodingFailed))
+            }
+        case 401:
+            handleUnauthorized()
+            promise(.failure(.unauthorized))
+        case 403:
+            promise(.failure(.forbidden))
+        case 400:
+            let message = parseErrorMessage(from: data)
+            promise(.failure(.badRequest(message: message)))
+        default:
+            let message = parseErrorMessage(from: data)
+            promise(.failure(.serverError(message: message)))
+        }
+    }
+
+    
     
     private func parseErrorMessage(from data: Data) -> String? {
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -249,13 +255,13 @@ final class NetworkService: NetworkServiceProtocol {
     
     
     private func handleUnauthorized() {
-        DispatchQueue.main.async { [weak self] in
+        DispatchQueue.main.async {
             // Clear user session
-            guard let _ = self else { return }
             Store.shared.clearSession()
             // Navigate to login
-            let loginVC = UIStoryboard(name: "Main", bundle: nil)
-                .instantiateViewController(withIdentifier: "LoginVC") as! LoginVC
+           guard let loginVC = UIStoryboard(name: "Main", bundle: nil)
+                .instantiateViewController(withIdentifier: "LoginVC") as? LoginVC
+            else { return }
             let navController = UINavigationController(rootViewController: loginVC)
             navController.isNavigationBarHidden = true
             UIApplication.setRootViewController(navController)
@@ -275,7 +281,7 @@ enum HTTPMethod: String {
 }
 
 typealias RequestParameters = [String: Any]
-typealias urlAppendData = Any
+typealias UrlAppendData = Any
 
 struct ImageData {
     let data: Data
@@ -333,5 +339,3 @@ enum NetworkError: Error, Equatable {
         }
     }
 }
-
-

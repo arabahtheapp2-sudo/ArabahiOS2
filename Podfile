@@ -26,6 +26,7 @@ target 'ARABAH' do
   pod 'ShimmerSwift', '2.1.1'
   pod 'SkeletonView', '1.30.4'
   pod 'Firebase/Crashlytics', '10.28.1'
+  pod 'SwiftLint', '0.59.1'
   
   # Target for unit tests
   target 'ARABAHTests' do

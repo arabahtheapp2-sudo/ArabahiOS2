@@ -53,4 +53,3 @@ final class DealsOffVCTests: XCTestCase {
         XCTAssertTrue(didNavigate || app.otherElements["zoomImageView"].exists, "Should navigate to deal detail screen.")
     }
 }
-

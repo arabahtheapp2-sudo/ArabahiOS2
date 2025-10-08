@@ -83,7 +83,7 @@ final class DealsViewModel {
     /// - Parameter index: Index of the deal in the `dealsBody` array.
     /// - Returns: A user-friendly string with placeholders and actual data.
     func formattedDealText(at index: Int) -> String {
-        guard let deal = dealsBody?[index] else { return "" }
+        guard let deal = dealsBody?[safe: index] else { return "" }
         let storeName = deal.storeID?.name ?? ""
         let dealDescription = deal.decription ?? ""
         return "\(PlaceHolderTitleRegex.storeName) \(storeName)\n\(PlaceHolderTitleRegex.deal) \(dealDescription)"
@@ -93,14 +93,16 @@ final class DealsViewModel {
     /// - Parameter index: Index of the deal in the `dealsBody` array.
     /// - Returns: Full image URL as a `String`.
     func dealImageUrl(at index: Int) -> String {
-        return (AppConstants.imageURL) + (dealsBody?[index].image ?? "")
+        guard let deal = dealsBody?[safe: index], let image = deal.image else { return "" }
+        return (AppConstants.imageURL) + (image)
     }
     
     /// Returns the full store image URL for a given deal index.
     /// - Parameter index: Index of the deal in the `dealsBody` array.
     /// - Returns: Full image URL as a `String`.
     func storeImageUrl(at index: Int) -> String {
-        return (AppConstants.imageURL) + (dealsBody?[index].storeID?.image ?? "")
+        guard let deal = dealsBody?[safe: index], let storeImage = deal.storeID?.image else { return "" }
+        return (AppConstants.imageURL) + (storeImage)
     }
     
     /// Determines whether a given image URL points to a PDF.

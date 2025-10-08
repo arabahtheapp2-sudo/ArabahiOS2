@@ -20,7 +20,6 @@ struct AddCommentModalBody: Codable, Equatable {
     let productID, userID, comment: String?
     let deleted: Bool?
     let id, createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case productID = "ProductID"
@@ -28,6 +27,5 @@ struct AddCommentModalBody: Codable, Equatable {
         case comment, deleted
         case id = "_id"
         case createdAt, updatedAt
-        case v = "__v"
     }
 }

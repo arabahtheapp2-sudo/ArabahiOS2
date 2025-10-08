@@ -23,9 +23,8 @@ class CommonUtilities {
         - isSuccess: The theme of the message (success, error, warning).
         - duration: How long the alert should be visible (default 3.5 seconds).
      */
-    func showAlert(Title: String = "", message: String, isSuccess: Theme, duration: TimeInterval = 3.5) {
-        DispatchQueue.main.async { [weak self] in
-            guard let _ = self else { return }
+    func showAlert(title: String = "", message: String, isSuccess: Theme, duration: TimeInterval = 3.5) {
+        DispatchQueue.main.async {
             // Hide any existing messages before showing a new one
             SwiftMessages.hideAll()
             
@@ -39,7 +38,7 @@ class CommonUtilities {
                 : .red
             
             warning.configureDropShadow()
-            warning.configureContent(title: Title, body: message)
+            warning.configureContent(title: title, body: message)
             warning.button?.isHidden = true  // Hide the default button
             
             // Configure message display properties
@@ -64,11 +63,11 @@ class CommonUtilities {
         alert.addAction(UIAlertAction(title: RegexTitles.retry, style: .default, handler: retryMove))
         alert.addAction(UIAlertAction(title: RegexTitles.cancel, style: .cancel))
         
-        DispatchQueue.main.async { [weak self] in
-            guard let _ = self else { return }
-            if let topvc = UIApplication.topViewController() {
-                topvc.present(alert, animated: true)
+        DispatchQueue.main.async {
+            guard let topController = UIApplication.shared.topMostViewController() else {
+                return
             }
+            topController.present(alert, animated: true)
         }
     }
     
@@ -82,13 +81,13 @@ class CommonUtilities {
      */
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: RegexTitles.OK, style: .default))
+        alert.addAction(UIAlertAction(title: RegexTitles.okTitle, style: .default))
         
-        DispatchQueue.main.async { [weak self] in
-            guard let _ = self else { return }
-            if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
-                window.rootViewController?.present(alert, animated: true)
+        DispatchQueue.main.async {
+            guard let topController = UIApplication.shared.topMostViewController() else {
+                return
             }
+            topController.present(alert, animated: true)
         }
     }
     
@@ -99,17 +98,18 @@ class CommonUtilities {
         - message: Alert message.
      */
     func showAlert(message: String) {
-        DispatchQueue.main.async { [weak self] in
-            guard let _ = self else { return }
+        DispatchQueue.main.async {
+           
             let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-            let ok = UIAlertAction(title: RegexTitles.OK, style: .default) { [weak self] _ in
-                guard let _ = self else { return }
+            let okAction = UIAlertAction(title: RegexTitles.okTitle, style: .default) { _ in
                 alert.dismiss(animated: true)
             }
-            alert.addAction(ok)
-            
-            if let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
-                window.rootViewController?.present(alert, animated: true)
+            alert.addAction(okAction)
+            DispatchQueue.main.async {
+                guard let topController = UIApplication.shared.topMostViewController() else {
+                    return
+                }
+                topController.present(alert, animated: true)
             }
         }
     }

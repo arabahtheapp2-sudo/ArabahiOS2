@@ -18,20 +18,20 @@ struct SubCatProductModal: Codable, Equatable {
 // MARK: - SubCatProductModalBody
 struct SubCatProductModalBody: Codable, Equatable {
     let qrCode, id, userID, categoryNames: String?
-    var name,nameArabic, price, image: String?
+    var name, nameArabic, price, image: String?
     let product: [Product]?
     let deleted: Bool?
-    var ProdiuctUnit,ProdiuctUnitArabic : String?
+    var prodiuctUnit, prodiuctUnitArabic: String?
     var productUnitId: ProductUnitIdModel?
     let createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case qrCode
         case id = "_id"
         case userID = "userId"
-        case categoryNames, name,nameArabic,ProdiuctUnitArabic, price, image, product, deleted, createdAt, updatedAt, ProdiuctUnit, productUnitId
-        case v = "__v"
+        case prodiuctUnitArabic = "ProdiuctUnitArabic"
+        case prodiuctUnit = "ProdiuctUnit"
+        case categoryNames, name, nameArabic, price, image, product, deleted, createdAt, updatedAt, productUnitId
     }
 
     init(from decoder: any Decoder) throws {
@@ -42,12 +42,12 @@ struct SubCatProductModalBody: Codable, Equatable {
         self.categoryNames = try container.decodeIfPresent(String.self, forKey: .categoryNames)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
         self.nameArabic = try container.decodeIfPresent(String.self, forKey: .nameArabic)
-        if let ProdiuctUnitArabic = try? container.decodeIfPresent(String.self, forKey: .ProdiuctUnitArabic) {
-            self.ProdiuctUnitArabic = ProdiuctUnitArabic
+        if let prodiuctUnitArabic = try? container.decodeIfPresent(String.self, forKey: .prodiuctUnitArabic) {
+            self.prodiuctUnitArabic = prodiuctUnitArabic
         }
         
-        if let ProdiuctUnit = try? container.decodeIfPresent(String.self, forKey: .ProdiuctUnit) {
-            self.ProdiuctUnit = ProdiuctUnit
+        if let prodiuctUnit = try? container.decodeIfPresent(String.self, forKey: .prodiuctUnit) {
+            self.prodiuctUnit = prodiuctUnit
         }
         
         if let productUnitId = try? container.decodeIfPresent(ProductUnitIdModel.self, forKey: .productUnitId) {
@@ -66,28 +66,26 @@ struct SubCatProductModalBody: Codable, Equatable {
         self.deleted = try container.decodeIfPresent(Bool.self, forKey: .deleted)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.ProdiuctUnit = try container.decodeIfPresent(String.self, forKey: .ProdiuctUnit)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
+        self.prodiuctUnit = try container.decodeIfPresent(String.self, forKey: .prodiuctUnit)
         let currentLang = L102Language.currentAppleLanguageFull()
 
         switch currentLang {
         case "ar":
             let arabicName = try container.decodeIfPresent(String.self, forKey: .nameArabic)
-            let arabicProdiuctUnit = try container.decodeIfPresent(String.self, forKey: .ProdiuctUnitArabic)
             
             self.name = (arabicName?.isEmpty ?? true) ? try container.decodeIfPresent(String.self, forKey: .name) : arabicName
            
             if productUnitId != nil {
-                self.ProdiuctUnit = (productUnitId?.prodiuctUnitArabic ?? "").isEmpty ? (productUnitId?.prodiuctUnit ?? "") : (productUnitId?.prodiuctUnitArabic ?? "")
+                self.prodiuctUnit = (productUnitId?.prodiuctUnitArabic ?? "").isEmpty ? (productUnitId?.prodiuctUnit ?? "") : (productUnitId?.prodiuctUnitArabic ?? "")
             } else {
-                self.ProdiuctUnit = (ProdiuctUnitArabic ?? "").isEmpty ? (ProdiuctUnit ?? "") : (ProdiuctUnitArabic ?? "")
+                self.prodiuctUnit = (prodiuctUnitArabic ?? "").isEmpty ? (prodiuctUnit ?? "") : (prodiuctUnitArabic ?? "")
             }
         default:
             self.name = try container.decodeIfPresent(String.self, forKey: .name)
             if productUnitId != nil {
-                self.ProdiuctUnit = productUnitId?.prodiuctUnit ?? ""
+                self.prodiuctUnit = productUnitId?.prodiuctUnit ?? ""
             } else {
-                self.ProdiuctUnit = try container.decodeIfPresent(String.self, forKey: .ProdiuctUnit)
+                self.prodiuctUnit = try container.decodeIfPresent(String.self, forKey: .prodiuctUnit)
             }
         }
 

@@ -156,9 +156,9 @@ class ReviewVC: UIViewController {
     /// Handles tap on "Add Review" button
     @IBAction func didTapAddReviewBtn(_ sender: UIButton) {
         // Navigate to Add Review screen
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "AddReviewVC") as? AddReviewVC else { return }
-        vc.productID = productID
-        navigationController?.pushViewController(vc, animated: true)
+        guard let addReviewVC = storyboard?.instantiateViewController(withIdentifier: "AddReviewVC") as? AddReviewVC else { return }
+        addReviewVC.productID = productID
+        navigationController?.pushViewController(addReviewVC, animated: true)
     }
 
     /// Handles tap on back button
@@ -181,7 +181,7 @@ extension ReviewVC: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         // Pass review data to cell for display
-        cell.ratingListing = viewModel.ratingList[indexPath.row]
+        cell.ratingListing = viewModel.ratingList[safe: indexPath.row]
         return cell
     }
 }

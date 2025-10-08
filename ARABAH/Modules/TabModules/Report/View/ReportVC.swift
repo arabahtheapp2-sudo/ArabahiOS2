@@ -25,16 +25,14 @@ class ReportVC: UIViewController {
     @IBOutlet weak var btnCross: UIButton!
     
     /// Button to submit the report
-    @IBOutlet weak var BtnSubmit: UIButton!
+    @IBOutlet weak var btnSubmit: UIButton!
 
     // MARK: - VARIABLES
     
     /// ViewModel handling report submission logic
     var viewModel = ReportViewModel()
-    
     /// ID of the product being reported
     var productID = String()
-    
     /// Set to store Combine cancellables
     private var cancellables = Set<AnyCancellable>()
 
@@ -94,7 +92,7 @@ class ReportVC: UIViewController {
         txtView.accessibilityIdentifier = "txtView"
         viewMain.accessibilityIdentifier = "viewMain"
         btnCross.accessibilityIdentifier = "btnCross"
-        BtnSubmit.accessibilityIdentifier = "BtnSubmit"
+        btnSubmit.accessibilityIdentifier = "BtnSubmit"
     }
 
     /// Configures initial view appearance
@@ -134,7 +132,7 @@ class ReportVC: UIViewController {
     }
 
     /// Handles submit button tap to initiate report submission
-    @IBAction func BtnSubmit(_ sender: UIButton) {
+    @IBAction func btnSubmit(_ sender: UIButton) {
         submitReport(isRetry: false)
     }
 }

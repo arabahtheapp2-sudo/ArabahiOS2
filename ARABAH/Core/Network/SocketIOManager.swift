@@ -23,62 +23,68 @@ protocol SocketDelegate: AnyObject {
 class SocketIOManager: NSObject {
     
     static let sharedInstance = SocketIOManager()
-    
-    private let manager = SocketManager(socketURL: URL(string: SocketKeys.socketBaseUrl.rawValue)!,
-                                        config: [
-                                            .compress,
-                                            .log(true),
-                                            .reconnects(true),
-                                            .reconnectWait(10),
-                                            .reconnectAttempts(-1) // infinite reconnect
-                                        ])
-    
-    private(set) var socket: SocketIOClient!
-    weak var delegate: SocketDelegate?
-    
-    private override init() {
-        super.init()
-        self.socket = manager.defaultSocket
-    }
-    
+      
+      private lazy var manager: SocketManager? = {
+          guard let url = URL(string: AppConstants.imageURL) else {
+             // Invalid Socket URL
+              return nil
+          }
+          return SocketManager(socketURL: url,
+                               config: [
+                                  .compress,
+                                  .log(true),
+                                  .reconnects(true),
+                                  .reconnectWait(10),
+                                  .reconnectAttempts(-1) // infinite reconnect
+                               ])
+      }()
+      
+      private(set) var socket: SocketIOClient?
+      weak var delegate: SocketDelegate?
+      
+      private override init() {
+          super.init()
+          if let socketManager = manager {
+              self.socket = socketManager.defaultSocket
+          } else {
+              // Socket manager not initialized, socket is nil
+          }
+      }
     // MARK: - Connection
     
     func connectSocket() {
-        guard socket.status != .connected else { return }
-        socket.connect()
+        guard socket?.status != .connected else { return }
+        socket?.connect()
         establishConnection()
     }
     
     private func establishConnection() {
-        socket.removeAllHandlers()
+        socket?.removeAllHandlers()
         
-        socket.on(clientEvent: .connect) { [weak self] data, ack in
-            print("✅ Socket Connected")
+        socket?.on(clientEvent: .connect) { [weak self] _, _ in
+            // ✅ Socket Connected
+            guard let self = self else { return }
             NotificationCenter.default.post(name: .socketConnected, object: nil)
-            self?.connectUser()
+            self.connectUser()
         }
         
-        socket.on(clientEvent: .reconnectAttempt) { [weak self] data, ack in
-            guard let _ = self else { return }
-            print("🔁 Reconnect Attempt")
+        socket?.on(clientEvent: .reconnectAttempt) { _, _ in
+           // 🔁 Reconnect Attempt
             NotificationCenter.default.post(name: .socketReconnectAttempt, object: nil)
         }
         
-        socket.on(clientEvent: .reconnect) { [weak self] data, ack in
-            guard let _ = self else { return }
-            print("✅ Reconnected")
+        socket?.on(clientEvent: .reconnect) { _, _ in
+            // ✅ Reconnected
             NotificationCenter.default.post(name: .socketReconnected, object: nil)
         }
         
-        socket.on(clientEvent: .disconnect) { [weak self] data, ack in
-            guard let _ = self else { return }
-            print("❌ Disconnected")
+        socket?.on(clientEvent: .disconnect) { _, _ in
+            // ❌ Disconnected
             NotificationCenter.default.post(name: .socketDisconnected, object: nil)
         }
         
-        socket.on(clientEvent: .error) { [weak self] data, ack in
-            guard let _ = self else { return }
-            print("⚠️ Socket Error: \(data)")
+        socket?.on(clientEvent: .error) { data, _ in
+           // ⚠️ Socket Error
             NotificationCenter.default.post(name: .socketError, object: data.first)
         }
         
@@ -86,29 +92,31 @@ class SocketIOManager: NSObject {
     }
     
     private func addEventHandlers() {
-        socket.on(SocketListeners.connectListener.instance) { [weak self] data, ack in
-            print("📩 connect_listener event")
-            self?.delegate?.listenedData(data: JSON(data), response: SocketListeners.connectListener.instance)
+        socket?.on(SocketListeners.connectListener.instance) { [weak self] data, _ in
+            // 📩 connect_listener event
+            guard let self = self else { return }
+            self.delegate?.listenedData(data: JSON(data), response: SocketListeners.connectListener.instance)
             NotificationCenter.default.post(name: .socketDataReceived, object: nil)
         }
         
-        socket.on(SocketListeners.Product_Comment_list.instance) { [weak self] data, ack in
-            print("📩 Product_Comment_list event")
-            self?.delegate?.listenedData(data: JSON(data), response: SocketListeners.Product_Comment_list.instance)
+        socket?.on(SocketListeners.productCommentList.instance) { [weak self] data, _ in
+            // 📩 Product_Comment_list event
+            guard let self = self else { return }
+            self.delegate?.listenedData(data: JSON(data), response: SocketListeners.productCommentList.instance)
         }
     }
     
     // MARK: - Disconnect
     
     func closeConnection() {
-        socket.removeAllHandlers()
-        socket.disconnect()
-        manager.disconnect()
-        print("🔌 Socket fully disconnected and handlers removed.")
+        socket?.removeAllHandlers()
+        socket?.disconnect()
+        manager?.disconnect()
+        // 🔌 Socket fully disconnected and handlers removed
     }
     
     func isConnected() -> Bool {
-        return socket.status == .connected
+        return socket?.status == .connected
     }
 }
 
@@ -119,13 +127,13 @@ extension SocketIOManager {
     func connectUser() {
         guard let userID = Store.userDetails?.body?.id,
               !userID.isEmpty else {
-            print("⚠️ Invalid authToken or userId")
+            // ⚠️ Invalid authToken or userId
             return
         }
         
         let dict: [String: Any] = [SocketKeys.userId.instance: userID]
         
-        socket.emit(SocketEmitters.connectUser.instance, dict)
+        socket?.emit(SocketEmitters.connectUser.instance, dict)
         
     }
     
@@ -133,10 +141,10 @@ extension SocketIOManager {
         guard let userId = Store.userDetails?.body?.id else { return }
         let params: [String: Any] = [
             SocketKeys.userId.rawValue: userId,
-            SocketKeys.Productid.rawValue: productID,
+            SocketKeys.productid.rawValue: productID,
             SocketKeys.comment.rawValue: comment
         ]
-        socket.emit(SocketEmitters.Product_Comment.instance, params)
+        socket?.emit(SocketEmitters.productComment.instance, params)
     }
 }
 
@@ -150,4 +158,3 @@ extension Notification.Name {
     static let socketError = Notification.Name("SocketError")
     static let socketDataReceived = Notification.Name("SocketDataReceived")
 }
-

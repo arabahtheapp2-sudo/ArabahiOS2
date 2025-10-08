@@ -78,4 +78,3 @@ final class ReviewVCUITests: XCTestCase {
         XCTAssertTrue(alert.buttons["Retry"].exists, "Retry button should appear")
     }
 }
-

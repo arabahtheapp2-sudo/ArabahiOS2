@@ -17,9 +17,9 @@ class ChangeLangVC: UIViewController {
     @IBOutlet weak var lblArbic: UILabel!         // Label for Arabic language option
     @IBOutlet weak var viewEng: UIView!           // View container for English selection
     @IBOutlet weak var viewArabic: UIView!        // View container for Arabic selection
-    @IBOutlet weak var BtnArabic: UIButton!       // Arabic language selection button
-    @IBOutlet weak var BtnEng: UIButton!          // English language selection button
-    @IBOutlet weak var BtnUpdate: UIButton!       // Button to confirm and apply language selection
+    @IBOutlet weak var btnArabic: UIButton!       // Arabic language selection button
+    @IBOutlet weak var btnEng: UIButton!          // English language selection button
+    @IBOutlet weak var btnUpdate: UIButton!       // Button to confirm and apply language selection
     
     // MARK: - VARIABLES
     
@@ -54,9 +54,9 @@ class ChangeLangVC: UIViewController {
         viewEng.accessibilityIdentifier = "viewEng"
         lblEnglish.accessibilityIdentifier = "English"
         lblArbic.accessibilityIdentifier = "Arabic"
-        BtnArabic.accessibilityIdentifier = "BtnArabic"
-        BtnEng.accessibilityIdentifier = "BtnEng"
-        BtnUpdate.accessibilityIdentifier = "BtnUpdate"
+        btnArabic.accessibilityIdentifier = "BtnArabic"
+        btnEng.accessibilityIdentifier = "BtnEng"
+        btnUpdate.accessibilityIdentifier = "BtnUpdate"
     }
     
     // MARK: - VIEW MODEL BINDING
@@ -110,8 +110,7 @@ class ChangeLangVC: UIViewController {
     
     /// Handles successful language change by resetting root UI
     private func handleSuccess() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+        DispatchQueue.main.async {
             let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let rootVC = mainStoryboard.instantiateViewController(withIdentifier: "TabBarController")
             let nav = UINavigationController(rootViewController: rootVC)
@@ -165,11 +164,11 @@ class ChangeLangVC: UIViewController {
     
     // MARK: - ACTIONS
     
-    @IBAction func BtnArabic(_ sender: UIButton) {
+    @IBAction func btnArabic(_ sender: UIButton) {
         setSelectedLanguage(true)
     }
     
-    @IBAction func BtnEng(_ sender: UIButton) {
+    @IBAction func btnEng(_ sender: UIButton) {
         setSelectedLanguage(false)
     }
     
@@ -177,7 +176,7 @@ class ChangeLangVC: UIViewController {
      Triggered when the "Update" button is tapped.
      Applies selected language, updates system direction, and calls backend API.
      */
-    @IBAction func BtnUpdate(_ sender: UIButton) {
+    @IBAction func btnUpdate(_ sender: UIButton) {
         Store.isArabicLang = self.isArabic
         let selectedLang = self.isArabic ? "ar" : "en"
         

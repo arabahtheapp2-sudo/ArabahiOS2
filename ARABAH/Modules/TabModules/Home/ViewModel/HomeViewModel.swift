@@ -29,7 +29,15 @@ final class HomeViewModel: NSObject, ObservableObject {
     // Private properties for internal use
     private var cancellables = Set<AnyCancellable>()  // Stores network requests
     private let homeServices: HomeServicesProtocol    // Handles API calls
-    private var retryParams: (longitude: String, latitude: String, categoryID: String?, categoryName: String?)?  // Stores last request params for retries
+    struct RetryParams {
+        let longitude: String
+        let latitude: String
+        let categoryID: String?
+        let categoryName: String?
+    }
+    private var retryParams: RetryParams?
+    // Stores last request params for retries
+    
     private let geocoder = CLGeocoder()  // Converts coordinates to addresses
     private var retryCount = 0
     private var maxRetryCount = 3
@@ -51,7 +59,7 @@ final class HomeViewModel: NSObject, ObservableObject {
         // Update state and save params in case we need to retry
         state = .loading
         retryCount = 0
-        retryParams = (longitude: longitude, latitude: latitude, categoryID: categoryID, categoryName: categoryName)
+        retryParams = RetryParams(longitude: longitude, latitude: latitude, categoryID: categoryID, categoryName: categoryName)
         
         // Make the API call
         homeServices.homeListAPI(
@@ -130,8 +138,8 @@ final class HomeViewModel: NSObject, ObservableObject {
         geocoder.reverseGeocodeLocation(loc, preferredLocale: locale) { [weak self] placemarks, error in
             guard let self = self else { return }
             
-            if let error = error {
-                print("🧭 Reverse geocode failed: \(error.localizedDescription)")
+            if error != nil {
+                // 🧭 Reverse geocode failed
                 return
             }
             

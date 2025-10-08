@@ -22,15 +22,16 @@ struct TermsPrivacyModel: Codable {
 }
 
 // MARK: - TermsPrivacyMdoalBody
-struct TermsPrivacyModelBody: Codable,Equatable {
+struct TermsPrivacyModelBody: Codable, Equatable {
     let id: String?
     let type: Int?
-    var title, description,descriptionArabic, updatedAt: String?
+    var title, description, descriptionArabic, updatedAt: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case type, title, description, updatedAt, descriptionArabic
     }
+    
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -48,12 +49,7 @@ struct TermsPrivacyModelBody: Codable,Equatable {
             self.description = try container.decodeIfPresent(String.self, forKey: .description)
         }
     }
-    init(id: String? = nil,
-             type: Int? = nil,
-             title: String? = nil,
-             description: String? = nil,
-             descriptionArabic: String? = nil,
-             updatedAt: String? = nil) {
+    init(id: String? = nil, type: Int? = nil, title: String? = nil, description: String? = nil, descriptionArabic: String? = nil, updatedAt: String? = nil) {
             self.id = id
             self.type = type
             self.title = title

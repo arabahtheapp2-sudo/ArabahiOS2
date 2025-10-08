@@ -20,7 +20,6 @@ struct ReportModalBody: Codable, Equatable {
     let userID, productID, message: String?
     let deleted: Bool?
     let id, createdAt, updatedAt: String?
-    let v: Int?
 
     enum CodingKeys: String, CodingKey {
         case userID = "userId"
@@ -28,6 +27,5 @@ struct ReportModalBody: Codable, Equatable {
         case message, deleted
         case id = "_id"
         case createdAt, updatedAt
-        case v = "__v"
     }
 }

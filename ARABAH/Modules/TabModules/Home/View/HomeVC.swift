@@ -197,14 +197,14 @@ class HomeVC: UIViewController {
             return
         }
         
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "SearchCategoryVC") as? SearchCategoryVC else { return }
+        guard let searchCategoryVC = storyboard?.instantiateViewController(withIdentifier: "SearchCategoryVC") as? SearchCategoryVC else { return }
         
         // Pass current location to search
         if let loc = viewModel.location {
-            vc.latitude = String(loc.latitude)
-            vc.longitude = String(loc.longitude)
+            searchCategoryVC.latitude = String(loc.latitude)
+            searchCategoryVC.longitude = String(loc.longitude)
         }
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(searchCategoryVC, animated: true)
     }
 
     @IBAction func btnScanTapped(_ sender: UIButton) {
@@ -213,16 +213,16 @@ class HomeVC: UIViewController {
 
     @IBAction func btnFilterTapped(_ sender: UIButton) {
         // Show filter options
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "FilterVC") as? FilterVC else { return }
+        guard let filterVC = storyboard?.instantiateViewController(withIdentifier: "FilterVC") as? FilterVC else { return }
         
         // Pass current location
         if let loc = viewModel.location {
-            vc.latitude = String(loc.latitude)
-            vc.longitude = String(loc.longitude)
+            filterVC.latitude = String(loc.latitude)
+            filterVC.longitude = String(loc.longitude)
         }
         
         // Handle filter selection callback
-        vc.callback = { [weak self] categoryId, isClear in
+        filterVC.callback = { [weak self] categoryId, isClear in
             guard let self = self, let loc = self.viewModel.location else { return }
 
             if isClear {
@@ -239,14 +239,14 @@ class HomeVC: UIViewController {
             }
         }
 
-        vc.modalPresentationStyle = .overCurrentContext
-        navigationController?.present(vc, animated: false)
+        filterVC.modalPresentationStyle = .overCurrentContext
+        navigationController?.present(filterVC, animated: false)
     }
 
     /// Helper for navigation
     private func navigate(to identifier: String) {
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: identifier) else { return }
-        navigationController?.pushViewController(vc, animated: true)
+        guard let toVC = storyboard?.instantiateViewController(withIdentifier: identifier) else { return }
+        navigationController?.pushViewController(toVC, animated: true)
     }
 }
 
@@ -281,7 +281,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         cell.homeColl.tag = indexPath.section
         cell.btnSeeAll.tag = indexPath.section
         cell.btnSeeAll.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
-        cell.headerLbl.text = section[indexPath.section]
+        cell.headerLbl.text = section[safe: indexPath.section]
         cell.btnSeeAll.addTarget(self, action: #selector(seeAllBtnTapped(_:)), for: .touchUpInside)
         return cell
     }
@@ -290,16 +290,16 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     @objc private func seeAllBtnTapped(_ sender: UIButton) {
         // Determine which screen to show based on section
         let vcID = sender.tag == 1 ? "CategoryVC" : "SubCategoryVC"
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: vcID) else { return }
+        guard let seeAllVC = storyboard?.instantiateViewController(withIdentifier: vcID) else { return }
         
         // Pass location data if needed
         if sender.tag == 1, let loc = viewModel.location {
-            (vc as? CategoryVC)?.latitude = String(loc.latitude)
-            (vc as? CategoryVC)?.longitude = String(loc.longitude)
+            (seeAllVC as? CategoryVC)?.latitude = String(loc.latitude)
+            (seeAllVC as? CategoryVC)?.longitude = String(loc.longitude)
         } else {
-            (vc as? SubCategoryVC)?.viewModel.check = 3
+            (seeAllVC as? SubCategoryVC)?.viewModel.check = 3
         }
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(seeAllVC, animated: true)
     }
 
     // Sets different heights for each section
@@ -324,7 +324,6 @@ extension HomeVC: GMSAutocompleteViewControllerDelegate {
     }
 
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
-        print("Autocomplete failed: \(error.localizedDescription)")
         dismiss(animated: true)
     }
 
@@ -339,14 +338,11 @@ extension HomeVC: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
-            print("Authorized When In Use or Always")
             manager.startUpdatingLocation()
             manager.requestLocation()
         case .denied, .restricted:
-            print("Permission Denied or Restricted")
             LocationPermissionManager.shared.showLocationSettingsAlert(from: self)
         case .notDetermined:
-            print("Permission Not Determined")
             locationManager.requestWhenInUseAuthorization()
         @unknown default:
             break
@@ -356,12 +352,11 @@ extension HomeVC: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // Got new location - update UI and stop to save battery
         guard let loc = locations.last else { return }
-        print("locationManager activated with---",loc)
         viewModel.updateLocation(loc.coordinate)
         manager.stopUpdatingLocation()
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location error: \(error.localizedDescription)")
+       // Location error
     }
 }

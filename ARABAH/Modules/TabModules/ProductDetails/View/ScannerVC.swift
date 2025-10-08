@@ -18,8 +18,8 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     @IBOutlet weak var simulateScanButton: UIView!
 
     // MARK: - Properties
-    var captureSession: AVCaptureSession!                // Manages input and output for real-time capture
-    var previewLayer: AVCaptureVideoPreviewLayer!        // Layer used to display the camera feed
+    var captureSession: AVCaptureSession?                // Manages input and output for real-time capture
+    var previewLayer: AVCaptureVideoPreviewLayer?        // Layer used to display the camera feed
 
     // MARK: - Lifecycle Methods
     override func viewDidLoad() {
@@ -27,16 +27,21 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         checkCameraPermission()
         backButton.accessibilityIdentifier = "BackButtonAccessibilityID"
         simulateScanButton.accessibilityIdentifier = "SimulateScanButtonAccessibilityID"
-        NotificationCenter.default.addObserver(self,selector: #selector(checkCameraPermissions),name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkCameraPermissions), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // Restart capture session if it was previously stopped
-        if captureSession?.isRunning == false {
-            DispatchQueue.global(qos: .background).async { [weak self] in
-                guard let self = self else { return }
-                self.captureSession.startRunning()
+        
+        guard let session = captureSession else {
+               // Capture session is not initialized
+            return
+        }
+        
+        if !session.isRunning {
+            DispatchQueue.global(qos: .background).async {
+                session.startRunning()
             }
         }
     }
@@ -44,9 +49,11 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         // Stop capture session when view disappears to save resources
-        if captureSession?.isRunning == true {
-            captureSession.stopRunning()
+        guard let session = captureSession, session.isRunning else {
+            return
         }
+        
+        session.stopRunning()
     }
     
     deinit {
@@ -65,92 +72,106 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
 
     @IBAction func btnScaner(_ sender: UIButton) {
         // Manually restart scanning if it's not running
-        if captureSession?.isRunning == false {
-            captureSession.startRunning()
+        guard let session = captureSession, !session.isRunning else {
+            return
+        }
+        
+        DispatchQueue.global(qos: .background).async {
+            session.startRunning()
         }
     }
 
     // MARK: - Setup Scanner
     /// Configures camera input, output, and barcode metadata detection
     func setupBarcodeScanner() {
-        captureSession = AVCaptureSession()
+        // Initialize the capture session safely
+        let session = AVCaptureSession()
+        self.captureSession = session
 
-        // Attempt to access the default camera device
+        // Access the default camera device
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
             showAlert(message: RegexMessages.cameraSupportError)
             return
         }
 
-        let videoInput: AVCaptureDeviceInput
-
-        // Attempt to create an input from the camera device
+        // Create input from camera
         do {
-            videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+            let videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+            if session.canAddInput(videoInput) {
+                session.addInput(videoInput)
+            } else {
+                showAlert(message: RegexMessages.failCamInputError)
+                return
+            }
         } catch {
             showAlert(message: RegexMessages.failCamError)
             return
         }
 
-        // Add the input to the session
-        if captureSession.canAddInput(videoInput) {
-            captureSession.addInput(videoInput)
-        } else {
-            showAlert(message: RegexMessages.failCamInputError)
-            return
-        }
-
         // Configure metadata output
         let metadataOutput = AVCaptureMetadataOutput()
-        if captureSession.canAddOutput(metadataOutput) {
-            captureSession.addOutput(metadataOutput)
+        if session.canAddOutput(metadataOutput) {
+            session.addOutput(metadataOutput)
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-            metadataOutput.metadataObjectTypes = [.ean8, .ean13, .code128] // Supported barcode types
+            metadataOutput.metadataObjectTypes = [.ean8, .ean13, .code128]
         } else {
             showAlert(message: RegexMessages.failMetaOutputError)
             return
         }
 
-        // Display the camera feed
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.frame = scannerView.bounds
-        previewLayer.videoGravity = .resizeAspectFill
-        scannerView.layer.addSublayer(previewLayer)
+        // Setup preview layer safely
+        let preview = AVCaptureVideoPreviewLayer(session: session)
+        preview.frame = scannerView.bounds
+        preview.videoGravity = .resizeAspectFill
+        scannerView.layer.addSublayer(preview)
+        self.previewLayer = preview
 
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.captureSession.startRunning()
+        // Start running session on background thread
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.captureSession?.startRunning()
         }
     }
+
 
     // MARK: - AVCaptureMetadataOutputObjectsDelegate
     /// Called when a metadata object (e.g. barcode) is detected
     func metadataOutput(_ output: AVCaptureMetadataOutput,
                         didOutput metadataObjects: [AVMetadataObject],
                         from connection: AVCaptureConnection) {
+        
         guard let metadataObject = metadataObjects.first else { return }
-
+        
         if let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
            let barcode = readableObject.stringValue {
+            
+            // Vibrate
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-            captureSession.stopRunning()
-
-            // Navigate to SubCatDetailVC with the scanned barcode
-            guard let vc = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
-            vc.qrCode = barcode
-            self.navigationController?.pushViewController(vc, animated: true)
-
-            print("Barcode value: \(barcode)")
+            
+            // Stop capture session safely
+            if let session = captureSession, session.isRunning {
+                session.stopRunning()
+            }
+            
+            // Navigate safely
+            if let subCatDetailVC = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC {
+                subCatDetailVC.qrCode = barcode
+                navigationController?.pushViewController(subCatDetailVC, animated: true)
+            } else {
+                // Failed to instantiate SubCatDetailVC
+            }
         }
     }
+
+
 
     // MARK: - Utility
     /// Shows an alert message and resumes the scanner after dismissal
     func showAlert(message: String) {
         let alert = UIAlertController(title: RegexTitles.result, message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: RegexTitles.OK, style: .default) { [weak self] _ in
+        alert.addAction(.init(title: RegexTitles.okTitle, style: .default) { [weak self] _ in
             DispatchQueue.global(qos: .background).async { [weak self] in
-                guard let self = self else { return }
-                self.captureSession.startRunning()
+                guard let self = self, let captureSession = self.captureSession else { return }
+                captureSession.startRunning()
             }
         })
         present(alert, animated: true)
@@ -162,7 +183,7 @@ extension ScannerVC: QRScannerViewDelegate {
 
     /// Called when QR scanner fails to read a code
     func qrScannerView(_ qrScannerView: QRScannerView, didFailure error: QRScannerError) {
-        print("QR Scanner Error: \(error)")
+        // QR Scanner Error
     }
 
     /// Called when a QR code is successfully scanned
@@ -172,19 +193,16 @@ extension ScannerVC: QRScannerViewDelegate {
             do {
                 if let jsonDict = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let productId = jsonDict["productId"] as? String {
-                    guard let vc = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
-                    vc.prodcutid = productId
-                    self.navigationController?.pushViewController(vc, animated: true)
-                    print("Extracted product ID: \(productId)")
+                    guard let subCatDetailVC = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
+                    subCatDetailVC.prodcutid = productId
+                    self.navigationController?.pushViewController(subCatDetailVC, animated: true)
                 } else {
-                    print("Failed to parse JSON")
+                    // Failed to parse JSON
                 }
             } catch {
-                print("Error decoding JSON: \(error.localizedDescription)")
+                // Error decoding JSON
             }
         }
-
-        print("Scan result: \(code)")
     }
 }
 
@@ -223,14 +241,13 @@ extension ScannerVC {
             message: RegexAlertMessages.cameraAllow,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: NSLocalizedString(RegexTitles.openSettings, comment: ""), style: .default) { [weak self] _ in
-            guard let _ = self else { return }
+        alert.addAction(UIAlertAction(title: NSLocalizedString(RegexTitles.openSettings, comment: ""), style: .default) { _ in
             if let appSettings = URL(string: UIApplication.openSettingsURLString),
                UIApplication.shared.canOpenURL(appSettings) {
                 UIApplication.shared.open(appSettings)
             }
         })
-        alert.addAction(UIAlertAction(title: NSLocalizedString(RegexTitles.cancel, comment: ""), style: .cancel,handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(title: NSLocalizedString(RegexTitles.cancel, comment: ""), style: .cancel, handler: { [weak self] _ in
             guard let self = self else { return }
             self.navigationController?.popViewController(animated: true)
         }))

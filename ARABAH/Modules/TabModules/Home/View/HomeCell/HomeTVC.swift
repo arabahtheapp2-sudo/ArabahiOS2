@@ -35,13 +35,13 @@ class HomeTVC: UITableViewCell {
     var isLoading: Bool = true
     
     /// Array of banner data to display when the collection view tag is 0.
-    var banner : [Banner]?
+    var banner: [Banner]?
     
     /// Array of category data to display when the collection view tag is 1.
-    var category : [Categorys]?
+    var category: [Categorys]?
     
     /// Array of latest product data to display when the collection view tag is 2.
-    var latProduct : [LatestProduct]?
+    var latProduct: [LatestProduct]?
     
     /// Title of the section used to adjust collection view layout.
     var sectionTitle = String() {
@@ -97,9 +97,6 @@ class HomeTVC: UITableViewCell {
         }
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
 }
 
 // MARK: - UICollectionView DataSource, Delegate, DelegateFlowLayout
@@ -152,97 +149,110 @@ extension HomeTVC: UICollectionViewDataSource, UICollectionViewDelegate, UIColle
     
     /// Configures and returns the cell for the collection view based on the tag and loading state.
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         switch homeColl.tag {
-        case 0: // Banner
-            guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "AdBannerCVC", for: indexPath) as? AdBannerCVC else {
-                return UICollectionViewCell()
-            }
-            // Show skeleton loading animation for image
-            cell.imgView.isSkeletonable = true
-            cell.imgView.showAnimatedGradientSkeleton()
-            
-            // When data is loaded, set banner image and hide skeleton
-            if !isLoading {
-                let imageIndex = (AppConstants.imageURL) + (banner?[indexPath.row].image ?? "")
-                cell.imgView.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder")) { [weak self] _, _, _, _ in
-                    guard let _ = self else { return }
+        case 0:
+            return configureBannerCell(for: indexPath)
+        case 1:
+            return configureCategoryCell(for: indexPath)
+        default:
+            return configureProductCell(for: indexPath)
+        }
+    }
+
+    private func configureBannerCell(for indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "AdBannerCVC", for: indexPath) as? AdBannerCVC else {
+            return UICollectionViewCell()
+        }
+        
+        cell.imgView.isSkeletonable = true
+        cell.imgView.showAnimatedGradientSkeleton()
+        
+        if !isLoading {
+            if let bannerData = banner?[safe: indexPath.row] {
+                let imageIndex = AppConstants.imageURL + (bannerData.image ?? "")
+                cell.imgView.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
                     cell.imgView.hideSkeleton()
                 }
+            } else {
+                cell.imgView.image = UIImage(named: "Placeholder")
             }
-            headerBgView.isHidden = true
-            return cell
-            
-        case 1: // Categories
-            guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "CategoriesCVC", for: indexPath) as? CategoriesCVC else {
-                return UICollectionViewCell()
-            }
-            // Show skeleton loading animation for image and label
-            cell.imgView.isSkeletonable = true
-            cell.imgView.showAnimatedGradientSkeleton()
-            cell.lblName.isSkeletonable = true
-            cell.lblName.showAnimatedGradientSkeleton()
-            
-            if !isLoading {
-                cell.lblName.hideSkeleton()
-                cell.lblName.text = category?[indexPath.row].categoryName ?? ""
-                
-                let catImageIndex = (AppConstants.imageURL) + (category?[indexPath.row].image ?? "")
-                cell.imgView.sd_setImage(with: URL(string: catImageIndex), placeholderImage: UIImage(named: "Placeholder")) { [weak self] _, _, _, _ in
-                    guard let _ = self else { return }
+        }
+        headerBgView.isHidden = true
+        return cell
+    }
+
+    private func configureCategoryCell(for indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "CategoriesCVC", for: indexPath) as? CategoriesCVC else {
+            return UICollectionViewCell()
+        }
+
+        cell.imgView.isSkeletonable = true
+        cell.lblName.isSkeletonable = true
+        cell.imgView.showAnimatedGradientSkeleton()
+        cell.lblName.showAnimatedGradientSkeleton()
+
+        if !isLoading {
+            cell.lblName.hideSkeleton()
+            if let categoryData = category?[safe: indexPath.row] {
+                cell.lblName.text = categoryData.categoryName ?? ""
+                let catImageIndex = AppConstants.imageURL + (categoryData.image ?? "")
+                cell.imgView.sd_setImage(with: URL(string: catImageIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
                     cell.imgView.hideSkeleton()
                 }
+            } else {
+                cell.lblName.text = ""
+                cell.imgView.image = UIImage(named: "Placeholder")
             }
-            headerBgView.isHidden = false
-            return cell
-            
-        default: // Latest products
-            guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "ProductsCVC", for: indexPath) as? ProductsCVC else {
-                return UICollectionViewCell()
-            }
-            
-            // Show skeleton loading animation for all UI elements
-            cell.lblName.isSkeletonable = true
-            cell.lblName.showAnimatedGradientSkeleton()
-            cell.lblRs.isSkeletonable = true
-            cell.lblRs.showAnimatedGradientSkeleton()
-            cell.imgView.isSkeletonable = true
-            cell.imgView.showAnimatedGradientSkeleton()
-            cell.lblKg.isSkeletonable = true
-            cell.lblKg.showAnimatedGradientSkeleton()
-            
-            if !isLoading {
-                // Hide skeletons and set actual content
-                cell.lblName.hideSkeleton()
-                cell.lblRs.hideSkeleton()
-                cell.lblKg.hideSkeleton()
+        }
+
+        headerBgView.isHidden = false
+        return cell
+    }
+
+    private func configureProductCell(for indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "ProductsCVC", for: indexPath) as? ProductsCVC else {
+            return UICollectionViewCell()
+        }
+
+        [cell.lblName, cell.lblRs, cell.lblKg, cell.imgView].forEach {
+            $0?.isSkeletonable = true
+            $0?.showAnimatedGradientSkeleton()
+        }
+
+        if !isLoading {
+            [cell.lblName, cell.lblRs, cell.lblKg].forEach { $0?.hideSkeleton() }
+            if let latProduct = latProduct?[safe: indexPath.row] {
+                cell.lblName.text = latProduct.name ?? ""
                 
-                cell.lblName.text = latProduct?[indexPath.row].name ?? ""
-                
-                // Calculate and format the minimum product price
-                let minPriceList = latProduct?[indexPath.row].product ?? []
+                let minPriceList = latProduct.product ?? []
                 let minValue = minPriceList.compactMap({ $0.price }).min() ?? 0.0
                 let val = (minValue == 0) ? "0" : (minValue.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", minValue) : String(format: "%.2f", minValue))
                 
                 let currentLang = L102Language.currentAppleLanguageFull()
-                switch currentLang {
-                case "ar":
-                    cell.lblRs.text = " ⃀ " + val + " " + PlaceHolderTitleRegex.from
-                default:
-                    cell.lblRs.text = PlaceHolderTitleRegex.from + " ⃀ " + val
-                }
+                cell.lblRs.text = currentLang == "ar" ?
+                    " ⃀ " + val + " " + PlaceHolderTitleRegex.from :
+                    PlaceHolderTitleRegex.from + " ⃀ " + val
                 
-                let latProdImgIndex = (AppConstants.imageURL) + (latProduct?[indexPath.row].image ?? "")
-                cell.imgView.sd_setImage(with: URL(string: latProdImgIndex), placeholderImage: UIImage(named: "Placeholder")) { [weak self] _, _, _, _ in
-                    guard let _ = self else { return }
+                let latProdImgIndex = AppConstants.imageURL + (latProduct.image ?? "")
+                cell.imgView.sd_setImage(with: URL(string: latProdImgIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
                     cell.imgView.hideSkeleton()
                 }
                 cell.lblKg.text = ""
                 headerBgView.isHidden = false
+            } else {
+                cell.lblName.text = ""
+                cell.lblKg.text = ""
+                cell.lblRs.text = ""
+                cell.imgView.image = UIImage(named: "Placeholder")
+                headerBgView.isHidden = true
             }
-            return cell
         }
+
+        return cell
     }
+
+    
+    
     
     /// Returns the size for the collection view cell based on the tag.
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -268,16 +278,16 @@ extension HomeTVC: UICollectionViewDataSource, UICollectionViewDelegate, UIColle
             break
             
         case 1:
-            guard let vc = parentVC?.storyboard?.instantiateViewController(withIdentifier: "SubCategoryVC") as? SubCategoryVC else { return }
-            vc.viewModel.categoryName = category?[indexPath.row].categoryName ?? ""
-            vc.viewModel.productID = category?[indexPath.row].id ?? ""
-            vc.viewModel.check = 1
-            parentVC?.navigationController?.pushViewController(vc, animated: true)
+            guard let categoryData = category?[safe: indexPath.row], let productID = categoryData.id, let subCategoryVC = parentVC?.storyboard?.instantiateViewController(withIdentifier: "SubCategoryVC") as? SubCategoryVC else { return }
+            subCategoryVC.viewModel.categoryName = categoryData.categoryName ?? ""
+            subCategoryVC.viewModel.productID = productID
+            subCategoryVC.viewModel.check = 1
+            parentVC?.navigationController?.pushViewController(subCategoryVC, animated: true)
             
         case 2:
-            guard let vc = parentVC?.storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
-            vc.prodcutid = latProduct?[indexPath.row].id ?? ""
-            parentVC?.navigationController?.pushViewController(vc, animated: true)
+            guard let latProduct = latProduct?[safe: indexPath.row], let productID = latProduct.id, let subCatDetailVC = parentVC?.storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
+            subCatDetailVC.prodcutid = productID
+            parentVC?.navigationController?.pushViewController(subCatDetailVC, animated: true)
             
         default:
             break

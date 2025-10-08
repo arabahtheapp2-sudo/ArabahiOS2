@@ -27,7 +27,7 @@ struct LoginModalBody: Codable, Equatable {
     var forgotPasswordToken: String?
     var isDeleted: Bool?
     var createdAt, updatedAt: String?
-    var v, loginTime: Int?
+    var loginTime: Int?
     var token: String?
 
     enum CodingKeys: String, CodingKey {
@@ -35,7 +35,6 @@ struct LoginModalBody: Codable, Equatable {
         case role, name, email, password, phone, phoneNnumberWithCode, image, countryCode, status, authToken, deviceToken, deviceType
         case isNotification = "IsNotification"
         case socialtype, otp, otpVerify, isProfileComplete, forgotPasswordToken, isDeleted, createdAt, updatedAt
-        case v = "__v"
         case loginTime, token
     }
     
@@ -53,10 +52,9 @@ struct LoginModalBody: Codable, Equatable {
         self.status = try container.decodeIfPresent(Int.self, forKey: .status)
         self.authToken = try container.decodeIfPresent(String.self, forKey: .authToken)
         self.deviceToken = try container.decodeIfPresent(String.self, forKey: .deviceToken)
-        //self.deviceType = try container.decodeIfPresent(String.self, forKey: .deviceType)
-        if let value = try? container.decode(String.self, forKey: .deviceType){
+        if let value = try? container.decode(String.self, forKey: .deviceType) {
             deviceType = value
-        }else if let value = try? container.decode(Int.self, forKey: .deviceType){
+        } else if let value = try? container.decode(Int.self, forKey: .deviceType) {
             deviceType = "\(value)"
         }
         self.isNotification = try container.decodeIfPresent(Int.self, forKey: .isNotification)
@@ -68,7 +66,6 @@ struct LoginModalBody: Codable, Equatable {
         self.isDeleted = try container.decodeIfPresent(Bool.self, forKey: .isDeleted)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         self.loginTime = try container.decodeIfPresent(Int.self, forKey: .loginTime)
         self.token = try container.decodeIfPresent(String.self, forKey: .token)
     }

@@ -14,7 +14,7 @@ class NotesListingVC: UIViewController {
     // MARK: - OUTLETS
     
     @IBOutlet weak var txtFldSearch: UITextField!  // Search field for filtering notes
-    @IBOutlet weak var NotesTblVieww: UITableView! // Table view displaying notes list
+    @IBOutlet weak var notesTblView: UITableView! // Table view displaying notes list
     
     // MARK: - VARIABLES
     
@@ -41,8 +41,8 @@ class NotesListingVC: UIViewController {
     
     /// Handles add button tap - navigates to new note screen
     @IBAction func btnAdd(_ sender: UIButton) {
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "NotesVC") as? NotesVC else { return }
-        self.navigationController?.pushViewController(vc, animated: true)
+        guard let notesVC = storyboard?.instantiateViewController(withIdentifier: "NotesVC") as? NotesVC else { return }
+        self.navigationController?.pushViewController(notesVC, animated: true)
     }
     
     /// Handles back button tap - returns to previous screen
@@ -66,34 +66,37 @@ extension NotesListingVC: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()  // Fallback for invalid cell
         }
         
-        let note = viewModel.filteredModal[indexPath.row]
-        
-        // Display first two lines of note text
-        if let notes = note.notesText, !notes.isEmpty {
-            cell.lblFirstTittle.text = notes[0].text ?? ""
-            cell.lblScondTittle.text = notes.count >= 2 ? notes[1].text ?? "" : PlaceHolderTitleRegex.noAdditionalText
-        }
-        
-        // Format creation date for display
-        let formato = DateFormatter()
-        formato.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"  // Parse server format
-        formato.timeZone = TimeZone(abbreviation: "UTC")
-        if let createdAt = note.createdAt, let date = formato.date(from: createdAt) {
-            formato.timeZone = TimeZone.current
-            formato.dateFormat = "hh:mm a"  // Display as "3:30 PM" format
-            cell.lblTime.text = formato.string(from: date)
+        if let note = viewModel.filteredModal[safe: indexPath.row] {
+            // Display first two lines of note text
+            if let notes = note.notesText, !notes.isEmpty {
+                cell.lblFirstTittle.text = notes[0].text ?? ""
+                cell.lblScondTittle.text = notes.count >= 2 ? notes[1].text ?? "" : PlaceHolderTitleRegex.noAdditionalText
+            }
+            
+            // Format creation date for display
+            let formato = DateFormatter()
+            formato.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"  // Parse server format
+            formato.timeZone = TimeZone(abbreviation: "UTC")
+            if let createdAt = note.createdAt, let date = formato.date(from: createdAt) {
+                formato.timeZone = TimeZone.current
+                formato.dateFormat = "hh:mm a"  // Display as "3:30 PM" format
+                cell.lblTime.text = formato.string(from: date)
+            } else {
+                cell.lblTime.text = "--"  // Fallback for invalid date
+            }
         } else {
-            cell.lblTime.text = "--"  // Fallback for invalid date
+            cell.lblFirstTittle.text = ""
+            cell.lblTime.text = "--"
+            cell.lblScondTittle.text = ""
         }
-        
         return cell
     }
     
     /// Handles note selection - opens note for editing
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "NotesVC") as? NotesVC else { return }
-        vc.notesId = viewModel.filteredModal[indexPath.row].id ?? ""  // Pass note ID
-        self.navigationController?.pushViewController(vc, animated: true)
+        guard let data = viewModel.filteredModal[safe: indexPath.row], let notesId = data.id, let notesVC = storyboard?.instantiateViewController(withIdentifier: "NotesVC") as? NotesVC else { return }
+        notesVC.notesId = notesId  // Pass note ID
+        self.navigationController?.pushViewController(notesVC, animated: true)
     }
     
     /// Configures swipe-to-delete action
@@ -101,16 +104,15 @@ extension NotesListingVC: UITableViewDelegate, UITableViewDataSource {
         let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] _, _, _ in
             guard let self = self else { return }
             // Show confirmation popup before deletion
-            guard let vc = self.storyboard?.instantiateViewController(identifier: "popUpVC") as? popUpVC else { return }
-            vc.modalPresentationStyle = .overFullScreen
-            vc.check = .deleteNote
-            vc.closure = { [weak self] in
-                guard let self = self else { return }
-                let getid = self.viewModel.filteredModal[indexPath.row].id ?? ""
+            guard let popUpVC = self.storyboard?.instantiateViewController(identifier: "popUpVC") as? PopUpVC else { return }
+            popUpVC.modalPresentationStyle = .overFullScreen
+            popUpVC.check = .deleteNote
+            popUpVC.closure = { [weak self] in
+                guard let self = self, let data = self.viewModel.filteredModal[safe: indexPath.row], let getid = data.id else { return }
                 self.viewModel.notesDeleteAPI(id: getid, isRetry: false)  // Delete from server
                 self.viewModel.removeModel(at: indexPath.row)  // Remove from local list
             }
-            self.present(vc, animated: true)
+            self.present(popUpVC, animated: true)
         }
         deleteAction.image = UIImage(named: "deleteBtn")  // Custom delete icon
         deleteAction.backgroundColor = #colorLiteral(red: 0.945, green: 0.945, blue: 0.945, alpha: 1)  // Light gray background
@@ -124,7 +126,7 @@ extension NotesListingVC: UITextFieldDelegate {
     /// Handles search field clear button
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         viewModel.resetFilter()  // Reset to show all notes
-        NotesTblVieww.reloadData()
+        notesTblView.reloadData()
         return true
     }
 }
@@ -141,17 +143,17 @@ extension NotesListingVC {
     /// Filters notes based on search text
     @objc private func searchNotes() {
         viewModel.filterNotes(searchText: txtFldSearch.text ?? "")
-        NotesTblVieww.reloadData()
+        notesTblView.reloadData()
     }
     
     /// Configures table view delegates and appearance
     private func setupTableView() {
-        NotesTblVieww.delegate = self
-        NotesTblVieww.dataSource = self
+        notesTblView.delegate = self
+        notesTblView.dataSource = self
     }
     
     private func setupIdentifier() {
-        NotesTblVieww.accessibilityIdentifier = "NotesTblVieww"
+        notesTblView.accessibilityIdentifier = "NotesTblVieww"
         txtFldSearch.accessibilityIdentifier = "txtFldSearch"
     }
     
@@ -181,7 +183,7 @@ extension NotesListingVC {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             showSuccess(message: RegexMessages.deleteNote)  // Show success message
             viewModel.getNotesAPI(isRetry: false)  // Refresh list after deletion
@@ -200,9 +202,9 @@ extension NotesListingVC {
             break
         case .loading:
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
-            NotesTblVieww.reloadData()  // Refresh with loaded notes
+            notesTblView.reloadData()  // Refresh with loaded notes
             setNoDataMsg(count: viewModel.filteredModal.count)  // Update empty state
         case .failure(let error):
             hideLoadingIndicator()
@@ -217,9 +219,9 @@ extension NotesListingVC {
     /// Shows/hides "no notes" message based on count
     private func setNoDataMsg(count: Int) {
         if count == 0 {
-            NotesTblVieww.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            notesTblView.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            NotesTblVieww.backgroundView = nil
+            notesTblView.backgroundView = nil
         }
     }
     

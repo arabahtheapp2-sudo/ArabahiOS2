@@ -22,7 +22,7 @@ class AddTicketVC: UIViewController, UITextViewDelegate {
     @IBOutlet weak var lblTittle: UILabel!
     
     /// Text field for entering ticket title
-    @IBOutlet var txtFldTittle: CustomTextField!
+    @IBOutlet var txtFldTittle: UITextField!
     
     /// Text view for entering ticket description
     @IBOutlet var txtViewDes: IQTextView!

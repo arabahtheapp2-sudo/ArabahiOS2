@@ -75,7 +75,7 @@ class NotificationListVC: UIViewController {
             isLoading = true
             showLoadingIndicator()
             notiListTbl.showAnimatedGradientSkeleton()
-        case .success(_):
+        case .success:
             hideLoadingIndicator()
             isLoading = false
             notiListTbl.reloadData()
@@ -104,7 +104,7 @@ class NotificationListVC: UIViewController {
         case .loading:
             isLoading = true
             showLoadingIndicator()
-        case .success(_):
+        case .success:
             notificaitonListAPI()
             hideLoadingIndicator()
         case .failure(let error):
@@ -166,14 +166,14 @@ class NotificationListVC: UIViewController {
     /// Handles clear all notifications button tap
     @IBAction func btnClearAll(_ sender: UIButton) {
         // Show confirmation popup before clearing
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "popUpVC") as? popUpVC else { return }
-        vc.check = .clearNotification
-        vc.closure = { [weak self] in
+        guard let popUpVC = storyboard?.instantiateViewController(withIdentifier: "popUpVC") as? PopUpVC else { return }
+        popUpVC.check = .clearNotification
+        popUpVC.closure = { [weak self] in
             self?.showLoadingIndicator()
             self?.deleteNotification()
         }
-        vc.modalPresentationStyle = .overCurrentContext
-        navigationController?.present(vc, animated: true)
+        popUpVC.modalPresentationStyle = .overCurrentContext
+        navigationController?.present(popUpVC, animated: true)
     }
 }
 
@@ -234,9 +234,9 @@ extension NotificationListVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Handle notification selection
         isselected = indexPath.row
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
-        vc.prodcutid = viewModel.productID(at: indexPath.row)
-        navigationController?.pushViewController(vc, animated: true)
+        guard let subCatDetailVC = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
+        subCatDetailVC.prodcutid = viewModel.productID(at: indexPath.row)
+        navigationController?.pushViewController(subCatDetailVC, animated: true)
         tableView.reloadData()
     }
 }

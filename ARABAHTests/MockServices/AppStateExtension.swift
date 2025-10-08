@@ -25,4 +25,3 @@ extension AppState: Equatable where Value: Equatable {
         }
     }
 }
-

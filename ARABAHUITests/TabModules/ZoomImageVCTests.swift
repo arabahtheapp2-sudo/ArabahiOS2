@@ -41,4 +41,3 @@ final class ZoomImageVCTests: XCTestCase {
         XCTAssertTrue(dealsHeader.waitForExistence(timeout: 3), "Should navigate back to Deals screen.")
     }
 }
-

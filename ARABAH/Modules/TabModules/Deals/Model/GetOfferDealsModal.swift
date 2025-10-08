@@ -20,7 +20,6 @@ struct GetOfferDealsModalBody: Codable, Equatable {
     let id, image: String?
     let deleted: Bool?
     let createdAt, updatedAt: String?
-    let v: Int?
     var decriptionArabic, decription: String?
     let storeID: StoreID?
 
@@ -29,7 +28,6 @@ struct GetOfferDealsModalBody: Codable, Equatable {
         case image
         case decription = "Decription"
         case deleted, createdAt, updatedAt
-        case v = "__v"
         case decriptionArabic = "DecriptionArabic"
         case storeID = "StoreId"
     }
@@ -42,7 +40,6 @@ struct GetOfferDealsModalBody: Codable, Equatable {
         self.deleted = try container.decodeIfPresent(Bool.self, forKey: .deleted)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         self.decriptionArabic = try container.decodeIfPresent(String.self, forKey: .decriptionArabic)
 
         let currentLang = L102Language.currentAppleLanguageFull()
@@ -61,20 +58,18 @@ struct GetOfferDealsModalBody: Codable, Equatable {
 struct StoreID: Codable, Equatable {
     let id, name, image, createdAt: String?
     let updatedAt: String?
-    let v: Int?
     let nameArabic: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case name, image, createdAt, updatedAt
-        case v = "__v"
         case nameArabic
     }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
-        //self.name = try container.decodeIfPresent(String.self, forKey: .name)
+        // self.name = try container.decodeIfPresent(String.self, forKey: .name)
         
         let currentLang = L102Language.currentAppleLanguageFull()
         switch currentLang {
@@ -87,8 +82,6 @@ struct StoreID: Codable, Equatable {
         self.image = try container.decodeIfPresent(String.self, forKey: .image)
         self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.v = try container.decodeIfPresent(Int.self, forKey: .v)
         self.nameArabic = try container.decodeIfPresent(String.self, forKey: .nameArabic)
     }
 }
-

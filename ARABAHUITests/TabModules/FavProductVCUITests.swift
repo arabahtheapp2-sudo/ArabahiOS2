@@ -67,4 +67,3 @@ final class FavProductVCUITests: XCTestCase {
         XCTAssertTrue(noDataView.waitForExistence(timeout: 5), "No Data message not shown when expected.")
     }
 }
-

@@ -14,10 +14,10 @@ final class RaiseTicketViewModel {
     // MARK: - Properties
     
     /// Published property to notify observers about state changes
-    @Published private(set) var state: AppState<getTicketModal> = .idle
+    @Published private(set) var state: AppState<GetTicketModal> = .idle
     
     /// Holds the list of support tickets fetched from the server
-    @Published private(set) var ticketBody: [getTicketModalBody]? = []
+    @Published private(set) var ticketBody: [GetTicketModalBody]? = []
     
     /// Combine cancellables to manage subscription lifecycle
     private var cancellables = Set<AnyCancellable>()
@@ -50,7 +50,7 @@ final class RaiseTicketViewModel {
                 if case .failure(let error) = completion {
                     self?.state = .failure(error)
                 }
-            } receiveValue: { [weak self] (response: getTicketModal) in
+            } receiveValue: { [weak self] (response: GetTicketModal) in
                 // Safely unwrap ticket list from response body
                 guard let contentBody = response.body else {
                     self?.state = .failure(.invalidResponse)

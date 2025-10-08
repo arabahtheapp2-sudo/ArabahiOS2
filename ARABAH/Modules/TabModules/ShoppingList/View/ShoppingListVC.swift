@@ -88,7 +88,7 @@ class ShoppingListVC: UIViewController {
             switch state {
             case .idle: break
             case .loading: showLoadingIndicator()
-            case .success(_):
+            case .success:
                 hideLoadingIndicator()
                 updateUI()
             case .failure(let error):
@@ -99,7 +99,7 @@ class ShoppingListVC: UIViewController {
         }
     
     
-    private func listDeleteState(_ state: AppState<shoppinglistDeleteModal>) {
+    private func listDeleteState(_ state: AppState<ShoppinglistDeleteModal>) {
            handleCommonState(state, successAction: { [weak self] in
                self?.viewModel.shoppingListAPI()
            })
@@ -117,7 +117,7 @@ class ShoppingListVC: UIViewController {
            switch state {
            case .idle: break
            case .loading: showLoadingIndicator()
-           case .success(_):
+           case .success:
                hideLoadingIndicator()
                successAction()
            case .failure(let error):
@@ -214,11 +214,10 @@ class ShoppingListVC: UIViewController {
     /// Synchronizes collection view scrolling across all visible cells
     func syncCollectionViewScroll() {
         guard let visibleCell = shoppingListTbl.visibleCells as? [ShoppingListTVC] else { return }
-        for cell in visibleCell {
-            if cell.cellColl.contentOffset != syncedOffset {
-                cell.cellColl.setContentOffset(syncedOffset, animated: false)
-            }
+        for cell in visibleCell where cell.cellColl.contentOffset != syncedOffset {
+            cell.cellColl.setContentOffset(syncedOffset, animated: false)
         }
+
     }
 }
 
@@ -321,11 +320,11 @@ extension ShoppingListVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         private func handleDeleteAction(at indexPath: IndexPath) {
-            guard let vc = storyboard?.instantiateViewController(identifier: "popUpVC") as? popUpVC else { return }
+            guard let popUpVC = storyboard?.instantiateViewController(identifier: "popUpVC") as? PopUpVC else { return }
             
-            vc.modalPresentationStyle = .overFullScreen
-            vc.check = .removeProduct
-            vc.closure = { [weak self] in
+            popUpVC.modalPresentationStyle = .overFullScreen
+            popUpVC.check = .removeProduct
+            popUpVC.closure = { [weak self] in
                 guard let self = self else { return }
                 let deleteIndex = self.viewModel.productIndex(from: indexPath)
                 if let id = self.viewModel.deleteProduct(at: deleteIndex) {
@@ -333,6 +332,6 @@ extension ShoppingListVC: UITableViewDelegate, UITableViewDataSource {
                     self.shoppingListTbl.deleteRows(at: [indexPath], with: .automatic)
                 }
             }
-            present(vc, animated: true)
+            self.present(popUpVC, animated: true)
         }
 }
