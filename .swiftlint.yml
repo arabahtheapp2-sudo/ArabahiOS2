@@ -1,0 +1,12 @@
+disabled_rules:
+ - trailing_whitespace
+ - vertical_whitespace
+ - line_length
+
+excluded:
+  - Pods
+
+function_body_length:
+  warning: 100
+  error: 110
+
