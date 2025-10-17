@@ -11,21 +11,21 @@ import UIKit
 class CategoryCVC: UICollectionViewCell {
     
     /// The container view that holds the entire content of the cell.
-    @IBOutlet var categoryView: UIView!
+    @IBOutlet weak var categoryView: UIView?
     
     /// UIImageView to display the category image.
-    @IBOutlet weak var categoryImg: UIImageView!
+    @IBOutlet weak var categoryImg: UIImageView?
     
     /// UILabel to display the category name.
-    @IBOutlet weak var categoryName: UILabel!
+    @IBOutlet weak var categoryName: UILabel?
     
     // MARK: - Cell Reuse Handling
     override func prepareForReuse() {
         super.prepareForReuse()
         
         // Reset image and label to default state
-        categoryImg.image = nil
-        categoryName.text = nil
+        categoryImg?.image = nil
+        categoryName?.text = nil
     }
     
 }

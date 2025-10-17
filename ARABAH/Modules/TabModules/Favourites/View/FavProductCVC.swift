@@ -13,19 +13,19 @@ class FavProductCVC: UICollectionViewCell {
     // MARK: - OUTLETS
     
     /// Label to display the unit of the product (e.g., gm, ml)
-    @IBOutlet weak var prodUnit: UILabel!
+    @IBOutlet weak var prodUnit: UILabel?
     
     /// Label to display the product price
-    @IBOutlet weak var prodPrice: UILabel!
+    @IBOutlet weak var prodPrice: UILabel?
     
     /// Label to display the product name
-    @IBOutlet weak var prodName: UILabel!
+    @IBOutlet weak var prodName: UILabel?
     
     /// ImageView to display the product image
-    @IBOutlet weak var prodImg: UIImageView!
+    @IBOutlet weak var prodImg: UIImageView?
     
     /// Button to toggle favorite status of the product
-    @IBOutlet weak var btnFav: UIButton!
+    @IBOutlet weak var btnFav: UIButton?
     
     // MARK: - DATA SETUP
     
@@ -36,13 +36,13 @@ class FavProductCVC: UICollectionViewCell {
             let imageIndex = (AppConstants.imageURL) + (self.setupObj?.productID?.image ?? "")
             
             // Show activity indicator while image loads
-            self.prodImg.sd_imageIndicator = SDWebImageActivityIndicator.gray
+            self.prodImg?.sd_imageIndicator = SDWebImageActivityIndicator.gray
             
             // Load the product image asynchronously with placeholder
-            self.prodImg.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder"))
+            self.prodImg?.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder"))
             
             // Set product name label from model
-            self.prodName.text = self.setupObj?.productID?.name ?? ""
+            self.prodName?.text = self.setupObj?.productID?.name ?? ""
             
             // Get product variations/prices array
             let data = self.setupObj?.productID?.product ?? []
@@ -71,13 +71,13 @@ class FavProductCVC: UICollectionViewCell {
             // Localize price display: Arabic adds a space after currency symbol
             switch currentLang {
             case "ar":
-                self.prodPrice.text = "⃀ " + "\(val)"
+                self.prodPrice?.text = "⃀ " + "\(val)"
             default:
-                self.prodPrice.text = "⃀" + "\(val)"
+                self.prodPrice?.text = "⃀" + "\(val)"
             }
             
             // Currently unit label is empty; update if needed
-            self.prodUnit.text = ""
+            self.prodUnit?.text = ""
         }
     }
     
@@ -85,15 +85,15 @@ class FavProductCVC: UICollectionViewCell {
         super.prepareForReuse()
         
         // Reset image to placeholder to avoid old image flicker
-        prodImg.image = nil
+        prodImg?.image = nil
         
         // Clear labels
-        prodUnit.text = ""
-        prodPrice.text = ""
-        prodName.text = ""
+        prodUnit?.text = ""
+        prodPrice?.text = ""
+        prodName?.text = ""
         
         // Optionally reset favorite button state if it changes dynamically
-        btnFav.isSelected = false
+        btnFav?.isSelected = false
     }
     
     

@@ -13,8 +13,8 @@ class NotesListingVC: UIViewController {
     
     // MARK: - OUTLETS
     
-    @IBOutlet weak var txtFldSearch: UITextField!  // Search field for filtering notes
-    @IBOutlet weak var notesTblView: UITableView! // Table view displaying notes list
+    @IBOutlet weak var txtFldSearch: UITextField?  // Search field for filtering notes
+    @IBOutlet weak var notesTblView: UITableView? // Table view displaying notes list
     
     // MARK: - VARIABLES
     
@@ -69,8 +69,8 @@ extension NotesListingVC: UITableViewDelegate, UITableViewDataSource {
         if let note = viewModel.filteredModal[safe: indexPath.row] {
             // Display first two lines of note text
             if let notes = note.notesText, !notes.isEmpty {
-                cell.lblFirstTittle.text = notes[0].text ?? ""
-                cell.lblScondTittle.text = notes.count >= 2 ? notes[1].text ?? "" : PlaceHolderTitleRegex.noAdditionalText
+                cell.lblFirstTittle?.text = notes[0].text ?? ""
+                cell.lblScondTittle?.text = notes.count >= 2 ? notes[1].text ?? "" : PlaceHolderTitleRegex.noAdditionalText
             }
             
             // Format creation date for display
@@ -80,14 +80,14 @@ extension NotesListingVC: UITableViewDelegate, UITableViewDataSource {
             if let createdAt = note.createdAt, let date = formato.date(from: createdAt) {
                 formato.timeZone = TimeZone.current
                 formato.dateFormat = "hh:mm a"  // Display as "3:30 PM" format
-                cell.lblTime.text = formato.string(from: date)
+                cell.lblTime?.text = formato.string(from: date)
             } else {
-                cell.lblTime.text = "--"  // Fallback for invalid date
+                cell.lblTime?.text = "--"  // Fallback for invalid date
             }
         } else {
-            cell.lblFirstTittle.text = ""
-            cell.lblTime.text = "--"
-            cell.lblScondTittle.text = ""
+            cell.lblFirstTittle?.text = ""
+            cell.lblTime?.text = "--"
+            cell.lblScondTittle?.text = ""
         }
         return cell
     }
@@ -126,7 +126,9 @@ extension NotesListingVC: UITextFieldDelegate {
     /// Handles search field clear button
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         viewModel.resetFilter()  // Reset to show all notes
-        notesTblView.reloadData()
+        DispatchQueue.main.async {
+            self.notesTblView?.reloadData()
+        }
         return true
     }
 }
@@ -136,25 +138,27 @@ extension NotesListingVC: UITextFieldDelegate {
 extension NotesListingVC {
     /// Sets up search text field with delegate and editing callback
     private func setupTextField() {
-        txtFldSearch.delegate = self
-        txtFldSearch.addTarget(self, action: #selector(searchNotes), for: .editingChanged)
+        txtFldSearch?.delegate = self
+        txtFldSearch?.addTarget(self, action: #selector(searchNotes), for: .editingChanged)
     }
     
     /// Filters notes based on search text
     @objc private func searchNotes() {
-        viewModel.filterNotes(searchText: txtFldSearch.text ?? "")
-        notesTblView.reloadData()
+        viewModel.filterNotes(searchText: txtFldSearch?.text ?? "")
+        DispatchQueue.main.async {
+            self.notesTblView?.reloadData()
+        }
     }
     
     /// Configures table view delegates and appearance
     private func setupTableView() {
-        notesTblView.delegate = self
-        notesTblView.dataSource = self
+        notesTblView?.delegate = self
+        notesTblView?.dataSource = self
     }
     
     private func setupIdentifier() {
-        notesTblView.accessibilityIdentifier = "NotesTblVieww"
-        txtFldSearch.accessibilityIdentifier = "txtFldSearch"
+        notesTblView?.accessibilityIdentifier = "NotesTblVieww"
+        txtFldSearch?.accessibilityIdentifier = "txtFldSearch"
     }
     
     /// Binds to ViewModel state changes
@@ -204,7 +208,9 @@ extension NotesListingVC {
             showLoadingIndicator()
         case .success:
             hideLoadingIndicator()
-            notesTblView.reloadData()  // Refresh with loaded notes
+            DispatchQueue.main.async {
+                self.notesTblView?.reloadData()  // Refresh with loaded notes
+            }
             setNoDataMsg(count: viewModel.filteredModal.count)  // Update empty state
         case .failure(let error):
             hideLoadingIndicator()
@@ -219,9 +225,9 @@ extension NotesListingVC {
     /// Shows/hides "no notes" message based on count
     private func setNoDataMsg(count: Int) {
         if count == 0 {
-            notesTblView.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            notesTblView?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            notesTblView.backgroundView = nil
+            notesTblView?.backgroundView = nil
         }
     }
     

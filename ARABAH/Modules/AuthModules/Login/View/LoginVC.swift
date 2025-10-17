@@ -14,12 +14,12 @@ import MBProgressHUD
 final class LoginVC: UIViewController {
     
     // MARK: - Outlets
-    @IBOutlet private weak var txtPhoneNumber: UITextField!
-    @IBOutlet private weak var viewMain: UIView!
-    @IBOutlet private weak var countryFlagImageView: UIImageView!
-    @IBOutlet private weak var countryCodeLabel: UILabel!
-    @IBOutlet private weak var signInButton: UIButton!
-    @IBOutlet private weak var guestButton: UIButton!
+    @IBOutlet private weak var txtPhoneNumber: UITextField?
+    @IBOutlet private weak var viewMain: UIView?
+    @IBOutlet private weak var countryFlagImageView: UIImageView?
+    @IBOutlet private weak var countryCodeLabel: UILabel?
+    @IBOutlet private weak var signInButton: UIButton?
+    @IBOutlet private weak var guestButton: UIButton?
     
     // MARK: - Properties
     private let countryPicker = CountryPickerView()                // Picker for country and phone code
@@ -38,16 +38,16 @@ final class LoginVC: UIViewController {
     // MARK: - UI Configuration
     private func setupViews() {
         // Style phone number input container
-        viewMain.layer.borderWidth = 1
-        viewMain.layer.borderColor = UIColor.systemGray4.cgColor
+        viewMain?.layer.borderWidth = 1
+        viewMain?.layer.borderColor = UIColor.systemGray4.cgColor
         
         // Set keyboard and alignment
-        txtPhoneNumber.keyboardType = .numberPad
-        txtPhoneNumber.textAlignment = Store.isArabicLang ? .right : .left
+        txtPhoneNumber?.keyboardType = .numberPad
+        txtPhoneNumber?.textAlignment = Store.isArabicLang ? .right : .left
         
         // Round the buttons
-        signInButton.layer.cornerRadius = 8
-        guestButton.layer.cornerRadius = 8
+        signInButton?.layer.cornerRadius = 8
+        guestButton?.layer.cornerRadius = 8
         
         DeviceTokenManager.clearDeviceToken()
     }
@@ -61,11 +61,11 @@ final class LoginVC: UIViewController {
     
     // MARK: - Accessibility Identifiers (for UI testing)
     private func setupAccessibility() {
-        txtPhoneNumber.accessibilityIdentifier = "login.phoneNumberTextField"
-        countryCodeLabel.accessibilityIdentifier = "login.countryCodeLabel"
-        countryFlagImageView.accessibilityIdentifier = "login.countryFlagImage"
-        signInButton.accessibilityIdentifier = "login.signInButton"
-        guestButton.accessibilityIdentifier = "login.guestButton"
+        txtPhoneNumber?.accessibilityIdentifier = "login.phoneNumberTextField"
+        countryCodeLabel?.accessibilityIdentifier = "login.countryCodeLabel"
+        countryFlagImageView?.accessibilityIdentifier = "login.countryFlagImage"
+        signInButton?.accessibilityIdentifier = "login.signInButton"
+        guestButton?.accessibilityIdentifier = "login.guestButton"
     }
     
     // MARK: - Combine ViewModel Binding
@@ -101,8 +101,8 @@ final class LoginVC: UIViewController {
     // Navigate to OTP Verification screen after successful login API response
     private func handleLoginSuccess(response: LoginModal) {
         guard let verificationVC = storyboard?.instantiateViewController(withIdentifier: "VerificationVC") as? VerificationVC else { return }
-        let countryCode = countryCodeLabel.text?.trimmingCharacters(in: .whitespaces) ?? ""
-        let phoneNumber = txtPhoneNumber.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let countryCode = countryCodeLabel?.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let phoneNumber = txtPhoneNumber?.text?.trimmingCharacters(in: .whitespaces) ?? ""
         verificationVC.countryCode =  countryCode
         // response.body?.countryCode ?? ""
         verificationVC.number = phoneNumber
@@ -112,8 +112,8 @@ final class LoginVC: UIViewController {
     
     // Triggers login API with entered country code and phone number
     private func apiRequest() {
-        let countryCode = countryCodeLabel.text?.trimmingCharacters(in: .whitespaces) ?? ""
-        let phoneNumber = txtPhoneNumber.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let countryCode = countryCodeLabel?.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let phoneNumber = txtPhoneNumber?.text?.trimmingCharacters(in: .whitespaces) ?? ""
         viewModel.login(countryCode: countryCode, phoneNumber: phoneNumber)
     }
     
@@ -138,8 +138,8 @@ final class LoginVC: UIViewController {
     /// Updates UI with selected country's phone code and flag
     private func updateCountryInfo(country: Country?) {
         guard let country = country else { return }
-        countryCodeLabel.text = country.phoneCode
-        countryFlagImageView.image = country.flag
+        countryCodeLabel?.text = country.phoneCode
+        countryFlagImageView?.image = country.flag
     }
     
     

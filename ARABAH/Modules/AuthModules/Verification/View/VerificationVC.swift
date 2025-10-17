@@ -13,15 +13,15 @@ import MBProgressHUD
 class VerificationVC: UIViewController {
     
     // MARK: - IBOutlets (UI elements)
-    @IBOutlet weak var resendBtn: UIButton!
-    @IBOutlet weak var verifyBtn: UIButton!
-    @IBOutlet weak var labelOTP: UILabel!
-    @IBOutlet var txtFldCollection: [OtpTextField]!
-    @IBOutlet weak var lblNumber: UILabel!
-    @IBOutlet weak var viewFour: UIView!
-    @IBOutlet weak var viewThree: UIView!
-    @IBOutlet weak var viewTwo: UIView!
-    @IBOutlet weak var viewOne: UIView!
+    @IBOutlet weak var resendBtn: UIButton?
+    @IBOutlet weak var verifyBtn: UIButton?
+    @IBOutlet weak var labelOTP: UILabel?
+    @IBOutlet var txtFldCollection: [OtpTextField]?
+    @IBOutlet weak var lblNumber: UILabel?
+    @IBOutlet weak var viewFour: UIView?
+    @IBOutlet weak var viewThree: UIView?
+    @IBOutlet weak var viewTwo: UIView?
+    @IBOutlet weak var viewOne: UIView?
     
     // MARK: - Properties
     private var phoneNumberWithCode: String {
@@ -60,22 +60,22 @@ class VerificationVC: UIViewController {
         }
         
         // Assign custom backspace delegate for OTP fields
-        txtFldCollection.forEach {
+        txtFldCollection?.forEach {
             $0.backspaceDelegate = self
         }
         
-        resendBtn.setLocalizedTitleButton(key: PlaceHolderTitleRegex.resend)
-        lblNumber.text = PlaceHolderTitleRegex.enter4DigitCode + "\(countryCode) \(number)"
+        resendBtn?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.resend)
+        lblNumber?.text = PlaceHolderTitleRegex.enter4DigitCode + "\(countryCode) \(number)"
     }
     
     // MARK: - Accessibility Identifiers (For UI testing)
     private func setupAccessibility() {
-        resendBtn.accessibilityIdentifier = "verification.resendButton"
-        verifyBtn.accessibilityIdentifier = "verification.verifyButton"
-        labelOTP.accessibilityIdentifier = "verification.timerLabel"
-        lblNumber.accessibilityIdentifier = "verification.phoneNumberLabel"
+        resendBtn?.accessibilityIdentifier = "verification.resendButton"
+        verifyBtn?.accessibilityIdentifier = "verification.verifyButton"
+        labelOTP?.accessibilityIdentifier = "verification.timerLabel"
+        lblNumber?.accessibilityIdentifier = "verification.phoneNumberLabel"
         
-        for (index, textField) in txtFldCollection.enumerated() {
+        txtFldCollection?.enumerated().forEach { index, textField in
             textField.accessibilityIdentifier = "verification.otpTextField\(index + 1)"
         }
     }
@@ -152,7 +152,7 @@ class VerificationVC: UIViewController {
     // MARK: - API Call Triggers
     private func verifyOTP() {
         self.view.endEditing(true)
-        let otp = txtFldCollection.map { $0.text ?? "" }.joined()
+        let otp = (txtFldCollection?.map { $0.text ?? "" }.joined() ?? "")
         
         viewModel.verifyOTP(otp: otp, phoneNumberWithCode: phoneNumberWithCode)
     }
@@ -164,7 +164,7 @@ class VerificationVC: UIViewController {
     // MARK: - OTP Timer
     private func startOTPTimer() {
         remainingSeconds = 300 // Reset timer
-        resendBtn.isEnabled = false
+        resendBtn?.isEnabled = false
         updateTimerLabel()
         
         timer = Timer.scheduledTimer(
@@ -182,15 +182,15 @@ class VerificationVC: UIViewController {
             updateTimerLabel()
         } else {
             timer?.invalidate()
-            labelOTP.text = ""
-            resendBtn.isEnabled = true
+            labelOTP?.text = ""
+            resendBtn?.isEnabled = true
         }
     }
     
     private func updateTimerLabel() {
         let minutes = remainingSeconds / 60
         let seconds = remainingSeconds % 60
-        labelOTP.text = String(format: "%02d:%02d", minutes, seconds)
+        labelOTP?.text = String(format: "%02d:%02d", minutes, seconds)
     }
     
     // MARK: - UI/State Handling Helpers
@@ -201,16 +201,16 @@ class VerificationVC: UIViewController {
     
     private func handleResendSuccess() {
         // Reset input fields on successful resend
-        txtFldCollection.forEach { $0.text = "" }
-        txtFldCollection.first?.becomeFirstResponder()
+        txtFldCollection?.forEach { $0.text = "" }
+        txtFldCollection?.first?.becomeFirstResponder()
         startOTPTimer()
     }
     
     private func handleVerificationFailure(_ error: NetworkError) {
         if error.shouldClearOTPFields {
             // Clear fields on specific failure messages
-            txtFldCollection.forEach { $0.text = "" }
-            txtFldCollection.first?.becomeFirstResponder()
+            txtFldCollection?.forEach { $0.text = "" }
+            txtFldCollection?.first?.becomeFirstResponder()
         } else {
             // Show retry alert
             CommonUtilities.shared.showAlertWithRetry(title: AppConstants.appName, message: error.localizedDescription) { [weak self] _ in
@@ -255,15 +255,15 @@ extension VerificationVC: UITextFieldDelegate, BackspaceTextFieldDelegate {
         if string.isEmpty {
             // Handle backspace
             textField.text = ""
-            if let otpTextField = textField as? OtpTextField, let index = txtFldCollection.firstIndex(of: otpTextField), index > 0 {
-                txtFldCollection[index - 1].becomeFirstResponder()
+            if let otpTextField = textField as? OtpTextField, let index = txtFldCollection?.firstIndex(of: otpTextField), index > 0 {
+                txtFldCollection?[index - 1].becomeFirstResponder()
             }
             return false
         } else {
             // Handle digit input and move forward
             textField.text = string
-            if let otpTextField = textField as? OtpTextField, let index = txtFldCollection.firstIndex(of: otpTextField), index < txtFldCollection.count - 1 {
-                txtFldCollection[index + 1].becomeFirstResponder()
+            if let otpTextField = textField as? OtpTextField, let index = txtFldCollection?.firstIndex(of: otpTextField), index < (txtFldCollection?.count ?? 0) - 1 {
+                txtFldCollection?[index + 1].becomeFirstResponder()
             } else {
                 textField.resignFirstResponder()
             }
@@ -273,8 +273,8 @@ extension VerificationVC: UITextFieldDelegate, BackspaceTextFieldDelegate {
     
     /// Handles backspace tap in custom OTP field
     func textFieldDidDelete(_ textField: OtpTextField) {
-        if let index = txtFldCollection.firstIndex(of: textField), index > 0 {
-            txtFldCollection[index - 1].becomeFirstResponder()
+        if let index = txtFldCollection?.firstIndex(of: textField), index > 0 {
+            txtFldCollection?[index - 1].becomeFirstResponder()
         }
     }
 }

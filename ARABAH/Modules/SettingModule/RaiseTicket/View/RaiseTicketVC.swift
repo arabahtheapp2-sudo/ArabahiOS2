@@ -16,13 +16,13 @@ class RaiseTicketVC: UIViewController {
     // MARK: - OUTLETS
     
     /// TableView to display the list of raised tickets
-    @IBOutlet weak var ticketTblView: UITableView!
+    @IBOutlet weak var ticketTblView: UITableView?
     
     /// Button to navigate to the Add Ticket screen
-    @IBOutlet weak var addTicketBtn: UIButton!
+    @IBOutlet weak var addTicketBtn: UIButton?
     
     /// Back navigation button
-    @IBOutlet weak var btnBack: UIButton!
+    @IBOutlet weak var btnBack: UIButton?
     
     // MARK: - VARIABLES
     
@@ -55,9 +55,9 @@ class RaiseTicketVC: UIViewController {
     
     /// Sets accessibility identifiers for UI test automation
     private func setupAccessibility() {
-        ticketTblView.accessibilityIdentifier = "ticketTblView"
-        addTicketBtn.accessibilityIdentifier = "addTicketBtn"
-        btnBack.accessibilityIdentifier = "btnBack"
+        ticketTblView?.accessibilityIdentifier = "ticketTblView"
+        addTicketBtn?.accessibilityIdentifier = "addTicketBtn"
+        btnBack?.accessibilityIdentifier = "btnBack"
     }
     
     /// Subscribes to the ViewModel's state and handles UI updates
@@ -80,7 +80,10 @@ class RaiseTicketVC: UIViewController {
         case .success:
             hideLoadingIndicator()
             setNoData(count: viewModel.ticketBody?.count ?? 0)
-            ticketTblView.reloadData()
+            DispatchQueue.main.async {
+                self.ticketTblView?.reloadData()
+            }
+            
         case .failure(let error):
             hideLoadingIndicator()
             setNoData(count: 0)
@@ -109,9 +112,9 @@ class RaiseTicketVC: UIViewController {
     /// Displays a "No Data" placeholder if no tickets are available
     func setNoData(count: Int) {
         if count == 0 {
-            ticketTblView.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            ticketTblView?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            ticketTblView.backgroundView = nil
+            ticketTblView?.backgroundView = nil
         }
     }
     
@@ -144,7 +147,10 @@ extension RaiseTicketVC: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         // Populate cell with ticket data
-        cell.ticketListing = viewModel.ticketBody?[safe: indexPath.row]
+        guard let data = viewModel.ticketBody?[safe: indexPath.row] else {
+             return cell
+        }
+        cell.ticketListing = data
         
         return cell
     }

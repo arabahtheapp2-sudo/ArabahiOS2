@@ -13,12 +13,12 @@ class FilterHeaderTVC: UITableViewCell {
     // MARK: - OUTLETS
 
     /// Label to display the section header title (e.g., "Categories", "Store Name", "Brand Name")
-    @IBOutlet weak var lblHeader: UILabel!
+    @IBOutlet weak var lblHeader: UILabel?
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
         // Reset label texts to empty strings
-        lblHeader.text = ""
+        lblHeader?.text = ""
     }
 }

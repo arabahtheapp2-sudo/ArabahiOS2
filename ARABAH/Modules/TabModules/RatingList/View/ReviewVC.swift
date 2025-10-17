@@ -15,16 +15,15 @@ class ReviewVC: UIViewController {
     // MARK: - Outlets
     
     // Displays the average rating
-    @IBOutlet weak var lblAvgRating: UILabel!
+    @IBOutlet weak var lblAvgRating: UILabel?
     
     // Shows total review count
-    @IBOutlet weak var lblTotalCountReview: UILabel!
+    @IBOutlet weak var lblTotalCountReview: UILabel?
     
     // Table view to display individual reviews
-    @IBOutlet weak var reviewTbl: UITableView!
+    @IBOutlet weak var reviewTbl: UITableView?
     
     // MARK: - Variables
-    
     // Handles review data fetching and processing
     var viewModel = RatingListViewModel()
     
@@ -54,15 +53,15 @@ class ReviewVC: UIViewController {
     
     /// Sets accessibility identifiers for UI testing
     private func setUpAccessibilityIdentifier() {
-        lblAvgRating.accessibilityIdentifier = "lblAvgRating"
-        lblTotalCountReview.accessibilityIdentifier = "lblTotalCountReview"
-        reviewTbl.accessibilityIdentifier = "reviewTbl"
+        lblAvgRating?.accessibilityIdentifier = "lblAvgRating"
+        lblTotalCountReview?.accessibilityIdentifier = "lblTotalCountReview"
+        reviewTbl?.accessibilityIdentifier = "reviewTbl"
     }
 
     /// Configures table view delegate and data source
     private func configureTable() {
-        reviewTbl.delegate = self
-        reviewTbl.dataSource = self
+        reviewTbl?.delegate = self
+        reviewTbl?.dataSource = self
     }
 
     // MARK: - Data Binding
@@ -81,7 +80,7 @@ class ReviewVC: UIViewController {
         viewModel.$averageRatingText
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                self?.lblAvgRating.text = value
+                self?.lblAvgRating?.text = value
             }
             .store(in: &cancellables)
 
@@ -89,7 +88,7 @@ class ReviewVC: UIViewController {
         viewModel.$totalReviewsText
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                self?.lblTotalCountReview.text = value
+                self?.lblTotalCountReview?.text = value
             }
             .store(in: &cancellables)
         
@@ -97,7 +96,7 @@ class ReviewVC: UIViewController {
         viewModel.$ratingList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.reviewTbl.reloadData()
+                self?.reviewTbl?.reloadData()
             }
             .store(in: &cancellables)
         
@@ -106,9 +105,9 @@ class ReviewVC: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] showEmpty in
                 if showEmpty {
-                    self?.reviewTbl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+                    self?.reviewTbl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
                 } else {
-                    self?.reviewTbl.backgroundView = nil
+                    self?.reviewTbl?.backgroundView = nil
                 }
             }
             .store(in: &cancellables)
@@ -177,11 +176,14 @@ extension ReviewVC: UITableViewDelegate, UITableViewDataSource {
 
     /// Configures each review cell with data
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = reviewTbl.dequeueReusableCell(withIdentifier: "ReviewTVC", for: indexPath) as? ReviewTVC else {
+        guard let cell = reviewTbl?.dequeueReusableCell(withIdentifier: "ReviewTVC", for: indexPath) as? ReviewTVC else {
             return UITableViewCell()
         }
         // Pass review data to cell for display
-        cell.ratingListing = viewModel.ratingList[safe: indexPath.row]
+        guard let data = viewModel.ratingList[safe: indexPath.row] else {
+             return cell
+        }
+        cell.ratingListing = data
         return cell
     }
 }

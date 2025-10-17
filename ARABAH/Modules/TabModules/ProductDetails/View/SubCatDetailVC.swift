@@ -11,46 +11,46 @@ class SubCatDetailVC: UIViewController, SocketDelegate, RangeSeekSliderDelegate,
     
     // MARK: - IBOutlets
     // Product Info Labels
-    @IBOutlet weak var lblProductUnit: UILabel!
-    @IBOutlet weak var lblProName: UILabel!
-    @IBOutlet weak var lblDescription: UILabel!
-    @IBOutlet weak var lblAmount: UILabel!
-    @IBOutlet weak var lblProductKgMl: UILabel!
-    @IBOutlet weak var lblTotalRaitingReview: UILabel!
-    @IBOutlet weak var lblLastPUpdate: UILabel!
-    @IBOutlet weak var lblTotalCountOffer: UILabel!
-    @IBOutlet weak var lblHeader: UILabel!
-    @IBOutlet weak var lblHistory: UILabel!
-    @IBOutlet weak var lblLowPrice: UILabel!
-    @IBOutlet weak var lblHighPrice: UILabel!
-    @IBOutlet weak var btnNotifyMe: UIButton!
-    @IBOutlet weak var heartBtn: UIButton!
-    @IBOutlet weak var btnSeeCommnet: UIButton!
-    @IBOutlet weak var btnSellSimilarPrdouct: UIButton!
-    @IBOutlet weak var offerSeeAll: UIButton!
-    @IBOutlet weak var btnTapReviewsButton: UIButton!
-    @IBOutlet weak var btnShare: UIButton!
-    @IBOutlet weak var didTapBackBtn: UIButton!
-    @IBOutlet weak var mainView: UIView!
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var chartVW: LineChartView!
-    @IBOutlet weak var greenVw: UIView!
-    @IBOutlet weak var reportView: UIView!
-    @IBOutlet weak var viewSlider: UIView!
-    @IBOutlet weak var viewPriceHistory: UIView!
-    @IBOutlet weak var viewHistoryPrice: CustomView!
-    @IBOutlet weak var offerTblView: UITableView!
-    @IBOutlet weak var commentTbl: UITableView!
-    @IBOutlet weak var bannerCollection: UICollectionView!
-    @IBOutlet weak var similarProColl: UICollectionView!
-    @IBOutlet weak var newSliderRange: UISlider!
-    @IBOutlet weak var slider: RangeSeekSlider!
-    @IBOutlet weak var txtView: IQTextView!
-    @IBOutlet weak var pgController: UIPageControl!
-    @IBOutlet weak var offerTblHeight: NSLayoutConstraint!
-    @IBOutlet weak var commentTblHeight: NSLayoutConstraint!
-    @IBOutlet weak var viewPriceHisHeight: NSLayoutConstraint!
-    @IBOutlet weak var viewHistoryPriceHieght: NSLayoutConstraint!
+    @IBOutlet weak var lblProductUnit: UILabel?
+    @IBOutlet weak var lblProName: UILabel?
+    @IBOutlet weak var lblDescription: UILabel?
+    @IBOutlet weak var lblAmount: UILabel?
+    @IBOutlet weak var lblProductKgMl: UILabel?
+    @IBOutlet weak var lblTotalRaitingReview: UILabel?
+    @IBOutlet weak var lblLastPUpdate: UILabel?
+    @IBOutlet weak var lblTotalCountOffer: UILabel?
+    @IBOutlet weak var lblHeader: UILabel?
+    @IBOutlet weak var lblHistory: UILabel?
+    @IBOutlet weak var lblLowPrice: UILabel?
+    @IBOutlet weak var lblHighPrice: UILabel?
+    @IBOutlet weak var btnNotifyMe: UIButton?
+    @IBOutlet weak var heartBtn: UIButton?
+    @IBOutlet weak var btnSeeCommnet: UIButton?
+    @IBOutlet weak var btnSellSimilarPrdouct: UIButton?
+    @IBOutlet weak var offerSeeAll: UIButton?
+    @IBOutlet weak var btnTapReviewsButton: UIButton?
+    @IBOutlet weak var btnShare: UIButton?
+    @IBOutlet weak var didTapBackBtn: UIButton?
+    @IBOutlet weak var mainView: UIView?
+    @IBOutlet weak var scrollView: UIScrollView?
+    @IBOutlet weak var chartVW: LineChartView?
+    @IBOutlet weak var greenVw: UIView?
+    @IBOutlet weak var reportView: UIView?
+    @IBOutlet weak var viewSlider: UIView?
+    @IBOutlet weak var viewPriceHistory: UIView?
+    @IBOutlet weak var viewHistoryPrice: CustomView?
+    @IBOutlet weak var offerTblView: UITableView?
+    @IBOutlet weak var commentTbl: UITableView?
+    @IBOutlet weak var bannerCollection: UICollectionView?
+    @IBOutlet weak var similarProColl: UICollectionView?
+    @IBOutlet weak var newSliderRange: UISlider?
+    @IBOutlet weak var slider: RangeSeekSlider?
+    @IBOutlet weak var txtView: IQTextView?
+    @IBOutlet weak var pgController: UIPageControl?
+    @IBOutlet weak var offerTblHeight: NSLayoutConstraint?
+    @IBOutlet weak var commentTblHeight: NSLayoutConstraint?
+    @IBOutlet weak var viewPriceHisHeight: NSLayoutConstraint?
+    @IBOutlet weak var viewHistoryPriceHieght: NSLayoutConstraint?
     
     // MARK: - Variables
     // ViewModel for business logic
@@ -135,31 +135,31 @@ class SubCatDetailVC: UIViewController, SocketDelegate, RangeSeekSliderDelegate,
         if Store.shared.authToken == nil || Store.shared.authToken == "" {
             authNil()
         } else {
-            let string = txtView.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+            let string = txtView?.text?.trimmingCharacters(in: .whitespacesAndNewlines)
             if string == "" {
                 CommonUtilities.shared.showAlert(message: RegexMessages.emptyMessage, isSuccess: .error)
             } else {
-                SocketIOManager.sharedInstance.getCommentList(productID: prodcutid, comment: txtView.text ?? "")
-                txtView.text = ""
+                SocketIOManager.sharedInstance.getCommentList(productID: prodcutid, comment: txtView?.text ?? "")
+                txtView?.text = ""
             }
         }
     }
     
     /// Show report view action
     @IBAction func didTapShowReportBtn(_ sender: UIButton) {
-        reportView.isHidden.toggle()
+        reportView?.isHidden.toggle()
     }
     
     /// Report button action
     @IBAction func didTapReportBtn(_ sender: UIButton) {
         if Store.shared.authToken == nil || Store.shared.authToken == "" {
-            reportView.isHidden = true
+            reportView?.isHidden = true
             authNil()
         } else {
             guard let reportVC = storyboard?.instantiateViewController(withIdentifier: "ReportVC") as? ReportVC else { return }
             reportVC.modalPresentationStyle = .overFullScreen
             reportVC.productID = prodcutid
-            reportView.isHidden = true
+            reportView?.isHidden = true
             present(reportVC, animated: true)
         }
     }
@@ -243,37 +243,37 @@ extension SubCatDetailVC {
     /// Configures initial view setup
      func setupView() {
         // Set delegates and data sources
-        bannerCollection.delegate = self
-        bannerCollection.dataSource = self
-        offerTblView.delegate = self
-        offerTblView.dataSource = self
-        commentTbl.delegate = self
-        commentTbl.dataSource = self
-        // Configure notify button appearance
-        btnNotifyMe.backgroundColor = .white
-        btnNotifyMe.setTitleColor(.set, for: .normal)
-        btnNotifyMe.layer.borderWidth = 1
-        btnNotifyMe.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+        bannerCollection?.delegate = self
+        bannerCollection?.dataSource = self
+        offerTblView?.delegate = self
+         offerTblView?.dataSource = self
+        commentTbl?.delegate = self
+        commentTbl?.dataSource = self
+        // Configu?re notify button appearance
+        btnNotifyMe?.backgroundColor = .white
+        btnNotifyMe?.setTitleColor(.set, for: .normal)
+        btnNotifyMe?.layer.borderWidth = 1
+        btnNotifyMe?.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
         // Initial view states
-        reportView.isHidden = true
-        chartVW.backgroundColor = .white
+        reportView?.isHidden = true
+        chartVW?.backgroundColor = .white
         // Localized text setup
-        txtView.placeholder = PlaceHolderTitleRegex.writeHere
-        lblHistory.text = PlaceHolderTitleRegex.historicalPrice
-        offerSeeAll.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
-        btnSeeCommnet.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
-        btnSellSimilarPrdouct.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
-        lblHeader.text = PlaceHolderTitleRegex.details
-        lblTotalCountOffer.text = PlaceHolderTitleRegex.offers
+        txtView?.placeholder = PlaceHolderTitleRegex.writeHere
+        lblHistory?.text = PlaceHolderTitleRegex.historicalPrice
+        offerSeeAll?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
+        btnSeeCommnet?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
+        btnSellSimilarPrdouct?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
+        lblHeader?.text = PlaceHolderTitleRegex.details
+        lblTotalCountOffer?.text = PlaceHolderTitleRegex.offers
     }
     
     /// Configures the range slider
      func setupSlider() {
-        slider.enableStep = false
-        slider.delegate = self
-        slider.disableRange = true
-        slider.hideLabels = true
-        slider.selectedHandleDiameterMultiplier = 1
+        slider?.enableStep = false
+        slider?.delegate = self
+        slider?.disableRange = true
+        slider?.hideLabels = true
+        slider?.selectedHandleDiameterMultiplier = 1
         // Configure floating value display
         floatingValueView.frame = CGRect(x: 0, y: -13, width: 150, height: 30)
         floatingValueView.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
@@ -281,74 +281,78 @@ extension SubCatDetailVC {
         floatingValueView.layer.masksToBounds = true
         floatingValueView.textAlignment = .center
         floatingValueView.font = UIFont.systemFont(ofSize: 14)
-        self.viewSlider.addSubview(floatingValueView)
+        self.viewSlider?.addSubview(floatingValueView)
     }
     
     // MARK: - UI Updates
     /// Updates all UI elements based on ViewModel data
      func updateUI() {
         // Basic product info
-        lblProName.text = viewModel.productName
-        lblTotalRaitingReview.text = viewModel.averageRating
-        lblDescription.text = viewModel.productDescription
-        lblTotalCountOffer.text = viewModel.offerCountText
-        lblLastPUpdate.text = viewModel.lastUpdateText
+        lblProName?.text = viewModel.productName
+        lblTotalRaitingReview?.text = viewModel.averageRating
+        lblDescription?.text = viewModel.productDescription
+        lblTotalCountOffer?.text = viewModel.offerCountText
+        lblLastPUpdate?.text = viewModel.lastUpdateText
         // Price display
-        lblAmount.text = viewModel.formattedPrice
-        lblProductUnit.text = viewModel.productUnit.isEmpty ? "" : "(\(viewModel.productUnit))"
+        lblAmount?.text = viewModel.formattedPrice
+        lblProductUnit?.text = viewModel.productUnit.isEmpty ? "" : "(\(viewModel.productUnit))"
         // Update heart button state
-        heartBtn.isSelected = viewModel.modal?.like == 1
+        heartBtn?.isSelected = viewModel.modal?.like == 1
         // Update notify button appearance
         if viewModel.modal?.notifyme?.notifyme == 0 {
-            btnNotifyMe.backgroundColor = .white
-            btnNotifyMe.setTitleColor(.set, for: .normal)
-            btnNotifyMe.layer.borderWidth = 1
-            btnNotifyMe.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            btnNotifyMe?.backgroundColor = .white
+            btnNotifyMe?.setTitleColor(.set, for: .normal)
+            btnNotifyMe?.layer.borderWidth = 1
+            btnNotifyMe?.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
         } else {
-            btnNotifyMe.backgroundColor = .set
-            btnNotifyMe.setTitleColor(.white, for: .normal)
+            btnNotifyMe?.backgroundColor = .set
+            btnNotifyMe?.setTitleColor(.white, for: .normal)
         }
         // Update comments visibility
-        btnSeeCommnet.isHidden = (viewModel.comments?.count ?? 0) == 0
+        btnSeeCommnet?.isHidden = (viewModel.comments?.count ?? 0) == 0
         // Update price history slider if data available
         if let priceRange = viewModel.priceRangeData, priceRange.totalAverage.count > 10 {
-            slider.minValue = CGFloat(priceRange.min)
-            slider.maxValue = CGFloat(priceRange.max)
-            slider.selectedMaxValue = CGFloat(priceRange.average)
-            lblLowPrice.text = "\(PlaceHolderTitleRegex.low) \(String(describing: priceRange.min.formatted))"
-            lblHighPrice.text = "\(PlaceHolderTitleRegex.high) \(String(describing: priceRange.max.formatted))"
+            slider?.minValue = CGFloat(priceRange.min)
+            slider?.maxValue = CGFloat(priceRange.max)
+            slider?.selectedMaxValue = CGFloat(priceRange.average)
+            lblLowPrice?.text = "\(PlaceHolderTitleRegex.low) \(String(describing: priceRange.min.formatted))"
+            lblHighPrice?.text = "\(PlaceHolderTitleRegex.high) \(String(describing: priceRange.max.formatted))"
             floatingValueView.text = "\(PlaceHolderTitleRegex.average) \(String(describing: priceRange.average.formatted))"
-            viewPriceHistory.isHidden = false
-            viewPriceHisHeight.constant = 117
+            viewPriceHistory?.isHidden = false
+            viewPriceHisHeight?.constant = 117
         } else {
-            viewPriceHistory.isHidden = true
-            viewPriceHisHeight.constant = 0
+            viewPriceHistory?.isHidden = true
+            viewPriceHisHeight?.constant = 0
         }
         // Update chart if data available
         if let chartData = viewModel.priceHistoryChartData {
-            chartVW.data = chartData
-            chartVW.notifyDataSetChanged()
-            viewHistoryPrice.isHidden = false
-            viewHistoryPriceHieght.constant = 260
+            chartVW?.data = chartData
+            chartVW?.notifyDataSetChanged()
+            viewHistoryPrice?.isHidden = false
+            viewHistoryPriceHieght?.constant = 260
         } else {
-            chartVW.clear()
-            viewHistoryPrice.isHidden = true
-            viewHistoryPriceHieght.constant = 0
+            chartVW?.clear()
+            viewHistoryPrice?.isHidden = true
+            viewHistoryPriceHieght?.constant = 0
         }
         // Reload data views
-        offerTblView.reloadData()
-        similarProColl.reloadData()
-        bannerCollection.reloadData()
-        commentTbl.reloadData()
+         DispatchQueue.main.async {
+             
+             
+             self.offerTblView?.reloadData()
+             self.similarProColl?.reloadData()
+             self.bannerCollection?.reloadData()
+             self.commentTbl?.reloadData()
+         }
         // Position floating value view based on slider
-        let currentValue = slider.selectedMaxValue
-        let minValue = slider.minValue
-        let maxValue = slider.maxValue
+         let currentValue = slider?.selectedMaxValue ?? 0.0
+         let minValue = slider?.minValue ?? 0.0
+         let maxValue = slider?.maxValue ?? 0.0
         guard maxValue > minValue else { return }
         let normalizedValue = (currentValue - minValue) / (maxValue - minValue)
-        let sliderTrackWidth = slider.frame.width - 32
-        let xPos = slider.frame.origin.x + (normalizedValue * sliderTrackWidth) + 16
-        floatingValueView.center = CGPoint(x: xPos, y: slider.frame.origin.y - 25)
+        let sliderTrackWidth = (slider?.frame.width ?? 0) - 32
+         let xPos = (slider?.frame.origin.x ?? 0) + (normalizedValue * sliderTrackWidth) + 16
+        floatingValueView.center = CGPoint(x: xPos, y: (slider?.frame.origin.y ?? 0) - 25)
     }
     
     // MARK: - RangeSeekSlider Delegate

@@ -23,6 +23,16 @@
         }
       }
     },
+    "Access forbidden" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الوصول ممنوع"
+          }
+        }
+      }
+    },
     "An unknown error occurred" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -30,6 +40,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "حدث خطأ غير معروف"
+          }
+        }
+      }
+    },
+    "API call failed. Please try again." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فشل استدعاء واجهة برمجة التطبيقات. يُرجى المحاولة مرة أخرى."
           }
         }
       }
@@ -552,6 +572,16 @@
         }
       }
     },
+    "Failed to parse response" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فشل تحليل الاستجابة"
+          }
+        }
+      }
+    },
     "Failed to parse server response" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -706,6 +736,26 @@
         }
       }
     },
+    "Invalid Encoding" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ترميز غير صالح"
+          }
+        }
+      }
+    },
+    "Invalid request" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "طلب غير صالح"
+          }
+        }
+      }
+    },
     "Last price updated on" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -836,6 +886,16 @@
         }
       }
     },
+    "Network error occurred" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حدث خطأ في الشبكة"
+          }
+        }
+      }
+    },
     "No" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -920,6 +980,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "لا يوجد إنترنت"
+          }
+        }
+      }
+    },
+    "No internet connection" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا يوجد اتصال بالإنترنت"
           }
         }
       }
@@ -1312,6 +1382,16 @@
         }
       }
     },
+    "Product New Price Update" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحديث سعر المنتج الجديد"
+          }
+        }
+      }
+    },
     "Product Prices" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1456,6 +1536,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "عرض الكل"
+          }
+        }
+      }
+    },
+    "Server error occurred" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حدث خطأ في الخادم"
+          }
+        }
+      }
+    },
+    "Session expired. Please login again." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى"
           }
         }
       }

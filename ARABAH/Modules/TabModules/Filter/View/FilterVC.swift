@@ -7,11 +7,11 @@ class FilterVC: UIViewController {
     
     // MARK: - OUTLETS
     
-    @IBOutlet weak var clearAllBn: UIButton!  // Button to clear all filters
-    @IBOutlet weak var lblFilter: UILabel!   // Title label "Filter"
-    @IBOutlet weak var fitlerTbl: UITableView!  // Table showing filter options
-    @IBOutlet var btnApply: UIButton!        // Button to apply selected filters
-    @IBOutlet var viewMain: UIView!          // Main container view with rounded corners
+    @IBOutlet weak var clearAllBn: UIButton? // Button to clear all filters
+    @IBOutlet weak var lblFilter: UILabel?   // Title label "Filter"
+    @IBOutlet weak var fitlerTbl: UITableView?  // Table showing filter options
+    @IBOutlet weak var btnApply: UIButton?        // Button to apply selected filters
+    @IBOutlet weak var viewMain: UIView?         // Main container view with rounded corners
     
     // MARK: - VARIABLES
     
@@ -67,7 +67,9 @@ class FilterVC: UIViewController {
             
         case .success:
             hideLoadingIndicator() // Hide spinner
-            fitlerTbl.reloadData() // Refresh table with new data
+            DispatchQueue.main.async {
+                self.fitlerTbl?.reloadData() // Refresh table with new data
+            }
             
         case .failure(let error):
             hideLoadingIndicator()
@@ -83,21 +85,21 @@ class FilterVC: UIViewController {
     
     private func setupView() {
         // Localize UI elements
-        self.lblFilter.setLocalizedTitle(key: PlaceHolderTitleRegex.filter)
-        self.clearAllBn.setLocalizedTitleButton(key: PlaceHolderTitleRegex.clear)
+        self.lblFilter?.setLocalizedTitle(key: PlaceHolderTitleRegex.filter)
+        self.clearAllBn?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.clear)
         
         // Style the main view with rounded top corners
-        viewMain.layer.cornerRadius = 26
-        viewMain.layer.masksToBounds = true
-        viewMain.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        viewMain?.layer.cornerRadius = 26
+        viewMain?.layer.masksToBounds = true
+        viewMain?.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         
         // Style the apply button
-        btnApply.layer.cornerRadius = 8
-        btnApply.layer.masksToBounds = true
+        btnApply?.layer.cornerRadius = 8
+        btnApply?.layer.masksToBounds = true
         
-        fitlerTbl.accessibilityIdentifier = "fitlerTbl"
-        btnApply.accessibilityIdentifier = "btnApply"
-        clearAllBn.accessibilityIdentifier = "clearAllBn"
+        fitlerTbl?.accessibilityIdentifier = "fitlerTbl"
+        btnApply?.accessibilityIdentifier = "btnApply"
+        clearAllBn?.accessibilityIdentifier = "clearAllBn"
     }
     
     // MARK: - DATA LOADING
@@ -121,9 +123,9 @@ class FilterVC: UIViewController {
     
     func setNoDataMsg(count: Int) {
         if count == 0 {
-            fitlerTbl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            fitlerTbl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            fitlerTbl.backgroundView = nil
+            fitlerTbl?.backgroundView = nil
         }
     }
     
@@ -140,7 +142,9 @@ class FilterVC: UIViewController {
     
     @IBAction func btnClear(_ sender: UIButton) {
         viewModel.clearSelections()
-        fitlerTbl.reloadData()
+        DispatchQueue.main.async {
+            self.fitlerTbl?.reloadData()
+        }
         self.dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             self.callback?("", true) // Clear all filters
@@ -173,7 +177,7 @@ extension FilterVC: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FilterHeaderTVC") as? FilterHeaderTVC else {
             return UIView()
         }
-        cell.lblHeader.text = headerSection[safe: section] // Set section title
+        cell.lblHeader?.text = headerSection[safe: section] // Set section title
         return cell.contentView
     }
     
@@ -183,7 +187,7 @@ extension FilterVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         // Set accessibility ID for testing
-        cell.btnCheck.accessibilityIdentifier = "checkbox_\(indexPath.section)_\(indexPath.row)"
+        cell.btnCheck?.accessibilityIdentifier = "checkbox_\(indexPath.section)_\(indexPath.row)"
         
         // Configure cell based on section
         switch indexPath.section {
@@ -191,11 +195,11 @@ extension FilterVC: UITableViewDelegate, UITableViewDataSource {
             if let category = viewModel.category?[safe: indexPath.row] {
                 cell.lblName?.text = category.categoryName ?? PlaceHolderTitleRegex.unknownCategory
                 let categoryID = category.id ?? ""
-                cell.btnCheck.setImage(viewModel.selectedCategoryIDs.contains(categoryID) ?
+                cell.btnCheck?.setImage(viewModel.selectedCategoryIDs.contains(categoryID) ?
                                        UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
             } else {
                 cell.lblName?.text = ""
-                cell.btnCheck.setImage(UIImage(named: "UnCheck"), for: .normal)
+                cell.btnCheck?.setImage(UIImage(named: "UnCheck"), for: .normal)
             }
             
             
@@ -203,11 +207,11 @@ extension FilterVC: UITableViewDelegate, UITableViewDataSource {
             if let store = viewModel.storeData?[safe: indexPath.row] {
                 cell.lblName?.text = store.name ?? ""
                 let storeID = store.id ?? ""
-                cell.btnCheck.setImage(viewModel.selectedStoreIDs.contains(storeID) ?
+                cell.btnCheck?.setImage(viewModel.selectedStoreIDs.contains(storeID) ?
                     UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
             } else {
                 cell.lblName?.text = ""
-                cell.btnCheck.setImage(UIImage(named: "UnCheck"), for: .normal)
+                cell.btnCheck?.setImage(UIImage(named: "UnCheck"), for: .normal)
             }
             
             
@@ -215,11 +219,11 @@ extension FilterVC: UITableViewDelegate, UITableViewDataSource {
             if let brand = viewModel.brand?[safe: indexPath.row] {
                 cell.lblName?.text = brand.brandname ?? ""
                 let brandID = brand.id ?? ""
-                cell.btnCheck.setImage(viewModel.selectedBrandIDs.contains(brandID) ?
+                cell.btnCheck?.setImage(viewModel.selectedBrandIDs.contains(brandID) ?
                     UIImage(named: "Check") : UIImage(named: "UnCheck"), for: .normal)
             } else {
                 cell.lblName?.text = ""
-                cell.btnCheck.setImage(UIImage(named: "UnCheck"), for: .normal)
+                cell.btnCheck?.setImage(UIImage(named: "UnCheck"), for: .normal)
             }
             
             
@@ -238,14 +242,24 @@ extension FilterVC: UITableViewDelegate, UITableViewDataSource {
         // Get ID of selected item
         var id = ""
         switch indexPath.section {
-        case 0: id = viewModel.category?[indexPath.row].id ?? ""
-        case 1: id = viewModel.storeData?[indexPath.row].id ?? ""
-        case 2: id = viewModel.brand?[indexPath.row].id ?? ""
+        case 0: 
+            guard let data = viewModel.category?[safe: indexPath.row], let safeId = data.id else { return }
+            id = safeId
+        case 1:
+            guard let data = viewModel.storeData?[safe: indexPath.row], let safeId = data.id else { return }
+            id = safeId
+            
+        case 2:
+            guard let data = viewModel.brand?[safe: indexPath.row], let safeId = data.id else { return }
+            id = safeId
+            
         default: return
         }
         
         // Toggle selection and refresh table
         viewModel.toggleSelection(id: id, section: indexPath.section)
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            tableView.reloadData()
+        }
     }
 }

@@ -19,13 +19,13 @@ class HomeVC: UIViewController {
     // MARK: - Outlets
     
     // All the UI components connected from storyboard
-    @IBOutlet weak var homeTbl: UITableView!          // Main table view for content
-    @IBOutlet weak var textFieldSearch: UITextField!  // Search field (currently decorative)
-    @IBOutlet weak var labelUsername: UILabel!        // Greeting label with user name
-    @IBOutlet weak var lblLocation: UILabel!         // Shows current city
-    @IBOutlet weak var btnLocation: UIButton!        // Button to change location
-    @IBOutlet weak var notificationButton: UIButton! // Notification bell icon
-    @IBOutlet weak var searchButton: UIButton!       // Search icon button
+    @IBOutlet weak var homeTbl: UITableView?          // Main table view for content
+    @IBOutlet weak var textFieldSearch: UITextField?  // Search field (currently decorative)
+    @IBOutlet weak var labelUsername: UILabel?        // Greeting label with user name
+    @IBOutlet weak var lblLocation: UILabel?        // Shows current city
+    @IBOutlet weak var btnLocation: UIButton?        // Button to change location
+    @IBOutlet weak var notificationButton: UIButton? // Notification bell icon
+    @IBOutlet weak var searchButton: UIButton?       // Search icon button
     
     // MARK: - Properties
     
@@ -56,13 +56,13 @@ class HomeVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // Update UI when view appears
-        textFieldSearch.textAlignment = Store.isArabicLang ? .right : .left
+        textFieldSearch?.textAlignment = Store.isArabicLang ? .right : .left
         
         // Personalize greeting with user's name if available
         if let name = Store.userDetails?.body?.name, !name.isEmpty {
-            labelUsername.text = "\(PlaceHolderTitleRegex.hello) \(name)"
+            labelUsername?.text = "\(PlaceHolderTitleRegex.hello) \(name)"
         } else {
-            labelUsername.text = PlaceHolderTitleRegex.hello
+            labelUsername?.text = PlaceHolderTitleRegex.hello
         }
     }
 
@@ -86,23 +86,23 @@ class HomeVC: UIViewController {
         viewModel.$currentCity
             .receive(on: DispatchQueue.main)
             .sink { [weak self] city in
-                self?.lblLocation.text = city
+                self?.lblLocation?.text = city
             }
             .store(in: &cancellables)
     }
 
     /// Configures table view with refresh control
     private func setupTableView() {
-        homeTbl.refreshControl = refreshControl
+        homeTbl?.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
     }
 
     /// Additional UI configuration
     private func setupUI() {
         // Set accessibility identifiers for testing
-        searchButton.accessibilityIdentifier = "Search"
-        notificationButton.accessibilityIdentifier = "Notification"
-        btnLocation.accessibilityIdentifier = "Location"
+        searchButton?.accessibilityIdentifier = "Search"
+        notificationButton?.accessibilityIdentifier = "Notification"
+        btnLocation?.accessibilityIdentifier = "Location"
     }
 
     /// Listens for app coming to foreground to recheck location
@@ -146,20 +146,24 @@ class HomeVC: UIViewController {
         case .loading:
             // Show loading state
             isLoading = true
-            homeTbl.reloadData()
+            DispatchQueue.main.async {
+                self.homeTbl?.reloadData()
+            }
             
         case .success:
             // Data loaded successfully
             isLoading = false
             refreshControl.endRefreshing()
-            homeTbl.backgroundView = nil
-            homeTbl.reloadData()
+            homeTbl?.backgroundView = nil
+            DispatchQueue.main.async {
+                self.homeTbl?.reloadData()
+            }
             
         case .failure(let error):
             // Show error state
             isLoading = false
             refreshControl.endRefreshing()
-            homeTbl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: .gray)
+            homeTbl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: .gray)
             
             // Offer retry option
             CommonUtilities.shared.showAlertWithRetry(title: AppConstants.appName, message: error.localizedDescription) { [weak self] _ in
@@ -167,7 +171,9 @@ class HomeVC: UIViewController {
             }
         case .validationError(let error):
             isLoading = false
-            homeTbl.reloadData()
+            DispatchQueue.main.async {
+                self.homeTbl?.reloadData()
+            }
             CommonUtilities.shared.showAlert(message: error.localizedDescription, isSuccess: .error)
         }
     }
@@ -264,25 +270,27 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Special case for empty layout section
         if indexPath.section == 3 {
-            return homeTbl.dequeueReusableCell(withIdentifier: "BannerTVC", for: indexPath)
+            return homeTbl?.dequeueReusableCell(withIdentifier: "BannerTVC", for: indexPath) ?? UITableViewCell()
         }
 
         // Main content cell
-        guard let cell = homeTbl.dequeueReusableCell(withIdentifier: "HomeTVC", for: indexPath) as? HomeTVC else {
+        guard let cell = homeTbl?.dequeueReusableCell(withIdentifier: "HomeTVC", for: indexPath) as? HomeTVC else {
             return UITableViewCell()
         }
-
+        guard let data = section[safe: indexPath.section] else {
+             return cell
+        }
         // Configure cell based on loading state
         cell.isLoading = isLoading
         cell.banner = viewModel.banner
         cell.category = viewModel.category
         cell.latProduct = viewModel.latProduct
-        cell.homeColl.reloadData()
-        cell.homeColl.tag = indexPath.section
-        cell.btnSeeAll.tag = indexPath.section
-        cell.btnSeeAll.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
-        cell.headerLbl.text = section[safe: indexPath.section]
-        cell.btnSeeAll.addTarget(self, action: #selector(seeAllBtnTapped(_:)), for: .touchUpInside)
+        cell.homeColl?.reloadData()
+        cell.homeColl?.tag = indexPath.section
+        cell.btnSeeAll?.tag = indexPath.section
+        cell.btnSeeAll?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.seeAll)
+        cell.headerLbl?.text = data
+        cell.btnSeeAll?.addTarget(self, action: #selector(seeAllBtnTapped(_:)), for: .touchUpInside)
         return cell
     }
 

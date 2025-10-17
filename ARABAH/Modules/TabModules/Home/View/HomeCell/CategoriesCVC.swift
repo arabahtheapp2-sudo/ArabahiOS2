@@ -11,18 +11,18 @@ import UIKit
 class CategoriesCVC: UICollectionViewCell {
     
     /// UIImageView to display the category image.
-    @IBOutlet var imgView: UIImageView!
+    @IBOutlet weak var imgView: UIImageView?
     
     /// UILabel to display the category name.
-    @IBOutlet var lblName: UILabel!
+    @IBOutlet weak var lblName: UILabel?
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
         // Reset image to avoid flickering old images
-        imgView.image = nil
+        imgView?.image = nil
         
         // Clear label text
-        lblName.text = nil
+        lblName?.text = nil
     }
 }

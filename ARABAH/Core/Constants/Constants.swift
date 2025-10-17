@@ -187,22 +187,22 @@ enum PlaceHolderTitleRegex {
     
     
     
-    static let seeAll = "See all"
-    static let productNewPriceUpdate = "Product New Price Update"
-    static let name = "Name"
-    static let noTitle = "No"
-    static let resend = "Resend"
-    static let PleaseEnterValidOTP = "Please enter valid OTP"
+    static let seeAll = NSLocalizedString("See all", comment: "")
+    static let productNewPriceUpdate = NSLocalizedString("Product New Price Update", comment: "")
+    static let name = NSLocalizedString("Name", comment: "")
+    static let noTitle = NSLocalizedString("No", comment: "")
+    static let resend = NSLocalizedString("Resend", comment: "")
+    static let PleaseEnterValidOTP = NSLocalizedString("Please enter valid OTP", comment: "")
     static let PleaseEnterValidOTPAR = "الرجاء إدخال OTP صالح"
-    static let apiFailTryAgain = "API call failed. Please try again."
-    static let product = "Product"
-    static let category = "Category"
-    static let filter = "Filter"
-    static let clear = "Clear"
-    static let clearAll = "Clear all"
-    static let categoriesHome = "Categories"
-    static let bannerHome = "banner"
-    static let skipSignIn = "Skip Sign In"
+    static let apiFailTryAgain = NSLocalizedString("API call failed. Please try again.", comment: "")
+    static let product = NSLocalizedString("Product", comment: "")
+    static let category = NSLocalizedString("Category", comment: "")
+    static let filter = NSLocalizedString("Filter", comment: "")
+    static let clear = NSLocalizedString("Clear", comment: "")
+    static let clearAll = NSLocalizedString("Clear all", comment: "")
+    static let categoriesHome = NSLocalizedString("Categories", comment: "")
+    static let bannerHome = NSLocalizedString("banner", comment: "")
+    static let skipSignIn = NSLocalizedString("Skip Sign In", comment: "")
     
     
 }
@@ -228,4 +228,3 @@ var rootVC: UIViewController? {
         }
     }
 }
-

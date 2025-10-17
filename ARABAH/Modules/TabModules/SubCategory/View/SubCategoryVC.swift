@@ -20,13 +20,13 @@ class SubCategoryVC: UIViewController {
     private let refreshControl = UIRefreshControl()
     
     /// Collection view to display sub-category products
-    @IBOutlet weak var subCategoryColl: UICollectionView!
+    @IBOutlet weak var subCategoryColl: UICollectionView?
     
     /// Header label showing the category title
-    @IBOutlet weak var headerLbll: UILabel!
+    @IBOutlet weak var headerLbll: UILabel?
     
     /// Back button to navigate to previous screen
-    @IBOutlet weak var btnBack: UIButton!
+    @IBOutlet weak var btnBack: UIButton?
     
     // MARK: - VARIABLES
     
@@ -59,7 +59,7 @@ class SubCategoryVC: UIViewController {
     
     /// Loads initial data and sets up the view
     private func loadInitialData() {
-        headerLbll.text = viewModel.currentHeaderTitle
+        headerLbll?.text = viewModel.currentHeaderTitle
         viewModel.refresh(isRetry: false)
     }
 }
@@ -76,47 +76,47 @@ extension SubCategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, U
     
     /// Configures and returns collection view cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = subCategoryColl.dequeueReusableCell(withReuseIdentifier: "SubCategoryCVC", for: indexPath) as? SubCategoryCVC else {
+        guard let cell = subCategoryColl?.dequeueReusableCell(withReuseIdentifier: "SubCategoryCVC", for: indexPath) as? SubCategoryCVC else {
             return UICollectionViewCell()
         }
         
         // Configure skeleton view properties
-        cell.imgView.isSkeletonable = true
-        cell.lblName.isSkeletonable = true
-        cell.lblProductUnit.isSkeletonable = true
-        cell.btnAdd.isSkeletonable = true
-        cell.btnAdd.layer.cornerRadius = cell.btnAdd.frame.size.width / 2
-        cell.btnAdd.clipsToBounds = true
+        cell.imgView?.isSkeletonable = true
+        cell.lblName?.isSkeletonable = true
+        cell.lblProductUnit?.isSkeletonable = true
+        cell.btnAdd?.isSkeletonable = true
+        cell.btnAdd?.layer.cornerRadius = (cell.btnAdd?.frame.size.width ?? 0) / 2
+        cell.btnAdd?.clipsToBounds = true
         
         if viewModel.displayItems.isEmpty {
             // Show skeleton loading views
-            cell.imgView.showAnimatedGradientSkeleton()
-            cell.lblName.showAnimatedGradientSkeleton()
-            cell.lblProductUnit.showAnimatedGradientSkeleton()
-            cell.btnAdd.showAnimatedGradientSkeleton()
+            cell.imgView?.showAnimatedGradientSkeleton()
+            cell.lblName?.showAnimatedGradientSkeleton()
+            cell.lblProductUnit?.showAnimatedGradientSkeleton()
+            cell.btnAdd?.showAnimatedGradientSkeleton()
         } else {
             // Configure cell with actual data
             if let item = viewModel.displayItems[safe: indexPath.row] {
-                cell.lblName.text = item.name
-                cell.lblProductUnit.text = item.productUnit
+                cell.lblName?.text = item.name
+                cell.lblProductUnit?.text = item.productUnit
                 
                 // Load product image with placeholder
-                cell.imgView.sd_setImage(with: URL(string: item.imageURL), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
-                    cell.imgView.hideSkeleton()
+                cell.imgView?.sd_setImage(with: URL(string: item.imageURL), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+                    cell.imgView?.hideSkeleton()
                 }
             } else {
-                cell.lblName.text = ""
-                cell.lblProductUnit.text = ""
-                cell.imgView.image = UIImage(named: "Placeholder")
+                cell.lblName?.text = ""
+                cell.lblProductUnit?.text = ""
+                cell.imgView?.image = UIImage(named: "Placeholder")
             }
             
             
             // Hide skeletons and set up real data
-            cell.lblName.hideSkeleton()
-            cell.lblProductUnit.hideSkeleton()
-            cell.btnAdd.hideSkeleton()
-            cell.btnAdd.tag = indexPath.row
-            cell.btnAdd.addTarget(self, action: #selector(addbtn(_:)), for: .touchUpInside)
+            cell.lblName?.hideSkeleton()
+            cell.lblProductUnit?.hideSkeleton()
+            cell.btnAdd?.hideSkeleton()
+            cell.btnAdd?.tag = indexPath.row
+            cell.btnAdd?.addTarget(self, action: #selector(addbtn(_:)), for: .touchUpInside)
         }
         
         return cell
@@ -129,22 +129,22 @@ extension SubCategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, U
     
     /// Returns size for collection view item
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: subCategoryColl.frame.width / 2, height: 186)
+        return CGSize(width: (subCategoryColl?.frame.width ?? 0) / 2, height: 186)
     }
     
     /// Handles item selection in collection view
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard !viewModel.displayItems.isEmpty else { return }
-        let selectedId = viewModel.displayItems[indexPath.row].id
+        guard let selectedObj = viewModel.displayItems[safe: indexPath.row] else { return }
         
         if viewModel.check == 2 {
             // If in selection mode, return the selected ID via callback
-            idCallback?(selectedId)
+            idCallback?(selectedObj.id)
             navigationController?.popViewController(animated: false)
         } else {
             // Otherwise, navigate to product detail view
             guard let subCatDetailVC = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
-            subCatDetailVC.prodcutid = selectedId
+            subCatDetailVC.prodcutid = selectedObj.id
             navigationController?.pushViewController(subCatDetailVC, animated: true)
         }
     }
@@ -157,22 +157,22 @@ extension SubCategoryVC {
     /// Sets up accessibility identifiers for UI testing
     private func setUpAccessibilityIdentifier() {
         self.view.accessibilityIdentifier = "SubCatDetailVC_Container"
-        subCategoryColl.accessibilityIdentifier = "subCategoryColl"
-        btnBack.accessibilityIdentifier = "Back"
+        subCategoryColl?.accessibilityIdentifier = "subCategoryColl"
+        btnBack?.accessibilityIdentifier = "Back"
     }
     
     /// Sets up collection view delegates and data source
     private func setUpCollectionView() {
-        subCategoryColl.delegate = self
-        subCategoryColl.dataSource = self
+        subCategoryColl?.delegate = self
+        subCategoryColl?.dataSource = self
     }
     
     /// Configures pull-to-refresh functionality
     private func setUpRefreshController() {
         if #available(iOS 10.0, *) {
-            subCategoryColl.refreshControl = refreshControl
+            subCategoryColl?.refreshControl = refreshControl
         } else {
-            subCategoryColl.addSubview(refreshControl)
+            subCategoryColl?.addSubview(refreshControl)
         }
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
     }
@@ -249,7 +249,9 @@ extension SubCategoryVC {
             showLoadingIndicator()
         case .success:
             refreshControl.endRefreshing()
-            subCategoryColl.reloadData()
+            DispatchQueue.main.async {
+                self.subCategoryColl?.reloadData()
+            }
             setNoDataMsg()
             hideLoadingIndicator()
         case .failure(let error):
@@ -276,7 +278,9 @@ extension SubCategoryVC {
             showLoadingIndicator()
         case .success:
             refreshControl.endRefreshing()
-            subCategoryColl.reloadData()
+            DispatchQueue.main.async {
+                self.subCategoryColl?.reloadData()
+            }
             setNoDataMsg()
             hideLoadingIndicator()
         case .failure(let error):
@@ -302,7 +306,9 @@ extension SubCategoryVC {
         case .success:
             hideLoadingIndicator()
             refreshControl.endRefreshing()
-            subCategoryColl.reloadData()
+            DispatchQueue.main.async {
+                self.subCategoryColl?.reloadData()
+            }
             setNoDataMsg()
         case .failure(let error):
             hideLoadingIndicator()
@@ -321,9 +327,9 @@ extension SubCategoryVC {
     /// Shows no data message when collection view is empty
     private func setNoDataMsg() {
         if viewModel.displayItems.isEmpty {
-            subCategoryColl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            subCategoryColl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            subCategoryColl.backgroundView = nil
+            subCategoryColl?.backgroundView = nil
         }
     }
 

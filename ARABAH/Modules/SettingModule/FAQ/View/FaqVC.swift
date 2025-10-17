@@ -15,7 +15,7 @@ class FaqVC: UIViewController {
     // MARK: - OUTLET
     
     /// Table view to display list of FAQs
-    @IBOutlet weak var faqTableView: UITableView!
+    @IBOutlet weak var faqTableView: UITableView?
     
     // MARK: - VARIABLES
     
@@ -45,7 +45,7 @@ class FaqVC: UIViewController {
     
     /// Set accessibility identifiers for UI elements
     private func setupAccessibility() {
-        faqTableView.accessibilityIdentifier = "faqTableView"
+        faqTableView?.accessibilityIdentifier = "faqTableView"
     }
     
     // MARK: - Data Binding
@@ -73,7 +73,10 @@ class FaqVC: UIViewController {
             // Hide loader and reload table with data
             hideLoadingIndicator()
             setNoDataMsg(count: viewModel.faqList?.count ?? 0)
-            faqTableView.reloadData()
+            DispatchQueue.main.async {
+                self.faqTableView?.reloadData()
+            }
+            
         case .failure(let error):
             // Hide loader, show empty view, and display error alert
             hideLoadingIndicator()
@@ -104,9 +107,9 @@ class FaqVC: UIViewController {
     /// Sets a no-data placeholder message when list is empty
     func setNoDataMsg(count: Int) {
         if count == 0 {
-            faqTableView.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            faqTableView?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            faqTableView.backgroundView = nil
+            faqTableView?.backgroundView = nil
         }
     }
     
@@ -135,30 +138,31 @@ extension FaqVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         // Accessibility IDs for UI Testing
-        cell.onClickBtn.accessibilityIdentifier = "faqExpandButton"
-        cell.lblBody.accessibilityIdentifier = "faqAnswerLabel"
+        cell.onClickBtn?.accessibilityIdentifier = "faqExpandButton"
+        cell.lblBody?.accessibilityIdentifier = "faqAnswerLabel"
         
         // Set the question title
         
         
         if let faqData = viewModel.faqList?[safe: indexPath.row] {
-            cell.faqHeadingLbl.text = faqData.question ?? ""
-            cell.lblBody.text = selectIndex == indexPath.row ? faqData.answer ?? "" : ""
+            cell.faqHeadingLbl?.text = faqData.question ?? ""
+            cell.lblBody?.text = selectIndex == indexPath.row ? faqData.answer ?? "" : ""
+            
+            // Set arrow direction icon (up if expanded, down otherwise)
+            cell.imgArrow?.image = selectIndex == indexPath.row ? UIImage(named: "ic_arrow_up") : UIImage(named: "ic_arrow_down")
+            
+            // Button action to toggle selection
+            cell.onClickBtn?.removeTarget(nil, action: nil, for: .allEvents)
+            cell.onClickBtn?.addTarget(self, action: #selector(tickUntick), for: .touchUpInside)
+            cell.onClickBtn?.tag = indexPath.row
+            
+            // Set corner radius dynamically depending on whether answer is visible
+            cell.mainVw?.cornerRadius = (cell.lblBody?.text?.isEmpty ?? true) ? 16 : 6
         } else {
-            cell.faqHeadingLbl.text = ""
-            cell.lblBody.text = ""
+            cell.faqHeadingLbl?.text = ""
+            cell.lblBody?.text = ""
         }
-        
-        // Set arrow direction icon (up if expanded, down otherwise)
-        cell.imgArrow.image = selectIndex == indexPath.row ? UIImage(named: "ic_arrow_up") : UIImage(named: "ic_arrow_down")
-        
-        // Button action to toggle selection
-        cell.onClickBtn.removeTarget(nil, action: nil, for: .allEvents)
-        cell.onClickBtn.addTarget(self, action: #selector(tickUntick), for: .touchUpInside)
-        cell.onClickBtn.tag = indexPath.row
-        
-        // Set corner radius dynamically depending on whether answer is visible
-        cell.mainVw.cornerRadius = (cell.lblBody.text?.isEmpty ?? true) ? 16 : 6
+
         
         return cell
     }
@@ -174,6 +178,8 @@ extension FaqVC {
         selectIndex = (sender.tag == selectIndex) ? -1 : sender.tag
         
         // Reload table to reflect changes in UI
-        self.faqTableView.reloadData()
+        DispatchQueue.main.async {
+            self.faqTableView?.reloadData()
+        }
     }
 }

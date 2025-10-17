@@ -15,13 +15,13 @@ class ShoppingListVC: UIViewController {
     // MARK: - IBOutlets
     
     // Clear all button to remove all items from shopping list
-    @IBOutlet weak var clearAll: UIButton!
+    @IBOutlet weak var clearAll: UIButton?
     // Label shown when there's no data available
-    @IBOutlet weak var lblNodata: UILabel!
+    @IBOutlet weak var lblNodata: UILabel?
     // Table view displaying the shopping list
-    @IBOutlet weak var shoppingListTbl: UITableView!
+    @IBOutlet weak var shoppingListTbl: UITableView?
     // Main view container
-    @IBOutlet var viewMain: UIView!
+    @IBOutlet weak var viewMain: UIView?
     
     // MARK: - Variables
     
@@ -130,7 +130,7 @@ class ShoppingListVC: UIViewController {
        
        private func handleListError(_ error: NetworkError) {
            hideLoadingIndicator()
-           lblNodata.isHidden = false
+           lblNodata?.isHidden = false
            CommonUtilities.shared.showAlertWithRetry(title: AppConstants.appName, message: error.localizedDescription) { [weak self] _ in
                self?.viewModel.retryShoppingListAPI()
            }
@@ -147,13 +147,15 @@ class ShoppingListVC: UIViewController {
     
     /// Updates the UI based on current data state
     private func updateUI() {
-           clearAll.isHidden = viewModel.isEmpty
-           shoppingListTbl.isHidden = viewModel.isEmpty
-           lblNodata.isHidden = !viewModel.isEmpty
+           clearAll?.isHidden = viewModel.isEmpty
+           shoppingListTbl?.isHidden = viewModel.isEmpty
+           lblNodata?.isHidden = !viewModel.isEmpty
            
-           shoppingListTbl.delegate = self
-           shoppingListTbl.dataSource = self
-           shoppingListTbl.reloadData()
+           shoppingListTbl?.delegate = self
+           shoppingListTbl?.dataSource = self
+        DispatchQueue.main.async {
+            self.shoppingListTbl?.reloadData()
+        }
        }
        
     
@@ -184,14 +186,14 @@ class ShoppingListVC: UIViewController {
     
     /// Sets up initial view configurations
     private func setUpView() {
-        clearAll.setLocalizedTitleButton(key: PlaceHolderTitleRegex.clearAll)
+        clearAll?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.clearAll)
     }
     
     /// Sets accessibility identifiers for UI testing
     private func setUpAccessibilityIdentifier() {
-        clearAll.accessibilityIdentifier = "clearAllButton"
-        lblNodata.accessibilityIdentifier = "noDataLabel"
-        shoppingListTbl.accessibilityIdentifier = "shoppingListTable"
+        clearAll?.accessibilityIdentifier = "clearAllButton"
+        lblNodata?.accessibilityIdentifier = "noDataLabel"
+        shoppingListTbl?.accessibilityIdentifier = "shoppingListTable"
     }
     
     // MARK: - Button Actions
@@ -213,9 +215,9 @@ class ShoppingListVC: UIViewController {
     
     /// Synchronizes collection view scrolling across all visible cells
     func syncCollectionViewScroll() {
-        guard let visibleCell = shoppingListTbl.visibleCells as? [ShoppingListTVC] else { return }
-        for cell in visibleCell where cell.cellColl.contentOffset != syncedOffset {
-            cell.cellColl.setContentOffset(syncedOffset, animated: false)
+        guard let visibleCell = shoppingListTbl?.visibleCells as? [ShoppingListTVC] else { return }
+        for cell in visibleCell where cell.cellColl?.contentOffset != syncedOffset {
+            cell.cellColl?.setContentOffset(syncedOffset, animated: false)
         }
 
     }
@@ -230,7 +232,7 @@ extension ShoppingListVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-          guard let cell = shoppingListTbl.dequeueReusableCell(withIdentifier: "ShoppingListTVC", for: indexPath) as? ShoppingListTVC else {
+          guard let cell = shoppingListTbl?.dequeueReusableCell(withIdentifier: "ShoppingListTVC", for: indexPath) as? ShoppingListTVC else {
               return UITableViewCell()
           }
           
@@ -241,13 +243,13 @@ extension ShoppingListVC: UITableViewDelegate, UITableViewDataSource {
       
       private func configureCell(_ cell: ShoppingListTVC, at indexPath: IndexPath) {
           cell.shopImages = viewModel.shopImages
-          cell.cellColl.tag = indexPath.row
-          cell.leftView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
-          cell.leftView.layer.cornerRadius = 10
+          cell.cellColl?.tag = indexPath.row
+          cell.leftView?.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+          cell.leftView?.layer.cornerRadius = 10
           cell.totalPrice = viewModel.totalPrice
           cell.productt = viewModel.products
           cell.shopSummry = viewModel.shopSummary
-          cell.cellColl.setContentOffset(ShoppingListTVC.syncedOffset, animated: false)
+          cell.cellColl?.setContentOffset(ShoppingListTVC.syncedOffset, animated: false)
           
           if viewModel.isHeaderRow(indexPath) {
               configureHeaderCell(cell)
@@ -259,23 +261,23 @@ extension ShoppingListVC: UITableViewDelegate, UITableViewDataSource {
       }
       
       private func configureHeaderCell(_ cell: ShoppingListTVC) {
-          cell.cellBgView.backgroundColor = #colorLiteral(red: 0.9647, green: 0.9686, blue: 0.9765, alpha: 1)
-          cell.cellBgView.layer.shadowOpacity = 0
-          cell.imgBgView.isHidden = true
-          cell.quantityLbl.isHidden = true
-          cell.itemLbl.isHidden = true
-          cell.leftView.backgroundColor = .clear
+          cell.cellBgView?.backgroundColor = #colorLiteral(red: 0.9647, green: 0.9686, blue: 0.9765, alpha: 1)
+          cell.cellBgView?.layer.shadowOpacity = 0
+          cell.imgBgView?.isHidden = true
+          cell.quantityLbl?.isHidden = true
+          cell.itemLbl?.isHidden = true
+          cell.leftView?.backgroundColor = .clear
       }
       
       private func configureFooterCell(_ cell: ShoppingListTVC) {
-          cell.cellBgView.backgroundColor = #colorLiteral(red: 0.9725, green: 0.9725, blue: 0.9725, alpha: 1)
-          cell.cellBgView.layer.shadowOpacity = 0
-          cell.imgBgView.isHidden = true
-          cell.quantityLbl.isHidden = true
-          cell.itemLbl.text = PlaceHolderTitleRegex.totalBasket
-          cell.itemLbl.isHidden = false
-          cell.leftView.backgroundColor = #colorLiteral(red: 0.1019, green: 0.2078, blue: 0.3686, alpha: 1)
-          cell.itemLbl.textColor = .white
+          cell.cellBgView?.backgroundColor = #colorLiteral(red: 0.9725, green: 0.9725, blue: 0.9725, alpha: 1)
+          cell.cellBgView?.layer.shadowOpacity = 0
+          cell.imgBgView?.isHidden = true
+          cell.quantityLbl?.isHidden = true
+          cell.itemLbl?.text = PlaceHolderTitleRegex.totalBasket
+          cell.itemLbl?.isHidden = false
+          cell.leftView?.backgroundColor = #colorLiteral(red: 0.1019, green: 0.2078, blue: 0.3686, alpha: 1)
+          cell.itemLbl?.textColor = .white
       }
       
       private func configureProductCell(_ cell: ShoppingListTVC, at indexPath: IndexPath) {
@@ -283,23 +285,23 @@ extension ShoppingListVC: UITableViewDelegate, UITableViewDataSource {
           cell.productName = viewModel.productName(at: productIndex)
           cell.product = viewModel.products(at: productIndex)
           
-          cell.cellBgView.backgroundColor = .white
-          cell.cellBgView.layer.shadowOpacity = 1
-          cell.imgBgView.isHidden = false
-          cell.quantityLbl.isHidden = false
-          cell.itemLbl.text = viewModel.productName(at: productIndex)
-          cell.itemLbl.isHidden = false
+          cell.cellBgView?.backgroundColor = .white
+          cell.cellBgView?.layer.shadowOpacity = 1
+          cell.imgBgView?.isHidden = false
+          cell.quantityLbl?.isHidden = false
+          cell.itemLbl?.text = viewModel.productName(at: productIndex)
+          cell.itemLbl?.isHidden = false
           
           if let imageName = viewModel.productImage(at: productIndex) {
               let image = (AppConstants.imageURL) + imageName
-              cell.imgView.sd_imageIndicator = SDWebImageActivityIndicator.gray
-              cell.imgView.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "Placeholder"))
+              cell.imgView?.sd_imageIndicator = SDWebImageActivityIndicator.gray
+              cell.imgView?.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "Placeholder"))
           } else {
-              cell.imgView.image = nil
+              cell.imgView?.image = nil
           }
           
-          cell.itemLbl.textColor = #colorLiteral(red: 0.1019, green: 0.2078, blue: 0.3686, alpha: 1)
-          cell.leftView.backgroundColor = .white
+          cell.itemLbl?.textColor = #colorLiteral(red: 0.1019, green: 0.2078, blue: 0.3686, alpha: 1)
+          cell.leftView?.backgroundColor = .white
       }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -329,7 +331,7 @@ extension ShoppingListVC: UITableViewDelegate, UITableViewDataSource {
                 let deleteIndex = self.viewModel.productIndex(from: indexPath)
                 if let id = self.viewModel.deleteProduct(at: deleteIndex) {
                     self.viewModel.shoppingListDeleteAPI(id: id)
-                    self.shoppingListTbl.deleteRows(at: [indexPath], with: .automatic)
+                    self.shoppingListTbl?.deleteRows(at: [indexPath], with: .automatic)
                 }
             }
             self.present(popUpVC, animated: true)

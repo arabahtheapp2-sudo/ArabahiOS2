@@ -15,19 +15,19 @@ class HomeTVC: UITableViewCell {
     // MARK: - Outlets
     
     /// Collection view displaying banners, categories, or latest products based on the tag.
-    @IBOutlet weak var homeColl: UICollectionView!
+    @IBOutlet weak var homeColl: UICollectionView?
     
     /// Background view for the section header.
-    @IBOutlet weak var headerBgView: UIView!
+    @IBOutlet weak var headerBgView: UIView?
     
     /// Constraint controlling the height of the collection view.
-    @IBOutlet weak var collectionHeight: NSLayoutConstraint!
+    @IBOutlet weak var collectionHeight: NSLayoutConstraint?
     
     /// Label displaying the section header title.
-    @IBOutlet weak var headerLbl: UILabel!
+    @IBOutlet weak var headerLbl: UILabel?
     
     /// Button for "See All" action.
-    @IBOutlet var btnSeeAll: UIButton!
+    @IBOutlet weak var btnSeeAll: UIButton?
     
     // MARK: - Variables
     
@@ -62,19 +62,21 @@ class HomeTVC: UITableViewCell {
         sectionTitle = ""
         
         // Reload collection view to clear any old data
-        homeColl.reloadData()
+        DispatchQueue.main.async {
+            self.homeColl?.reloadData()
+        }
         
         // Optionally reset header UI
-        headerLbl.text = ""
-        headerBgView.isHidden = false
-        btnSeeAll.isHidden = false
+        headerLbl?.text = ""
+        headerBgView?.isHidden = false
+        btnSeeAll?.isHidden = false
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        homeColl.dataSource = self
-        homeColl.delegate = self
-        btnSeeAll.accessibilityIdentifier = "SeeAll"
+        homeColl?.dataSource = self
+        homeColl?.delegate = self
+        btnSeeAll?.accessibilityIdentifier = "SeeAll"
 
     }
     
@@ -82,18 +84,18 @@ class HomeTVC: UITableViewCell {
     
     /// Configures the collection view layout based on the section title.
     func configureCollectionViewLayout() {
-        if let layout = homeColl.collectionViewLayout as? UICollectionViewFlowLayout {
+        if let layout = homeColl?.collectionViewLayout as? UICollectionViewFlowLayout {
             if sectionTitle == PlaceHolderTitleRegex.categoriesHome {
                 layout.scrollDirection = .vertical
-                homeColl.isPagingEnabled = false
+                homeColl?.isPagingEnabled = false
             } else if sectionTitle == PlaceHolderTitleRegex.bannerHome {
                 layout.scrollDirection = .horizontal
-                homeColl.isPagingEnabled = true
+                homeColl?.isPagingEnabled = true
             } else {
                 layout.scrollDirection = .horizontal
-                homeColl.isPagingEnabled = false
+                homeColl?.isPagingEnabled = false
             }
-            homeColl.collectionViewLayout.invalidateLayout()
+            homeColl?.collectionViewLayout.invalidateLayout()
         }
     }
     
@@ -105,7 +107,7 @@ extension HomeTVC: UICollectionViewDataSource, UICollectionViewDelegate, UIColle
     
     /// Returns the number of items for the collection view based on its tag and loading state.
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch homeColl.tag {
+        switch homeColl?.tag {
         case 0: // Banner
             if isLoading {
                 return 1
@@ -149,7 +151,7 @@ extension HomeTVC: UICollectionViewDataSource, UICollectionViewDelegate, UIColle
     
     /// Configures and returns the cell for the collection view based on the tag and loading state.
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch homeColl.tag {
+        switch homeColl?.tag {
         case 0:
             return configureBannerCell(for: indexPath)
         case 1:
@@ -160,91 +162,96 @@ extension HomeTVC: UICollectionViewDataSource, UICollectionViewDelegate, UIColle
     }
 
     private func configureBannerCell(for indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "AdBannerCVC", for: indexPath) as? AdBannerCVC else {
+        guard let cell = homeColl?.dequeueReusableCell(withReuseIdentifier: "AdBannerCVC", for: indexPath) as? AdBannerCVC else {
             return UICollectionViewCell()
         }
         
-        cell.imgView.isSkeletonable = true
-        cell.imgView.showAnimatedGradientSkeleton()
+        cell.imgView?.isSkeletonable = true
+        cell.imgView?.showAnimatedGradientSkeleton()
         
         if !isLoading {
             if let bannerData = banner?[safe: indexPath.row] {
                 let imageIndex = AppConstants.imageURL + (bannerData.image ?? "")
-                cell.imgView.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
-                    cell.imgView.hideSkeleton()
+                cell.imgView?.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+                    cell.imgView?.hideSkeleton()
                 }
             } else {
-                cell.imgView.image = UIImage(named: "Placeholder")
+                cell.imgView?.image = UIImage(named: "Placeholder")
             }
         }
-        headerBgView.isHidden = true
+        headerBgView?.isHidden = true
         return cell
     }
 
     private func configureCategoryCell(for indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "CategoriesCVC", for: indexPath) as? CategoriesCVC else {
+        guard let cell = homeColl?.dequeueReusableCell(withReuseIdentifier: "CategoriesCVC", for: indexPath) as? CategoriesCVC else {
             return UICollectionViewCell()
         }
 
-        cell.imgView.isSkeletonable = true
-        cell.lblName.isSkeletonable = true
-        cell.imgView.showAnimatedGradientSkeleton()
-        cell.lblName.showAnimatedGradientSkeleton()
+        cell.imgView?.isSkeletonable = true
+        cell.lblName?.isSkeletonable = true
+        cell.imgView?.showAnimatedGradientSkeleton()
+        cell.lblName?.showAnimatedGradientSkeleton()
 
         if !isLoading {
-            cell.lblName.hideSkeleton()
+            cell.lblName?.hideSkeleton()
             if let categoryData = category?[safe: indexPath.row] {
-                cell.lblName.text = categoryData.categoryName ?? ""
+                cell.lblName?.text = categoryData.categoryName ?? ""
                 let catImageIndex = AppConstants.imageURL + (categoryData.image ?? "")
-                cell.imgView.sd_setImage(with: URL(string: catImageIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
-                    cell.imgView.hideSkeleton()
+                cell.imgView?.sd_setImage(with: URL(string: catImageIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+                    cell.imgView?.hideSkeleton()
                 }
             } else {
-                cell.lblName.text = ""
-                cell.imgView.image = UIImage(named: "Placeholder")
+                cell.lblName?.text = ""
+                cell.imgView?.image = UIImage(named: "Placeholder")
             }
         }
 
-        headerBgView.isHidden = false
+        headerBgView?.isHidden = false
         return cell
     }
 
     private func configureProductCell(for indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = homeColl.dequeueReusableCell(withReuseIdentifier: "ProductsCVC", for: indexPath) as? ProductsCVC else {
+        guard let cell = homeColl?.dequeueReusableCell(withReuseIdentifier: "ProductsCVC", for: indexPath) as? ProductsCVC else {
             return UICollectionViewCell()
         }
 
-        [cell.lblName, cell.lblRs, cell.lblKg, cell.imgView].forEach {
-            $0?.isSkeletonable = true
-            $0?.showAnimatedGradientSkeleton()
+        [cell.lblName, cell.lblRs, cell.lblKg, cell.imgView].compactMap { $0 }.forEach { view in
+            view.isSkeletonable = true
+            view.showAnimatedGradientSkeleton()
         }
 
+
         if !isLoading {
-            [cell.lblName, cell.lblRs, cell.lblKg].forEach { $0?.hideSkeleton() }
+            [cell.lblName, cell.lblRs, cell.lblKg, cell.imgView].compactMap { $0 }.forEach { view in
+               
+                view.hideSkeleton()
+            }
+
             if let latProduct = latProduct?[safe: indexPath.row] {
-                cell.lblName.text = latProduct.name ?? ""
+                cell.lblName?.text = latProduct.name ?? ""
                 
                 let minPriceList = latProduct.product ?? []
                 let minValue = minPriceList.compactMap({ $0.price }).min() ?? 0.0
                 let val = (minValue == 0) ? "0" : (minValue.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", minValue) : String(format: "%.2f", minValue))
                 
                 let currentLang = L102Language.currentAppleLanguageFull()
-                cell.lblRs.text = currentLang == "ar" ?
+                cell.lblRs?.text = currentLang == "ar" ?
                     " ⃀ " + val + " " + PlaceHolderTitleRegex.from :
                     PlaceHolderTitleRegex.from + " ⃀ " + val
                 
                 let latProdImgIndex = AppConstants.imageURL + (latProduct.image ?? "")
-                cell.imgView.sd_setImage(with: URL(string: latProdImgIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
-                    cell.imgView.hideSkeleton()
+                cell.imgView?.sd_setImage(with: URL(string: latProdImgIndex), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+                    cell.imgView?.hideSkeleton()
                 }
-                cell.lblKg.text = ""
-                headerBgView.isHidden = false
+                cell.lblKg?.text = ""
+                headerBgView?.isHidden = false
             } else {
-                cell.lblName.text = ""
-                cell.lblKg.text = ""
-                cell.lblRs.text = ""
-                cell.imgView.image = UIImage(named: "Placeholder")
-                headerBgView.isHidden = true
+                cell.lblName?.text = ""
+                cell.lblKg?.text = ""
+                cell.lblRs?.text = ""
+                cell.imgView?.image = UIImage(named: "Placeholder")
+                headerBgView?.isHidden = true
             }
         }
 
@@ -256,13 +263,13 @@ extension HomeTVC: UICollectionViewDataSource, UICollectionViewDelegate, UIColle
     
     /// Returns the size for the collection view cell based on the tag.
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        switch homeColl.tag {
+        switch homeColl?.tag {
         case 0:
-            return CGSize(width: homeColl.layer.bounds.width, height: self.frame.size.width / 2)
+            return CGSize(width: (homeColl?.layer.bounds.width ?? 0), height: self.frame.size.width / 2)
         case 1:
-            return CGSize(width: homeColl.layer.bounds.width / 2, height: 152)
+            return CGSize(width: (homeColl?.layer.bounds.width ?? 0) / 2, height: 152)
         default:
-            return CGSize(width: homeColl.layer.bounds.width / 2.3, height: 145)
+            return CGSize(width: (homeColl?.layer.bounds.width ?? 0) / 2.3, height: 145)
         }
     }
     
@@ -272,7 +279,7 @@ extension HomeTVC: UICollectionViewDataSource, UICollectionViewDelegate, UIColle
         
         let parentVC = super.viewContainingController()
         
-        switch homeColl.tag {
+        switch homeColl?.tag {
         case 0:
             // No action defined for banner selection
             break

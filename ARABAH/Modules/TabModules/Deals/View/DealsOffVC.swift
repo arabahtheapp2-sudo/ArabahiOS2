@@ -19,10 +19,10 @@ class DealsOffVC: UIViewController {
     // MARK: - OUTLETS
     
     /// Header label for the view
-    @IBOutlet weak var lblHeader: UILabel!
+    @IBOutlet weak var lblHeader: UILabel?
     
     /// TableView to display deals and offers
-    @IBOutlet var tbl: UITableView!
+    @IBOutlet weak var tbl: UITableView?
     
     // MARK: - VARIABLES
     
@@ -53,13 +53,13 @@ class DealsOffVC: UIViewController {
     
     /// Sets up the header text using localized string
     private func setupHeaderText() {
-        lblHeader.text = PlaceHolderTitleRegex.deals
+        lblHeader?.text = PlaceHolderTitleRegex.deals
     }
     
     /// Configures table view delegate and data source
     private func configureTable() {
-        tbl.delegate = self
-        tbl.dataSource = self
+        tbl?.delegate = self
+        tbl?.dataSource = self
     }
     
     /// Binds to ViewModel state changes to update UI accordingly
@@ -85,13 +85,17 @@ class DealsOffVC: UIViewController {
             isLoading = false
             hideLoadingIndicator()
             showNoData()
-            tbl.reloadData()
+            DispatchQueue.main.async {
+                self.tbl?.reloadData()
+            }
         case .failure(let error):
             isLoading = false
             hideLoadingIndicator()
             showNoData()
             showErrorAlert(error: error)
-            tbl.reloadData()
+            DispatchQueue.main.async {
+                self.tbl?.reloadData()
+            }
         case .validationError(let error):
             hideLoadingIndicator()
             CommonUtilities.shared.showAlert(message: error.localizedDescription, isSuccess: .error)
@@ -114,9 +118,9 @@ class DealsOffVC: UIViewController {
     /// Shows no data message if there are no deals available
     private func showNoData() {
         if viewModel.isDataEmpty {
-            tbl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            tbl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            tbl.backgroundView = nil
+            tbl?.backgroundView = nil
         }
     }
 }
@@ -136,32 +140,32 @@ extension DealsOffVC: UITableViewDelegate, UITableViewDataSource {
         }
 
         // Configure skeleton view for loading state
-        cell.imgView.isSkeletonable = true
-        cell.lblName.isSkeletonable = true
+        cell.imgView?.isSkeletonable = true
+        cell.lblName?.isSkeletonable = true
 
         if isLoading {
             // Show skeleton animation while loading
-            cell.imgView.showAnimatedGradientSkeleton()
-            cell.lblName.showAnimatedGradientSkeleton()
+            cell.imgView?.showAnimatedGradientSkeleton()
+            cell.lblName?.showAnimatedGradientSkeleton()
         } else {
             // Hide skeleton when data is loaded
-            cell.lblName.hideSkeleton()
-            cell.imgView.hideSkeleton()
+            cell.lblName?.hideSkeleton()
+            cell.imgView?.hideSkeleton()
 
             // Set deal text
-            cell.lblName.text = viewModel.formattedDealText(at: indexPath.row)
+            cell.lblName?.text = viewModel.formattedDealText(at: indexPath.row)
 
             // Load deal and store images asynchronously
             let dealImageUrl = viewModel.dealImageUrl(at: indexPath.row)
             let storeImageUrl = viewModel.storeImageUrl(at: indexPath.row)
 
-            cell.imgView.sd_setImage(with: URL(string: dealImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+            cell.imgView?.sd_setImage(with: URL(string: dealImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
                
-                cell.imgView.hideSkeleton()
+                cell.imgView?.hideSkeleton()
             }
 
-            cell.imageStore.sd_setImage(with: URL(string: storeImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
-                cell.imageStore.hideSkeleton()
+            cell.imageStore?.sd_setImage(with: URL(string: storeImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+                cell.imageStore?.hideSkeleton()
             }
         }
 

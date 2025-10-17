@@ -19,7 +19,7 @@ class NotesVC: UIViewController {
 
     // MARK: - OUTLETS
     
-    @IBOutlet weak var notesTbl: UITableView!  // Table view to display/edit notes
+    @IBOutlet weak var notesTbl: UITableView?  // Table view to display/edit notes
 
     // MARK: - VARIABLES
     
@@ -70,20 +70,23 @@ extension NotesVC: UITableViewDelegate, UITableViewDataSource, UITextViewDelegat
             // Configure placeholder text for empty cells
             let note = data.text ?? ""
             if note.isEmpty {
-                cell.txtView.text = PlaceHolderTitleRegex.enterTextHere
-                cell.txtView.textColor = .lightGray
+                cell.txtView?.text = PlaceHolderTitleRegex.enterTextHere
+                cell.txtView?.textColor = .lightGray
             } else {
-                cell.txtView.text = note
-                cell.txtView.textColor = .black
+                cell.txtView?.text = note
+                cell.txtView?.textColor = .black
             }
+            
+            cell.txtView?.delegate = self  // Handle text changes
+            cell.txtView?.tag = indexPath.row  // Track which cell is being edited
+            cell.txtView?.isScrollEnabled = false  // Allow dynamic cell height
+            
         } else {
-            cell.txtView.textColor = .black
-            cell.txtView.text = ""
+            cell.txtView?.textColor = .black
+            cell.txtView?.text = ""
         }
         
-        cell.txtView.delegate = self  // Handle text changes
-        cell.txtView.tag = indexPath.row  // Track which cell is being edited
-        cell.txtView.isScrollEnabled = false  // Allow dynamic cell height
+        
 
         return cell
     }
@@ -130,8 +133,8 @@ extension NotesVC: UITableViewDelegate, UITableViewDataSource, UITextViewDelegat
         // Update model with current text
         if viewModel.texts.indices.contains(textView.tag) {
             viewModel.texts[textView.tag].text = newText
-            notesTbl.beginUpdates()
-            notesTbl.endUpdates()  // Update cell height
+            notesTbl?.beginUpdates()
+            notesTbl?.endUpdates()  // Update cell height
         }
 
         // Handle return key - create new line
@@ -144,11 +147,11 @@ extension NotesVC: UITableViewDelegate, UITableViewDataSource, UITextViewDelegat
 
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                self.notesTbl.reloadData()
+                self.notesTbl?.reloadData()
                 // Move focus to new line
                 let nextIndex = textView.tag + 1
-                if let nextCell = self.notesTbl.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? NotesTVC {
-                    nextCell.txtView.becomeFirstResponder()
+                if let nextCell = self.notesTbl?.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? NotesTVC {
+                    nextCell.txtView?.becomeFirstResponder()
                 }
             }
             return false
@@ -161,12 +164,12 @@ extension NotesVC: UITableViewDelegate, UITableViewDataSource, UITextViewDelegat
                 viewModel.texts.remove(at: index)
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    self.notesTbl.reloadData()
+                    self.notesTbl?.reloadData()
                     // Move focus to previous line
                     let prevIndex = index - 1
                     if prevIndex >= 0,
-                       let prevCell = self.notesTbl.cellForRow(at: IndexPath(row: prevIndex, section: 0)) as? NotesTVC {
-                        prevCell.txtView.becomeFirstResponder()
+                       let prevCell = self.notesTbl?.cellForRow(at: IndexPath(row: prevIndex, section: 0)) as? NotesTVC {
+                        prevCell.txtView?.becomeFirstResponder()
                     }
                 }
             }
@@ -182,9 +185,9 @@ extension NotesVC: UITableViewDelegate, UITableViewDataSource, UITextViewDelegat
 extension NotesVC {
     /// Sets up table view configuration
     private func setupTableView() {
-        notesTbl.accessibilityIdentifier = "notesTbl"
-        notesTbl.delegate = self
-        notesTbl.dataSource = self
+        notesTbl?.accessibilityIdentifier = "notesTbl"
+        notesTbl?.delegate = self
+        notesTbl?.dataSource = self
     }
 
     /// Binds to ViewModel state changes
@@ -236,7 +239,9 @@ extension NotesVC {
             showLoadingIndicator()
         case .success:
             hideLoadingIndicator()
-            notesTbl.reloadData()  // Refresh with loaded note
+            DispatchQueue.main.async {
+                self.notesTbl?.reloadData()  // Refresh with loaded note
+            }
             setNoDataMsg(count: viewModel.texts.count)
         case .failure(let error):
             hideLoadingIndicator()
@@ -253,9 +258,9 @@ extension NotesVC {
     /// Shows/hides "no data" message
     private func setNoDataMsg(count: Int) {
         if count == 0 {
-            notesTbl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            notesTbl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            notesTbl.backgroundView = nil
+            notesTbl?.backgroundView = nil
         }
     }
 

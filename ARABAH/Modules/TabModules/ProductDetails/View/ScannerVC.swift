@@ -13,9 +13,9 @@ import AVFoundation
 class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
 
     // MARK: - Outlets
-    @IBOutlet weak var scannerView: UIView!  // View that will display the camera preview layer
-    @IBOutlet weak var backButton: UIView!
-    @IBOutlet weak var simulateScanButton: UIView!
+    @IBOutlet weak var scannerView: UIView?  // View that will display the camera preview layer
+    @IBOutlet weak var backButton: UIView?
+    @IBOutlet weak var simulateScanButton: UIView?
 
     // MARK: - Properties
     var captureSession: AVCaptureSession?                // Manages input and output for real-time capture
@@ -25,8 +25,8 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         checkCameraPermission()
-        backButton.accessibilityIdentifier = "BackButtonAccessibilityID"
-        simulateScanButton.accessibilityIdentifier = "SimulateScanButtonAccessibilityID"
+        backButton?.accessibilityIdentifier = "BackButtonAccessibilityID"
+        simulateScanButton?.accessibilityIdentifier = "SimulateScanButtonAccessibilityID"
         NotificationCenter.default.addObserver(self, selector: #selector(checkCameraPermissions), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
@@ -121,9 +121,9 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
 
         // Setup preview layer safely
         let preview = AVCaptureVideoPreviewLayer(session: session)
-        preview.frame = scannerView.bounds
+        preview.frame = scannerView?.bounds ?? CGRect()
         preview.videoGravity = .resizeAspectFill
-        scannerView.layer.addSublayer(preview)
+        scannerView?.layer.addSublayer(preview)
         self.previewLayer = preview
 
         // Start running session on background thread

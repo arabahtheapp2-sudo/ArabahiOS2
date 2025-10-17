@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     /// Called when the scene is about to connect to the app session.
     /// This is the entry point for setting up the initial UI.
-    /// Calls `auttooLogin()` to decide which screen to show based on login state.
+    /// Calls auttooLogin() to decide which screen to show based on login state.
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         auttooLogin()  // Setup initial root view controller based on login status
         

@@ -20,11 +20,11 @@ enum ConfirmationType {
 class PopUpVC: UIViewController {
     
     // MARK: - Outlets
-    @IBOutlet weak var noBtn: CustomButton!
-    @IBOutlet weak var yesBtn: UIButton!
-    @IBOutlet weak var lblDesc: UILabel!
-    @IBOutlet weak var imgVie: UIImageView!
-    @IBOutlet weak var lblHeader: UILabel!
+    @IBOutlet weak var noBtn: CustomButton?
+    @IBOutlet weak var yesBtn: UIButton?
+    @IBOutlet weak var lblDesc: UILabel?
+    @IBOutlet weak var imgVie: UIImageView?
+    @IBOutlet weak var lblHeader: UILabel?
     
     // MARK: - Variables
     /// Defines the type of popup (e.g., logout, delete, etc.)
@@ -39,7 +39,7 @@ class PopUpVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         checkval()
-        noBtn.setLocalizedTitleButton(key: PlaceHolderTitleRegex.noTitle)
+        noBtn?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.noTitle)
     }
 
     // MARK: - Functions
@@ -48,29 +48,29 @@ class PopUpVC: UIViewController {
     func checkval() {
         switch check {
         case .logout:
-            lblHeader.text = PlaceHolderTitleRegex.signOut
-            lblDesc.text = PlaceHolderTitleRegex.sureSignOut
-            imgVie.image = UIImage(named: "logOut")
+            lblHeader?.text = PlaceHolderTitleRegex.signOut
+            lblDesc?.text = PlaceHolderTitleRegex.sureSignOut
+            imgVie?.image = UIImage(named: "logOut")
         case .deleteAccount:
-            lblHeader.text = PlaceHolderTitleRegex.deleteAccount
-            lblDesc.text = PlaceHolderTitleRegex.sureDeleteAccount
-            imgVie.image = UIImage(named: "deleteBtn")
+            lblHeader?.text = PlaceHolderTitleRegex.deleteAccount
+            lblDesc?.text = PlaceHolderTitleRegex.sureDeleteAccount
+            imgVie?.image = UIImage(named: "deleteBtn")
         case .clearNotification:
-            lblHeader.text = PlaceHolderTitleRegex.clearNotification
-            lblDesc.text = PlaceHolderTitleRegex.sureClearNotification
-            imgVie.image = UIImage(named: "deleteBtn")
+            lblHeader?.text = PlaceHolderTitleRegex.clearNotification
+            lblDesc?.text = PlaceHolderTitleRegex.sureClearNotification
+            imgVie?.image = UIImage(named: "deleteBtn")
         case .deleteNote:
-            lblHeader.text = PlaceHolderTitleRegex.deleteNote
-            lblDesc.text = PlaceHolderTitleRegex.sureDeleteNote
-            imgVie.image = UIImage(named: "deleteBtn")
+            lblHeader?.text = PlaceHolderTitleRegex.deleteNote
+            lblDesc?.text = PlaceHolderTitleRegex.sureDeleteNote
+            imgVie?.image = UIImage(named: "deleteBtn")
         case .deleteShopList:
-            lblHeader.text = PlaceHolderTitleRegex.deleteShopList
-            lblDesc.text = PlaceHolderTitleRegex.sureDeleteShopList
-            imgVie.image = UIImage(named: "deleteBtn")
+            lblHeader?.text = PlaceHolderTitleRegex.deleteShopList
+            lblDesc?.text = PlaceHolderTitleRegex.sureDeleteShopList
+            imgVie?.image = UIImage(named: "deleteBtn")
         default:
-            lblHeader.text = PlaceHolderTitleRegex.removeProduct
-            lblDesc.text = PlaceHolderTitleRegex.sureRemoveProduct
-            imgVie.image = UIImage(named: "deleteBtn")
+            lblHeader?.text = PlaceHolderTitleRegex.removeProduct
+            lblDesc?.text = PlaceHolderTitleRegex.sureRemoveProduct
+            imgVie?.image = UIImage(named: "deleteBtn")
         }
         self.view.accessibilityIdentifier = "popUpVCView"
     }

@@ -11,7 +11,7 @@ import UIKit
 
 /// Centralized network service handling all API requests
 final class NetworkService: NetworkServiceProtocol {
-    static let  shared = NetworkService()
+    static let shared = NetworkService()
     private let session: URLSession
     private let boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW"
     private let tokenProvider: TokenProvider
@@ -317,25 +317,25 @@ enum NetworkError: Error, Equatable {
     var localizedDescription: String {
         switch self {
         case .noInternetConnection:
-            return "No internet connection"
+            return NSLocalizedString("No internet connection", comment: "")
         case .unauthorized:
-            return "Session expired. Please login again."
+            return NSLocalizedString("Session expired. Please login again.", comment: "")
         case .forbidden:
-            return "Access forbidden"
+            return NSLocalizedString("Access forbidden", comment: "")
         case .badRequest(let message):
-            return message ?? "Invalid request"
+            return message ?? NSLocalizedString("Invalid request", comment: "")
         case .serverError(let message):
-            return message ?? "Server error occurred"
+            return message ?? NSLocalizedString("Server error occurred", comment: "")
         case .decodingFailed:
-            return "Failed to parse response"
+            return NSLocalizedString("Failed to parse response", comment: "")
         case .networkError(let message):
             return message
         case .validationError(let message):
             return message
         case .invalidEncoding:
-            return "Invalid Encoding"
+            return NSLocalizedString("Invalid Encoding", comment: "")
         default:
-            return "Network error occurred"
+            return NSLocalizedString("Network error occurred", comment: "")
         }
     }
 }

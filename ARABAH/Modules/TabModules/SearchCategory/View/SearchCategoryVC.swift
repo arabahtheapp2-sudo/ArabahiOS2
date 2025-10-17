@@ -17,28 +17,28 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
     // MARK: - OUTLETS
     
     /// Constraints
-    @IBOutlet weak var categoryHight: NSLayoutConstraint!
+    @IBOutlet weak var categoryHight: NSLayoutConstraint?
     
     /// Labels
-    @IBOutlet weak var lblProdcut: UILabel!
-    @IBOutlet weak var lblCategory: UILabel!
+    @IBOutlet weak var lblProdcut: UILabel?
+    @IBOutlet weak var lblCategory: UILabel?
     
     /// Collection Views
-    @IBOutlet weak var productCollection: UICollectionView!
-    @IBOutlet weak var searchCollectionCateogy: UICollectionView!
+    @IBOutlet weak var productCollection: UICollectionView?
+    @IBOutlet weak var searchCollectionCateogy: UICollectionView?
     
     /// Table View
-    @IBOutlet weak var recentSearchTbl: UITableView!
+    @IBOutlet weak var recentSearchTbl: UITableView?
     
     /// Views
-    @IBOutlet weak var viewRecentSearch: UIView!
+    @IBOutlet weak var viewRecentSearch: UIView?
     
     /// Text Field
-    @IBOutlet weak var txtFldSearch: UITextField!
+    @IBOutlet weak var txtFldSearch: UITextField?
     
     /// UIButton
-    @IBOutlet weak var filterButton: UIButton!
-    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var filterButton: UIButton?
+    @IBOutlet weak var backButton: UIButton?
     
     // MARK: - VARIABLES
     
@@ -74,15 +74,15 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
             // Clear search when text field is empty
             viewModel.updateSearchQuery("")
             viewModel.clearCategory()
-            self.searchCollectionCateogy.isHidden = true
+            self.searchCollectionCateogy?.isHidden = true
         } else {
             // Perform search with entered text
             viewModel.updateSearchQuery(resultString)
             viewModel.performSearch(isRetry: false)
-            self.searchCollectionCateogy.isHidden = false
+            self.searchCollectionCateogy?.isHidden = false
         }
 
-        txtFldSearch.resignFirstResponder()
+        txtFldSearch?.resignFirstResponder()
         return true
     }
 
@@ -95,7 +95,7 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
         filterVC.longitude = self.longitude
         filterVC.callback = { [weak self] (_, _) in
             guard let self = self else { return }
-            let name = txtFldSearch.text
+            let name = txtFldSearch?.text
             viewModel.updateSearchQuery(name ?? "")
             viewModel.fetchSearchResults(isRetry: false)
         }
@@ -173,11 +173,15 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
         case .success:
             hideLoadingIndicator()
             setNoData(count: viewModel.recentModel?.count ?? 0)
-            recentSearchTbl.reloadData()
+            DispatchQueue.main.async {
+                self.recentSearchTbl?.reloadData()
+            }
         case .failure(let error):
             hideLoadingIndicator()
             setNoData(count: 0)
-            recentSearchTbl.reloadData()
+            DispatchQueue.main.async {
+                self.recentSearchTbl?.reloadData()
+            }
             showRetry(error: error) { [weak self] in
                 self?.viewModel.recentSearchAPI(isRetry: true)
                 
@@ -197,7 +201,7 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
         case .loading:
             showLoadingIndicator()
         case .success:
-            self.viewRecentSearch.isHidden = true
+            self.viewRecentSearch?.isHidden = true
             hideLoadingIndicator()
             updateSearchResultUI()
         case .failure(let error):
@@ -243,59 +247,59 @@ class SearchCategoryVC: UIViewController, UITextFieldDelegate {
     private func updateSearchResultUI() {
         let catCount = viewModel.category?.count ?? 0
         let prodCount = viewModel.product?.count ?? 0
-
-        searchCollectionCateogy.setNoDataMessage(catCount == 0 ? PlaceHolderTitleRegex.noDataFound : "", txtColor: (catCount == 0 ? UIColor.set : .clear))
-        productCollection.setNoDataMessage(prodCount == 0 ? PlaceHolderTitleRegex.noDataFound : "", txtColor: (catCount == 0 ? UIColor.set : .clear))
-
-        categoryHight.constant = catCount == 0 ? 0 : 186
-        lblCategory.isHidden = catCount == 0
-        lblProdcut.isHidden = prodCount == 0
-
-        searchCollectionCateogy.reloadData()
-        productCollection.reloadData()
+        
+        searchCollectionCateogy?.setNoDataMessage(catCount == 0 ? PlaceHolderTitleRegex.noDataFound : "", txtColor: (catCount == 0 ? UIColor.set : .clear))
+        productCollection?.setNoDataMessage(prodCount == 0 ? PlaceHolderTitleRegex.noDataFound : "", txtColor: (catCount == 0 ? UIColor.set : .clear))
+        
+        categoryHight?.constant = catCount == 0 ? 0 : 186
+        lblCategory?.isHidden = catCount == 0
+        lblProdcut?.isHidden = prodCount == 0
+        DispatchQueue.main.async {
+            self.searchCollectionCateogy?.reloadData()
+            self.productCollection?.reloadData()
+        }
     }
-
     /// Sets no data message for table view based on item count
     private func setNoData(count: Int) {
         if count == 0 {
-            recentSearchTbl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            recentSearchTbl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            recentSearchTbl.backgroundView = nil
+            recentSearchTbl?.backgroundView = nil
         }
     }
 
     /// Sets up accessibility identifiers for UI testing
     private func setupAccessibilityIdentifier() {
-        txtFldSearch.accessibilityIdentifier = "txtFldSearch"
-        recentSearchTbl.accessibilityIdentifier = "recentSearchTbl"
-        productCollection.accessibilityIdentifier = "productCollection"
-        searchCollectionCateogy.accessibilityIdentifier = "searchCollectionCateogy"
-        viewRecentSearch.accessibilityIdentifier = "viewRecentSearch"
-        filterButton.accessibilityIdentifier = "BtnFilter"
-        backButton.accessibilityIdentifier = "btnBack"
+        txtFldSearch?.accessibilityIdentifier = "txtFldSearch"
+        recentSearchTbl?.accessibilityIdentifier = "recentSearchTbl"
+        productCollection?.accessibilityIdentifier = "productCollection"
+        searchCollectionCateogy?.accessibilityIdentifier = "searchCollectionCateogy"
+        viewRecentSearch?.accessibilityIdentifier = "viewRecentSearch"
+        filterButton?.accessibilityIdentifier = "BtnFilter"
+        backButton?.accessibilityIdentifier = "btnBack"
 
     }
 
     /// Sets up delegates and data sources for listing views
     private func setupListingViews() {
-        recentSearchTbl.delegate = self
-        recentSearchTbl.dataSource = self
-        productCollection.delegate = self
-        productCollection.dataSource = self
-        searchCollectionCateogy.delegate = self
-        searchCollectionCateogy.dataSource = self
+        recentSearchTbl?.delegate = self
+        recentSearchTbl?.dataSource = self
+        productCollection?.delegate = self
+        productCollection?.dataSource = self
+        searchCollectionCateogy?.delegate = self
+        searchCollectionCateogy?.dataSource = self
     }
 
     /// Initial view setup
     private func setUpView() {
-        txtFldSearch.delegate = self
-        txtFldSearch.becomeFirstResponder()
-        viewRecentSearch.isHidden = false
-        txtFldSearch.textAlignment = Store.isArabicLang ? .right : .left
-        lblProdcut.setLocalizedTitle(key: PlaceHolderTitleRegex.product)
-        lblCategory.setLocalizedTitle(key: PlaceHolderTitleRegex.category)
-        lblProdcut.isHidden = true
-        lblCategory.isHidden = true
+        txtFldSearch?.delegate = self
+        txtFldSearch?.becomeFirstResponder()
+        viewRecentSearch?.isHidden = false
+        txtFldSearch?.textAlignment = Store.isArabicLang ? .right : .left
+        lblProdcut?.setLocalizedTitle(key: PlaceHolderTitleRegex.product)
+        lblCategory?.setLocalizedTitle(key: PlaceHolderTitleRegex.category)
+        lblProdcut?.isHidden = true
+        lblCategory?.isHidden = true
     }
 }
 
@@ -314,24 +318,27 @@ extension SearchCategoryVC: UITableViewDelegate, UITableViewDataSource {
              return UITableViewCell()
         }
         if let data = viewModel.recentModel?[safe: indexPath.row] {
-            cell.lblName.text = data.name ?? ""
+            cell.lblName?.text = data.name ?? ""
+            cell.btnCross?.tag = indexPath.row
+            cell.btnCross?.addTarget(self, action: #selector(deleteBtn(_:)), for: .touchUpInside)
         } else {
-            cell.lblName.text = ""
+            cell.lblName?.text = ""
         }
-        cell.btnCross.tag = indexPath.row
-        cell.btnCross.addTarget(self, action: #selector(deleteBtn(_:)), for: .touchUpInside)
+        
         return cell
     }
 
     /// Handles selection of recent search item
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let name = viewModel.recentModel?[indexPath.row].name ?? ""
-        txtFldSearch.text = name
-        viewModel.updateSearchQuery(name)
-        viewModel.performSearch(isRetry: false)
-        viewRecentSearch.isHidden = true
-        lblProdcut.isHidden = false
-        lblCategory.isHidden = false
+        if let data = viewModel.recentModel?[safe: indexPath.row] {
+            let name = data.name ?? ""
+            txtFldSearch?.text = name
+            viewModel.updateSearchQuery(name)
+            viewModel.performSearch(isRetry: false)
+            viewRecentSearch?.isHidden = true
+            lblProdcut?.isHidden = false
+            lblCategory?.isHidden = false
+        }
     }
 
     /// Handles delete button action for recent search items

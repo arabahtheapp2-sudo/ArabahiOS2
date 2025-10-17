@@ -12,7 +12,7 @@ class CommentVC: UIViewController {
     // MARK: - OUTLETS
     
     /// TableView to display the list of comments
-    @IBOutlet weak var tblViewComment: UITableView!
+    @IBOutlet weak var tblViewComment: UITableView?
     
     // MARK: - VARIABLES
     
@@ -31,17 +31,17 @@ class CommentVC: UIViewController {
     
     // MARK: - Functions
     func setAccessibilityIdentifier() {
-        tblViewComment.accessibilityIdentifier = "tblViewComment"
+        tblViewComment?.accessibilityIdentifier = "tblViewComment"
     }
     
     private func setNoData() {
         // Additional setup can be done here if needed
         if comments?.count == 0 {
             // Show no data message when comment list is empty
-            tblViewComment.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            tblViewComment?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
             // Remove any background view when data is present
-            tblViewComment.backgroundView = nil
+            tblViewComment?.backgroundView = nil
         }
     }
     

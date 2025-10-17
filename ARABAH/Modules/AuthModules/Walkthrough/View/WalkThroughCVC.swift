@@ -9,12 +9,12 @@ import UIKit
 
 class WalkThroughCVC: UICollectionViewCell {
     
-    @IBOutlet weak var img: UIImageView!
+    @IBOutlet weak var img: UIImageView?
     // Called just before the cell is reused
     override func prepareForReuse() {
         super.prepareForReuse()
         
         // Reset the image to avoid flickering or incorrect images showing
-        img.image = nil
+        img?.image = nil
     }
 }

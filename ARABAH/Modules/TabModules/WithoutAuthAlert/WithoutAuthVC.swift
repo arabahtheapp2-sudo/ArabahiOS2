@@ -12,9 +12,9 @@ import UIKit
 class WithoutAuthVC: UIViewController {
     
     // MARK: - Outlets
-    @IBOutlet weak var skipSignInBtn: UIButton!   // Button to skip sign-in
-    @IBOutlet weak var viewMain: UIView!           // Main container view
-    @IBOutlet weak var signInButton: UIButton!           // Main container view
+    @IBOutlet weak var skipSignInBtn: UIButton?   // Button to skip sign-in
+    @IBOutlet weak var viewMain: UIView?          // Main container view
+    @IBOutlet weak var signInButton: UIButton?           // Main container view
     
     // MARK: - Variables
     var isMoveToHome: Bool = false                  // Flag to determine whether to move to home screen on skip
@@ -81,16 +81,16 @@ class WithoutAuthVC: UIViewController {
     
     func setupView() {
         // Set localized title for the skip button
-        skipSignInBtn.setLocalizedTitleButton(key: PlaceHolderTitleRegex.skipSignIn)
+        skipSignInBtn?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.skipSignIn)
         
         // Configure main view appearance with corner radius and shadow
-        viewMain.layer.cornerRadius = 12
-        viewMain.layer.shadowColor = UIColor.black.cgColor
-        viewMain.layer.shadowOpacity = 0.3
-        viewMain.layer.shadowOffset = CGSize(width: 5, height: 5)
-        viewMain.layer.shadowRadius = 10
-        skipSignInBtn.accessibilityIdentifier = "skipSignInButton"
-            signInButton.accessibilityIdentifier = "signInButton"
+        viewMain?.layer.cornerRadius = 12
+        viewMain?.layer.shadowColor = UIColor.black.cgColor
+        viewMain?.layer.shadowOpacity = 0.3
+        viewMain?.layer.shadowOffset = CGSize(width: 5, height: 5)
+        viewMain?.layer.shadowRadius = 10
+        skipSignInBtn?.accessibilityIdentifier = "skipSignInButton"
+            signInButton?.accessibilityIdentifier = "signInButton"
     }
     
     

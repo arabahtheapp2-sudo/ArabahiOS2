@@ -14,13 +14,13 @@ class TermsConditionVC: UIViewController {
     // MARK: - OUTLETS
     
     /// TextView to display the content (Terms, Privacy Policy, About Us)
-    @IBOutlet var txtView: UITextView!
+    @IBOutlet weak var txtView: UITextView?
     
     /// Label to display the screen's header title
-    @IBOutlet var lblHeader: UILabel!
+    @IBOutlet weak var lblHeader: UILabel?
     
     /// Back button to return to the previous screen
-    @IBOutlet var backButton: UIButton!
+    @IBOutlet weak var backButton: UIButton?
     
     // MARK: - VARIABLES
     
@@ -56,14 +56,14 @@ class TermsConditionVC: UIViewController {
     
     /// Updates UI elements such as header label text
     private func setupViews() {
-        lblHeader.text = headerTitle(for: contentType)
+        lblHeader?.text = headerTitle(for: contentType)
     }
     
     /// Sets accessibility identifiers for UI testing
     private func setupAccessibility() {
-        lblHeader.accessibilityIdentifier = "headerLabel"
-        backButton.accessibilityIdentifier = "backButton"
-        txtView.accessibilityIdentifier = "contentTextView"
+        lblHeader?.accessibilityIdentifier = "headerLabel"
+        backButton?.accessibilityIdentifier = "backButton"
+        txtView?.accessibilityIdentifier = "contentTextView"
     }
     
     /**
@@ -110,7 +110,7 @@ class TermsConditionVC: UIViewController {
         case .success(let contentBody):
             hideLoadingIndicator()
             // Display fetched HTML content as plain text
-            txtView.text = contentBody.description?.htmlToString
+            txtView?.text = contentBody.description?.htmlToString
         case .failure(let error):
             hideLoadingIndicator()
             showErrorAlert(error: error)

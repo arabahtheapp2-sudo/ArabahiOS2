@@ -13,18 +13,18 @@ class FilterTVC: UITableViewCell {
     // MARK: - OUTLETS
         
     /// Label that displays the name of the filter item (e.g., category name, store name, brand name)
-    @IBOutlet var lblName: UILabel!
+    @IBOutlet weak var lblName: UILabel?
     
     /// Button that shows check/uncheck state (selection indicator)
-    @IBOutlet var btnCheck: UIButton!
+    @IBOutlet weak var btnCheck: UIButton?
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
         // Reset label texts to empty strings
-        lblName.text = ""
+        lblName?.text = ""
         
         // Reset button state
-        btnCheck.isSelected = false
+        btnCheck?.isSelected = false
     }
 }

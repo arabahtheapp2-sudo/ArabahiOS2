@@ -45,7 +45,9 @@ extension SubCatDetailVC {
             do {
                 let teamDataArray = try JSONDecoder().decode([CommentElement].self, from: data.arrayValue[0].rawData())
                 viewModel.insertComment(data: teamDataArray[0])
-                commentTbl.reloadData()
+                DispatchQueue.main.async {
+                    self.commentTbl?.reloadData()
+                }
             } catch {
                 // Error decoding comment
             }
@@ -128,7 +130,7 @@ extension SubCatDetailVC {
             showLoadingIndicator()
         case .success(let status):
             hideLoadingIndicator()
-            heartBtn.isSelected = status == 1
+            heartBtn?.isSelected = status == 1
             let alertMsg = status == 1 ? RegexMessages.productLike : RegexMessages.productDislike
             CommonUtilities.shared.showAlert(message: alertMsg, isSuccess: .success)
         case .failure(let error):
@@ -169,9 +171,9 @@ extension SubCatDetailVC {
             showLoadingIndicator()
         case .success:
             hideLoadingIndicator()
-            scrollView.setContentOffset(.zero, animated: true)
-            mainView.isHidden = false
-            scrollView.isHidden = false
+            scrollView?.setContentOffset(.zero, animated: true)
+            mainView?.isHidden = false
+            scrollView?.isHidden = false
         case .failure(let error):
             hideLoadingIndicator()
             self.handleQRDetailError(error: error)
@@ -189,9 +191,9 @@ extension SubCatDetailVC {
             showLoadingIndicator()
         case .success:
             hideLoadingIndicator()
-            scrollView.setContentOffset(.zero, animated: true)
-            mainView.isHidden = false
-            scrollView.isHidden = false
+            scrollView?.setContentOffset(.zero, animated: true)
+            mainView?.isHidden = false
+            scrollView?.isHidden = false
         case .failure(let error):
             self.hideLoadingIndicator()
             self.handleDetailAPIError(error: error)
@@ -237,9 +239,9 @@ extension SubCatDetailVC {
     /// Applies color gradient to the green view
      func applySolidColorsToGreenVw() {
         // Clear existing subviews
-        greenVw.subviews.forEach { $0.removeFromSuperview() }
-        guard greenVw.bounds.width > 0 else { return }
-        let totalWidth = greenVw.bounds.width
+        greenVw?.subviews.forEach { $0.removeFromSuperview() }
+        guard (greenVw?.bounds.width ?? 0) > 0 else { return }
+        let totalWidth = greenVw?.bounds.width
         // Define color ranges: (start%, end%, color)
         struct ColorRange {
             let lower: CGFloat
@@ -253,30 +255,30 @@ extension SubCatDetailVC {
         ]
         // Create colored sections
         for range in colorRanges {
-            let startX = (range.lower / 100) * totalWidth
-            let width = ((range.upper - range.lower) / 100) * totalWidth
+            let startX = (range.lower / 100) * (totalWidth ?? 0)
+            let width = ((range.upper - range.lower) / 100) * (totalWidth ?? 0)
             guard width > 0 else { continue }
-            let sectionView = UIView(frame: CGRect(x: startX, y: 0, width: width, height: greenVw.bounds.height))
+            let sectionView = UIView(frame: CGRect(x: startX, y: 0, width: width, height: (greenVw?.bounds.height ?? 0)))
             sectionView.backgroundColor = range.color
-            greenVw.addSubview(sectionView)
+            greenVw?.addSubview(sectionView)
         }
     }
     
     
      func setupIdentifier() {
-        lblProName.accessibilityIdentifier = "lblProName"
-        lblAmount.accessibilityIdentifier = "lblAmount"
-        btnNotifyMe.accessibilityIdentifier = "btnNotifyMe"
-        heartBtn.accessibilityIdentifier = "heartBtn"
-        slider.accessibilityIdentifier = "rangeSlider"
-        floatingValueView.accessibilityIdentifier = "floatingValueView"
-        chartVW.accessibilityIdentifier = "chartVW"
-        btnSeeCommnet.accessibilityIdentifier = "btnSeeCommnet"
-        offerSeeAll.accessibilityIdentifier = "offerSeeAll"
-        btnSeeCommnet.accessibilityIdentifier = "btnSeeCommnet"
-        btnTapReviewsButton.accessibilityIdentifier = "Reviews" // set for reviews button
-        btnShare.accessibilityIdentifier = "BtnShare"
-        didTapBackBtn.accessibilityIdentifier = "didTapBackBtn"
+        lblProName?.accessibilityIdentifier = "lblProName"
+        lblAmount?.accessibilityIdentifier = "lblAmount"
+        btnNotifyMe?.accessibilityIdentifier = "btnNotifyMe"
+        heartBtn?.accessibilityIdentifier = "heartBtn"
+        slider?.accessibilityIdentifier = "rangeSlider"
+         floatingValueView.accessibilityIdentifier = "floatingValueView"
+        chartVW?.accessibilityIdentifier = "chartVW"
+        btnSeeCommnet?.accessibilityIdentifier = "btnSeeCommnet"
+        offerSeeAll?.accessibilityIdentifier = "offerSeeAll"
+        btnSeeCommnet?.accessibilityIdentifier = "btnSeeCommnet"
+        btnTapReviewsButton?.accessibilityIdentifier = "Reviews" // set for reviews button
+        btnShare?.accessibilityIdentifier = "BtnShare"
+        didTapBackBtn?.accessibilityIdentifier = "didTapBackBtn"
     }
     
 }

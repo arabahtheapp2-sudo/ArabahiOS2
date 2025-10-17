@@ -15,25 +15,25 @@ class ContactUsVC: UIViewController, UITextViewDelegate {
     // MARK: - OUTLETS
     
     /// Label for "Message" field
-    @IBOutlet weak var lblMessage: UILabel!
+    @IBOutlet weak var lblMessage: UILabel?
     
     /// Label for "Email" field
-    @IBOutlet weak var lblEmail: UILabel!
+    @IBOutlet weak var lblEmail: UILabel?
     
     /// Label for "Name" field
-    @IBOutlet weak var lblName: UILabel!
+    @IBOutlet weak var lblName: UILabel?
     
     /// Text view for entering the message
-    @IBOutlet var txtView: IQTextView!
+    @IBOutlet weak var txtView: IQTextView?
     
     /// Text field for entering email
-    @IBOutlet var txtFldEmail: UITextField!
+    @IBOutlet weak var txtFldEmail: UITextField?
     
     /// View container for message input
-    @IBOutlet var viewMsg: UIView!
+    @IBOutlet weak var viewMsg: UIView?
     
     /// Text field for entering name
-    @IBOutlet var txt: UITextField!
+    @IBOutlet weak var txt: UITextField?
     
     // MARK: - VARIABLES
     
@@ -57,28 +57,28 @@ class ContactUsVC: UIViewController, UITextViewDelegate {
     
     /// Initializes UI labels, placeholders, and text alignment based on selected language
     private func setupViews() {
-        lblName.setLocalizedTitle(key: PlaceHolderTitleRegex.name)
-        txtView.placeholder = PlaceHolderTitleRegex.writeHere
-        lblEmail.text = PlaceHolderTitleRegex.email
-        lblMessage.text = PlaceHolderTitleRegex.message
+        lblName?.setLocalizedTitle(key: PlaceHolderTitleRegex.name)
+        txtView?.placeholder = PlaceHolderTitleRegex.writeHere
+        lblEmail?.text = PlaceHolderTitleRegex.email
+        lblMessage?.text = PlaceHolderTitleRegex.message
         
         // Adjust alignment for RTL languages
         if Store.isArabicLang {
-            txtFldEmail.textAlignment = .right
-            txt.textAlignment = .right
-            txtView.textAlignment = .right
+            txtFldEmail?.textAlignment = .right
+            txt?.textAlignment = .right
+            txtView?.textAlignment = .right
         } else {
-            txtFldEmail.textAlignment = .left
-            txt.textAlignment = .left
-            txtView.textAlignment = .left
+            txtFldEmail?.textAlignment = .left
+            txt?.textAlignment = .left
+            txtView?.textAlignment = .left
         }
     }
     
     /// Assigns accessibility identifiers for UI testing
     private func setupAccessibility() {
-        txt.accessibilityIdentifier = "txtName"
-        txtFldEmail.accessibilityIdentifier = "txtEmail"
-        txtView.accessibilityIdentifier = "txtMessage"
+        txt?.accessibilityIdentifier = "txtName"
+        txtFldEmail?.accessibilityIdentifier = "txtEmail"
+        txtView?.accessibilityIdentifier = "txtMessage"
     }
     
     // MARK: - DATA BINDING
@@ -132,9 +132,9 @@ class ContactUsVC: UIViewController, UITextViewDelegate {
     
     /// Triggers Contact Us API call using the entered values
     func contactUsAPI() {
-        let name = txt.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let email = txtFldEmail.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let message = txtView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let name = txt?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let email = txtFldEmail?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let message = txtView?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         
         viewModel.contactUsAPI(name: name, email: email, message: message)
     }

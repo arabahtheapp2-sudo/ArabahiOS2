@@ -16,10 +16,10 @@ class CategoryVC: UIViewController {
     // MARK: - OUTLETS
     
     /// Text field for searching categories
-    @IBOutlet weak var txtFldSearch: UITextField!
+    @IBOutlet weak var txtFldSearch: UITextField?
     
     /// Collection view to display categories
-    @IBOutlet var categoryCollection: UICollectionView!
+    @IBOutlet weak var categoryCollection: UICollectionView?
 
     // MARK: - VARIABLES
     
@@ -71,10 +71,10 @@ class CategoryVC: UIViewController {
             .sink { [weak self] isEmpty in
                 if isEmpty {
                     // Show no data message when collection is empty
-                    self?.categoryCollection.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+                    self?.categoryCollection?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
                 } else {
                     // Remove background view when data is available
-                    self?.categoryCollection.backgroundView = nil
+                    self?.categoryCollection?.backgroundView = nil
                 }
             }
             .store(in: &cancellables)
@@ -87,11 +87,15 @@ class CategoryVC: UIViewController {
         
         case .loading:
             // Reload collection to show skeleton views
-            categoryCollection.reloadData()
+            DispatchQueue.main.async {
+                self.categoryCollection?.reloadData()
+            }
         case .success:
             // Reload with actual data
-            categoryCollection.reloadData()
-            refreshControl.endRefreshing()
+            DispatchQueue.main.async {
+                self.categoryCollection?.reloadData()
+                self.refreshControl.endRefreshing()
+            }
         case .failure(let error):
             // Show error alert
             showErrorAlert(error: error)
@@ -105,15 +109,15 @@ class CategoryVC: UIViewController {
 
     /// Sets up accessibility identifiers for UI testing
     private func accessibilityIdentifier() {
-        categoryCollection.accessibilityIdentifier = "categoryCollection"
+        categoryCollection?.accessibilityIdentifier = "categoryCollection"
     }
 
     /// Configures pull-to-refresh functionality
     private func setupRefreshConroller() {
         if #available(iOS 10.0, *) {
-            categoryCollection.refreshControl = refreshControl
+            categoryCollection?.refreshControl = refreshControl
         } else {
-            categoryCollection.addSubview(refreshControl)
+            categoryCollection?.addSubview(refreshControl)
         }
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
     }
@@ -140,7 +144,7 @@ class CategoryVC: UIViewController {
 
 // MARK: - UICollectionView Delegate & DataSource
 extension CategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
+    
     /// Returns number of items in collection view
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if case .loading = viewModel.state {
@@ -151,51 +155,53 @@ extension CategoryVC: UICollectionViewDelegate, UICollectionViewDataSource, UICo
             return viewModel.numberOfItems
         }
     }
-
+    
     /// Configures and returns collection view cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCVC", for: indexPath) as? CategoryCVC else {
             return UICollectionViewCell()
         }
-
+        
         // Make views skeletonable
-        cell.categoryImg.isSkeletonable = true
-        cell.categoryName.isSkeletonable = true
-
+        cell.categoryImg?.isSkeletonable = true
+        cell.categoryName?.isSkeletonable = true
+        
         if case .loading = viewModel.state {
             // Show skeleton view during loading
-            cell.categoryImg.showAnimatedGradientSkeleton()
-            cell.categoryName.showAnimatedGradientSkeleton()
+            cell.categoryImg?.showAnimatedGradientSkeleton()
+            cell.categoryName?.showAnimatedGradientSkeleton()
         } else if let model = viewModel.categoryCell(for: indexPath.row) {
             // Configure cell with actual data
-            cell.categoryName.hideSkeleton()
-            cell.categoryName.text = model.categoryName ?? ""
-
+            cell.categoryName?.hideSkeleton()
+            cell.categoryName?.text = model.categoryName ?? ""
+            
             // Load category image with SDWebImage
             let catImageUrl = (AppConstants.imageURL) + (model.image ?? "")
-            cell.categoryImg.sd_setImage(with: URL(string: catImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
-                cell.categoryImg.hideSkeleton()
+            cell.categoryImg?.sd_setImage(with: URL(string: catImageUrl), placeholderImage: UIImage(named: "Placeholder")) { _, _, _, _ in
+                cell.categoryImg?.hideSkeleton()
             }
         }
         return cell
     }
-
+    
     /// Returns size for collection view item
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Two items per row with fixed height
         return CGSize(width: collectionView.frame.width / 2, height: 174)
     }
-
+    
     /// Handles item selection in collection view
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // Ignore selection during loading state
         if case .loading = viewModel.state { return }
-
-        // Navigate to SubCategoryVC with selected category details
-        guard let subCategoryVC = storyboard?.instantiateViewController(withIdentifier: "SubCategoryVC") as? SubCategoryVC else { return }
-        subCategoryVC.viewModel.productID = viewModel.categoryBody?[indexPath.row].id ?? ""
-        subCategoryVC.viewModel.check = 1
-        subCategoryVC.viewModel.categoryName = viewModel.categoryBody?[indexPath.row].categoryName ?? ""
-        self.navigationController?.pushViewController(subCategoryVC, animated: true)
+        
+        if let data = viewModel.categoryBody?[safe: indexPath.row] {
+            // Navigate to SubCategoryVC with selected category details
+            guard let subCategoryVC = storyboard?.instantiateViewController(withIdentifier: "SubCategoryVC") as? SubCategoryVC else { return }
+            subCategoryVC.viewModel.productID = data.id ?? ""
+            subCategoryVC.viewModel.check = 1
+            subCategoryVC.viewModel.categoryName = data.categoryName ?? ""
+            self.navigationController?.pushViewController(subCategoryVC, animated: true)
+        }
     }
 }

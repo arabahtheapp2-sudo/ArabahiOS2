@@ -38,7 +38,7 @@ class CommonUtilities {
                 : .red
             
             warning.configureDropShadow()
-            warning.configureContent(title: title, body: message)
+            warning.configureContent(title: NSLocalizedString(title, comment: ""), body: NSLocalizedString(message, comment: ""))
             warning.button?.isHidden = true  // Hide the default button
             
             // Configure message display properties
@@ -59,7 +59,7 @@ class CommonUtilities {
         - retryMove: Closure executed when user taps "Retry".
      */
     func showAlertWithRetry(title: String, message: String, retryMove: ((UIAlertAction) -> Void)?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: NSLocalizedString(title, comment: ""), message: NSLocalizedString(message, comment: ""), preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: RegexTitles.retry, style: .default, handler: retryMove))
         alert.addAction(UIAlertAction(title: RegexTitles.cancel, style: .cancel))
         
@@ -80,7 +80,7 @@ class CommonUtilities {
         - message: Alert message.
      */
     func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: NSLocalizedString(title, comment: ""), message: NSLocalizedString(message, comment: ""), preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: RegexTitles.okTitle, style: .default))
         
         DispatchQueue.main.async {
@@ -100,7 +100,7 @@ class CommonUtilities {
     func showAlert(message: String) {
         DispatchQueue.main.async {
            
-            let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+            let alert = UIAlertController(title: "", message: NSLocalizedString(message, comment: ""), preferredStyle: .alert)
             let okAction = UIAlertAction(title: RegexTitles.okTitle, style: .default) { _ in
                 alert.dismiss(animated: true)
             }

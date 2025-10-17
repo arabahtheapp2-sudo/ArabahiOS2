@@ -11,9 +11,9 @@ import UIKit
 /// Displays the deal image, store image, and deal/store information label.
 class DealsOffTVC: UITableViewCell {
     
-    @IBOutlet weak var imageStore: UIImageView!   // ImageView for the store's logo or image
-    @IBOutlet weak var lblName: UILabel!           // Label to show the store name and deal description
-    @IBOutlet var imgView: UIImageView!            // ImageView for the deal image/banner
+    @IBOutlet weak var imageStore: UIImageView?   // ImageView for the store's logo or image
+    @IBOutlet weak var lblName: UILabel?           // Label to show the store name and deal description
+    @IBOutlet weak var imgView: UIImageView?            // ImageView for the deal image/banner
     
     
     // MARK: - Cell Reuse Handling
@@ -21,9 +21,9 @@ class DealsOffTVC: UITableViewCell {
         super.prepareForReuse()
         
         // Reset images and text to prevent showing old data
-        imageStore.image = nil
-        imgView.image = nil
-        lblName.text = nil
+        imageStore?.image = nil
+        imgView?.image = nil
+        lblName?.text = nil
     }
     
 }

@@ -13,16 +13,16 @@ class CommentTVC: UITableViewCell {
     // MARK: - OUTLETS
     
     /// Label to show the comment text/description
-    @IBOutlet weak var lblDescription: UILabel!
+    @IBOutlet weak var lblDescription: UILabel?
     
     /// Label to show the commenter's user name
-    @IBOutlet weak var lblUserName: UILabel!
+    @IBOutlet weak var lblUserName: UILabel?
     
     /// ImageView to show the user's profile image
-    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var imgView: UIImageView?
     
     /// Main container view for styling purposes
-    @IBOutlet weak var viewMain: UIView!
+    @IBOutlet weak var viewMain: UIView?
     
     // MARK: - PROPERTIES
     
@@ -34,16 +34,16 @@ class CommentTVC: UITableViewCell {
             let imageIndex = (AppConstants.imageURL) + (self.setupObj?.userID?.image ?? "")
             
             // Show gray activity indicator while image is loading
-            self.imgView.sd_imageIndicator = SDWebImageActivityIndicator.gray
+            self.imgView?.sd_imageIndicator = SDWebImageActivityIndicator.gray
             
             // Load and set the image asynchronously from URL with a placeholder image
-            self.imgView.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder"))
+            self.imgView?.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder"))
             
             // Set the comment text label
-            self.lblDescription.text = self.setupObj?.comment ?? ""
+            self.lblDescription?.text = self.setupObj?.comment ?? ""
             
             // Set the user name label
-            self.lblUserName.text = self.setupObj?.userID?.name ?? ""
+            self.lblUserName?.text = self.setupObj?.userID?.name ?? ""
         }
     }
     
@@ -52,12 +52,12 @@ class CommentTVC: UITableViewCell {
             super.prepareForReuse()
             
             // Reset the image and cancel any ongoing download
-            imgView.image = nil
-            imgView.sd_cancelCurrentImageLoad()
+            imgView?.image = nil
+            imgView?.sd_cancelCurrentImageLoad()
             
             // Clear labels to avoid data flash
-            lblUserName.text = nil
-            lblDescription.text = nil
+            lblUserName?.text = nil
+            lblDescription?.text = nil
         }
     
 }

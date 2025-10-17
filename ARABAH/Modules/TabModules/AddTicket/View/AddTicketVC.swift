@@ -16,19 +16,19 @@ class AddTicketVC: UIViewController, UITextViewDelegate {
     // MARK: - OUTLETS
     
     /// Label for description section
-    @IBOutlet weak var lblDescription: UILabel!
+    @IBOutlet weak var lblDescription: UILabel?
     
     /// Label for title section
-    @IBOutlet weak var lblTittle: UILabel!
+    @IBOutlet weak var lblTittle: UILabel?
     
     /// Text field for entering ticket title
-    @IBOutlet var txtFldTittle: UITextField!
+    @IBOutlet weak var txtFldTittle: UITextField?
     
     /// Text view for entering ticket description
-    @IBOutlet var txtViewDes: IQTextView!
+    @IBOutlet weak var txtViewDes: IQTextView?
     
     /// Button to submit the ticket
-    @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var submitButton: UIButton?
 
     // MARK: - VARIABLES
     
@@ -51,22 +51,22 @@ class AddTicketVC: UIViewController, UITextViewDelegate {
     
     /// Sets up accessibility identifiers for UI testing
     private func accessibilityIdentifier() {
-        txtFldTittle.accessibilityIdentifier = "txtFldTittle"
-        txtViewDes.accessibilityIdentifier = "txtViewDes"
-        submitButton.accessibilityIdentifier = "SubmitButton"
+        txtFldTittle?.accessibilityIdentifier = "txtFldTittle"
+        txtViewDes?.accessibilityIdentifier = "txtViewDes"
+        submitButton?.accessibilityIdentifier = "SubmitButton"
     }
     
     /// Configures the initial view setup
     private func setupView() {
-        txtViewDes.placeholder = PlaceHolderTitleRegex.writeHere
+        txtViewDes?.placeholder = PlaceHolderTitleRegex.writeHere
         
         // Handle text alignment based on language
         if Store.isArabicLang {
-            txtViewDes.textAlignment = .right
-            txtFldTittle.textAlignment = .right
+            txtViewDes?.textAlignment = .right
+            txtFldTittle?.textAlignment = .right
         } else {
-            txtViewDes.textAlignment = .left
-            txtFldTittle.textAlignment = .left
+            txtViewDes?.textAlignment = .left
+            txtFldTittle?.textAlignment = .left
         }
     }
     
@@ -119,7 +119,7 @@ class AddTicketVC: UIViewController, UITextViewDelegate {
     
     /// Handles submit button tap event
     @IBAction func didTapSubmitBtn(_ sender: UIButton) {
-        viewModel.submitTicket(title: txtFldTittle.text, description: txtViewDes.text)
+        viewModel.submitTicket(title: txtFldTittle?.text, description: txtViewDes?.text)
     }
     
     /// Handles back button tap event

@@ -20,10 +20,10 @@ extension SubCatDetailVC: UICollectionViewDelegate, UICollectionViewDataSource, 
         } else {
             // Handle empty state for similar products
             if (viewModel.similarProducts?.count ?? 0) == 0 {
-                similarProColl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+                similarProColl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
                 return 0
             }
-            similarProColl.backgroundView = nil
+            similarProColl?.backgroundView = nil
             return viewModel.similarProducts?.count ?? 0
         }
     }
@@ -33,8 +33,8 @@ extension SubCatDetailVC: UICollectionViewDelegate, UICollectionViewDataSource, 
             // Banner cell configuration
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DetailBannerCVC", for: indexPath) as? DetailBannerCVC else { return UICollectionViewCell() }
             let imageIndex = (AppConstants.imageURL) + (viewModel.modal?.product?.image ?? "")
-            cell.imgBanner.sd_imageIndicator = SDWebImageActivityIndicator.gray
-            cell.imgBanner.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder"))
+            cell.imgBanner?.sd_imageIndicator = SDWebImageActivityIndicator.gray
+            cell.imgBanner?.sd_setImage(with: URL(string: imageIndex), placeholderImage: UIImage(named: "Placeholder"))
             return cell
         } else {
             // Similar product cell configuration
@@ -47,10 +47,10 @@ extension SubCatDetailVC: UICollectionViewDelegate, UICollectionViewDataSource, 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == bannerCollection {
             // Full width banner size
-            return CGSize(width: bannerCollection.layer.bounds.width, height: bannerCollection.layer.bounds.height)
+            return CGSize(width: (bannerCollection?.layer.bounds.width ?? 0), height: (bannerCollection?.layer.bounds.height ?? 0))
         }
         // Similar product cell size (2 per row with spacing)
-        return CGSize(width: similarProColl.bounds.width / 2.2 - 7, height: 155)
+        return CGSize(width: (similarProColl?.bounds.width ?? 0) / 2.2 - 7, height: 155)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

@@ -12,7 +12,7 @@ import UIKit
 class OfferSellAllTVC: UITableViewCell {
     
     /// The main container view for the cell, used to hold all subviews and apply styling.
-    @IBOutlet var viewMain: UIView!
+    @IBOutlet weak var viewMain: UIView?
     
     // Additional setup or configuration can be added here if needed.
 }

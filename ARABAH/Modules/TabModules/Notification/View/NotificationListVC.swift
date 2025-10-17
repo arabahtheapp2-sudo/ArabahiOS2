@@ -9,9 +9,9 @@ class NotificationListVC: UIViewController {
     // MARK: - OUTLETS
     
     // Button to clear all notifications
-    @IBOutlet weak var clearBtn: UIButton!
+    @IBOutlet weak var clearBtn: UIButton?
     // Table view to display list of notifications
-    @IBOutlet weak var notiListTbl: UITableView!
+    @IBOutlet weak var notiListTbl: UITableView?
 
     // MARK: - VARIABLES
     
@@ -37,14 +37,14 @@ class NotificationListVC: UIViewController {
     
     /// Sets accessibility identifiers for UI testing
     private func setupAccessibilityIdentifier() {
-        notiListTbl.accessibilityIdentifier = "notificationListTable"
-        clearBtn.accessibilityIdentifier = "clearAllButton"
+        notiListTbl?.accessibilityIdentifier = "notificationListTable"
+        clearBtn?.accessibilityIdentifier = "clearAllButton"
     }
 
     /// Configures initial view appearance
     private func setUpView() {
         // Localize the clear button title
-        clearBtn.setLocalizedTitleButton(key: PlaceHolderTitleRegex.clearAll)
+        clearBtn?.setLocalizedTitleButton(key: PlaceHolderTitleRegex.clearAll)
     }
 
     /// Binds to ViewModel state changes
@@ -74,23 +74,29 @@ class NotificationListVC: UIViewController {
         case .loading:
             isLoading = true
             showLoadingIndicator()
-            notiListTbl.showAnimatedGradientSkeleton()
+            notiListTbl?.showAnimatedGradientSkeleton()
         case .success:
             hideLoadingIndicator()
             isLoading = false
-            notiListTbl.reloadData()
-            clearBtn.isHidden = viewModel.isEmpty
+            DispatchQueue.main.async {
+                self.notiListTbl?.reloadData()
+            }
+            clearBtn?.isHidden = viewModel.isEmpty
             setNoDataMsg()
         case .failure(let error):
             isLoading = false
             hideLoadingIndicator()
             showErrorAlertListAPI(error: error)
             setNoDataMsg()
-            notiListTbl.reloadData()
+            DispatchQueue.main.async {
+                self.notiListTbl?.reloadData()
+            }
         case .validationError(let error):
             isLoading = false
             setNoDataMsg()
-            notiListTbl.reloadData()
+            DispatchQueue.main.async {
+                self.notiListTbl?.reloadData()
+            }
             CommonUtilities.shared.showAlert(message: error.localizedDescription, isSuccess: .error)
         }
     }
@@ -150,9 +156,9 @@ class NotificationListVC: UIViewController {
     /// Shows/hides "No data" message based on notification list state
     private func setNoDataMsg() {
         if viewModel.isEmpty {
-            notiListTbl.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+            notiListTbl?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
         } else {
-            notiListTbl.backgroundView = nil
+            notiListTbl?.backgroundView = nil
         }
     }
 
@@ -180,63 +186,68 @@ class NotificationListVC: UIViewController {
 // MARK: - UITableViewDataSource, UITableViewDelegate
 
 extension NotificationListVC: UITableViewDataSource, UITableViewDelegate {
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Show skeleton cells while loading, actual count otherwise
         return isLoading ? 10 : viewModel.count()
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "NotificaitonListTVC", for: indexPath) as? NotificaitonListTVC else {
             return UITableViewCell()
         }
-
+        
         // Configure cell appearance based on selection state
         if indexPath.row == isselected {
-            cell.lblName.textColor = .white
-            cell.viewMain.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
-            cell.lblDescription.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5036878882)
-            cell.lblTime.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5036878882)
+            cell.lblName?.textColor = .white
+            cell.viewMain?.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            cell.lblDescription?.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5036878882)
+            cell.lblTime?.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5036878882)
         } else {
-            cell.lblName.textColor = .black
-            cell.viewMain.backgroundColor = .white
-            cell.lblDescription.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5)
-            cell.lblTime.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5)
+            cell.lblName?.textColor = .black
+            cell.viewMain?.backgroundColor = .white
+            cell.lblDescription?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5)
+            cell.lblTime?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5)
         }
-
+        
         // Configure cell content based on loading state
         if isLoading {
             // Show skeleton loading views
-            cell.imgView.showAnimatedGradientSkeleton()
-            cell.lblName.showAnimatedGradientSkeleton()
-            cell.lblDescription.showAnimatedSkeleton()
-            cell.lblTime.showAnimatedSkeleton()
+            cell.imgView?.showAnimatedGradientSkeleton()
+            cell.lblName?.showAnimatedGradientSkeleton()
+            cell.lblDescription?.showAnimatedSkeleton()
+            cell.lblTime?.showAnimatedSkeleton()
         } else {
             // Show actual notification data
             guard let model = viewModel.model(at: indexPath.row) else { return cell }
-
+            
             // Hide skeleton views
-            cell.imgView.hideSkeleton()
-            cell.lblName.hideSkeleton()
-            cell.lblDescription.hideSkeleton()
-            cell.lblTime.hideSkeleton()
-
+            cell.imgView?.hideSkeleton()
+            cell.lblName?.hideSkeleton()
+            cell.lblDescription?.hideSkeleton()
+            cell.lblTime?.hideSkeleton()
+            
             // Populate cell with notification data
-            cell.lblName.text = model.title
-            cell.lblDescription.text = model.description
-            cell.lblTime.text = model.time
-            cell.imgView.sd_setImage(with: URL(string: model.imageURL), placeholderImage: UIImage(named: "Placeholder"))
+            cell.lblName?.text = model.title
+            cell.lblDescription?.text = model.description
+            cell.lblTime?.text = model.time
+            cell.imgView?.sd_setImage(with: URL(string: model.imageURL), placeholderImage: UIImage(named: "Placeholder"))
         }
-
+        
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Handle notification selection
         isselected = indexPath.row
-        guard let subCatDetailVC = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
-        subCatDetailVC.prodcutid = viewModel.productID(at: indexPath.row)
-        navigationController?.pushViewController(subCatDetailVC, animated: true)
-        tableView.reloadData()
+        let productID = viewModel.productID(at: indexPath.row)
+        if productID != "" {
+            guard let subCatDetailVC = storyboard?.instantiateViewController(withIdentifier: "SubCatDetailVC") as? SubCatDetailVC else { return }
+            subCatDetailVC.prodcutid = viewModel.productID(at: indexPath.row)
+            navigationController?.pushViewController(subCatDetailVC, animated: true)
+            DispatchQueue.main.async {
+                tableView.reloadData()
+            }
+        }
     }
 }

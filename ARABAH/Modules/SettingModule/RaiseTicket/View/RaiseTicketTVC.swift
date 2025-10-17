@@ -12,24 +12,24 @@ class RaiseTicketTVC: UITableViewCell {
     // MARK: - OUTLETS
     
     /// Label to display the date when the ticket was created
-    @IBOutlet var lblDate: UILabel!
+    @IBOutlet weak var lblDate: UILabel?
     
     /// Main container view for the cell's UI elements
-    @IBOutlet var viewMain: UIView!
+    @IBOutlet weak var viewMain: UIView?
     
     /// Label to display the description/details of the ticket
-    @IBOutlet var lblDescription: UILabel!
+    @IBOutlet weak var lblDescription: UILabel?
     
     /// Label to display the ticket title or subject
-    @IBOutlet weak var ticketLbl: UILabel!
+    @IBOutlet weak var ticketLbl: UILabel?
     
     // MARK: - CELL REUSE HANDLING
     override func prepareForReuse() {
         super.prepareForReuse()
         // Reset all UI elements to prevent old data being shown
-        lblDate.text = nil
-        lblDescription.text = nil
-        ticketLbl.text = nil
+        lblDate?.text = nil
+        lblDescription?.text = nil
+        ticketLbl?.text = nil
         
     }
     
@@ -40,7 +40,7 @@ class RaiseTicketTVC: UITableViewCell {
     var ticketListing: GetTicketModalBody? {
         didSet {
             // Set the description text from the model or empty string if nil
-            lblDescription.text = ticketListing?.description ?? ""
+            lblDescription?.text = ticketListing?.description ?? ""
             
             // Date formatter for parsing and formatting date strings
             let formato = DateFormatter()
@@ -63,17 +63,15 @@ class RaiseTicketTVC: UITableViewCell {
                 formato.dateFormat = "dd/MM/yyyy"
                 
                 // Set the formatted date string to the label
-                lblDate.text = formato.string(from: date)
+                lblDate?.text = formato.string(from: date)
             } else {
                 // If date parsing fails, clear the label
-                lblDate.text = ""
+                lblDate?.text = ""
             }
             
             // Set the ticket title or fallback to empty string
-            ticketLbl.text = ticketListing?.title ?? ""
+            ticketLbl?.text = ticketListing?.title ?? ""
             
-            // Example placeholder if needed:
-            // cell.ticketLbl.text = "Ticket \(indexPath.row+1)"
         }
     }
 }

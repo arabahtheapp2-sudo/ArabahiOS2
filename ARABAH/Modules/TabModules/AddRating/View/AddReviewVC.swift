@@ -15,13 +15,13 @@ class AddReviewVC: UIViewController {
     // MARK: - OUTLETS
     
     // Star rating selector (1-5 stars)
-    @IBOutlet weak var ratingView: CosmosView!
+    @IBOutlet weak var ratingView: CosmosView?
     
     // Text view for writing the review
-    @IBOutlet var txtView: UITextView!
+    @IBOutlet weak var txtView: UITextView?
     
     // Container view for the text view (for styling)
-    @IBOutlet var viewTxtView: UIView!
+    @IBOutlet weak var viewTxtView: UIView?
     
     // MARK: - VARIABLES
     
@@ -52,8 +52,8 @@ class AddReviewVC: UIViewController {
     
     /// Sets accessibility identifiers for UI testing
     private func setUpAccessibilityIdentifier() {
-        ratingView.accessibilityIdentifier = "ratingView"
-        txtView.accessibilityIdentifier = "reviewTextView"
+        ratingView?.accessibilityIdentifier = "ratingView"
+        txtView?.accessibilityIdentifier = "reviewTextView"
     }
     
     // MARK: - BINDING
@@ -126,8 +126,8 @@ class AddReviewVC: UIViewController {
         // Send rating and review to ViewModel
         viewModel.submitReview(
             productId: productID,
-            rating: ratingView.rating,
-            reviewText: txtView.text
+            rating: ratingView?.rating ?? 0.0,
+            reviewText: txtView?.text ?? ""
         )
     }
 }

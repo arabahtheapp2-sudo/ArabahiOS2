@@ -13,11 +13,11 @@ import MBProgressHUD
 class ProfileVC: UIViewController {
     
     // MARK: - IBOutlets
-    @IBOutlet weak var btnComplete: UIButton!
-    @IBOutlet weak var lblCountyPhone: UILabel!
-    @IBOutlet weak var lblUser: UILabel!
-    @IBOutlet weak var profileImg: UIImageView!
-    @IBOutlet weak var tblVw: UITableView!
+    @IBOutlet weak var btnComplete: UIButton?
+    @IBOutlet weak var lblCountyPhone: UILabel?
+    @IBOutlet weak var lblUser: UILabel?
+    @IBOutlet weak var profileImg: UIImageView?
+    @IBOutlet weak var tblVw: UITableView?
     
     // MARK: - Properties
      let viewModel = ProfileViewModel()
@@ -58,11 +58,11 @@ class ProfileVC: UIViewController {
     
     // Set accessibility identifiers for UI testing
     private func setupAccessibility() {
-        btnComplete.accessibilityIdentifier = "EditProfileButton"
-        profileImg.accessibilityIdentifier = "ProfileImage"
-        lblUser.accessibilityIdentifier = "userNameLabel"
-        lblCountyPhone.accessibilityIdentifier = "phoneNumberLabel"
-        tblVw.accessibilityIdentifier = "profileTableView"
+        btnComplete?.accessibilityIdentifier = "EditProfileButton"
+        profileImg?.accessibilityIdentifier = "ProfileImage"
+        lblUser?.accessibilityIdentifier = "userNameLabel"
+        lblCountyPhone?.accessibilityIdentifier = "phoneNumberLabel"
+        tblVw?.accessibilityIdentifier = "profileTableView"
     }
     
     // Bind ViewModel state changes to UI handling
@@ -135,7 +135,9 @@ class ProfileVC: UIViewController {
         case .success:
             hideLoadingIndicator()
             showNotificationUpdateSuccess()
-            tblVw.reloadData()
+            DispatchQueue.main.async {
+                self.tblVw?.reloadData()
+            }
         case .failure(let error):
             hideLoadingIndicator()
             handleUpdateStatusError(error)
@@ -201,18 +203,18 @@ class ProfileVC: UIViewController {
     
     // Update profile UI elements from user data
     private func updateUI(with profile: LoginModalBody) {
-        self.btnComplete.isHidden = false
+        self.btnComplete?.isHidden = false
         let profileImageURL = (AppConstants.imageURL) + (profile.image ?? "")
-        profileImg.sd_imageIndicator = SDWebImageActivityIndicator.gray
-        profileImg.sd_setImage(with: URL(string: profileImageURL), placeholderImage: UIImage(named: "Placeholder"))
-        lblUser.text = profile.name ?? ""
-        lblCountyPhone.text = "\(profile.countryCode ?? "") \(profile.phone ?? "")"
+        profileImg?.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        profileImg?.sd_setImage(with: URL(string: profileImageURL), placeholderImage: UIImage(named: "Placeholder"))
+        lblUser?.text = profile.name ?? ""
+        lblCountyPhone?.text = "\(profile.countryCode ?? "") \(profile.phone ?? "")"
         
         // Set button title based on profile completeness
         let buttonTitle = viewModel.shouldShowCompleteProfile() ?
             PlaceHolderTitleRegex.completeYourProfile :
             PlaceHolderTitleRegex.editProfile
-        btnComplete.setTitle(buttonTitle, for: .normal)
+        btnComplete?.setTitle(buttonTitle, for: .normal)
     }
     
     // MARK: - Navigation

@@ -15,26 +15,26 @@ class ZoomImageVC: UIViewController, UIScrollViewDelegate {
     var imageUrl: String = ""
     
     /// ScrollView that enables zooming for the image
-    @IBOutlet weak var scroll: UIScrollView!
+    @IBOutlet weak var scroll: UIScrollView?
     
     /// ImageView that displays the image loaded from the given URL
-    @IBOutlet weak var img: UIImageView!
+    @IBOutlet weak var img: UIImageView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        img.accessibilityIdentifier = "zoomImageView"
+        img?.accessibilityIdentifier = "zoomImageView"
     }
     
     // MARK: Setup view
     private func setupView() {
         // Load image asynchronously with placeholder while loading
-        img.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "Placeholder"))
+        img?.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "Placeholder"))
         
         // Configure scroll view zoom scale limits
-        scroll.minimumZoomScale = 1.0
-        scroll.maximumZoomScale = 6.0
-        scroll.delegate = self
+        scroll?.minimumZoomScale = 1.0
+        scroll?.maximumZoomScale = 6.0
+        scroll?.delegate = self
     }
     
     /// Delegate method to specify which view should be zoomed inside the scroll view

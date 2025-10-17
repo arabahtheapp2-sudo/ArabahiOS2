@@ -14,7 +14,7 @@ class FavProductVC: UIViewController {
     // MARK: - Outlets
     
     // Collection view to display favorite products
-    @IBOutlet weak var favProdCollection: UICollectionView!
+    @IBOutlet weak var favProdCollection: UICollectionView?
     
     // MARK: - Properties
     
@@ -49,12 +49,12 @@ class FavProductVC: UIViewController {
     
     /// Configures the collection view delegate and data source
     private func configureCollectionView() {
-        favProdCollection.delegate = self
-        favProdCollection.dataSource = self
+        favProdCollection?.delegate = self
+        favProdCollection?.dataSource = self
         
         // Set accessibility identifier for UI testing
-        favProdCollection.accessibilityIdentifier = "favProdCollection"
-        favProdCollection.backgroundView?.accessibilityIdentifier = "noDataLabel"
+        favProdCollection?.accessibilityIdentifier = "favProdCollection"
+        favProdCollection?.backgroundView?.accessibilityIdentifier = "noDataLabel"
     }
     
     /// Sets up bindings to ViewModel properties
@@ -79,7 +79,7 @@ class FavProductVC: UIViewController {
         viewModel.$likedBody
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.favProdCollection.reloadData()
+                self?.favProdCollection?.reloadData()
             }
             .store(in: &cancellables)
         
@@ -88,9 +88,9 @@ class FavProductVC: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isEmpty in
                 if isEmpty {
-                    self?.favProdCollection.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
+                    self?.favProdCollection?.setNoDataMessage(PlaceHolderTitleRegex.noDataFound, txtColor: UIColor.set)
                 } else {
-                    self?.favProdCollection.backgroundView = nil
+                    self?.favProdCollection?.backgroundView = nil
                 }
             }
             .store(in: &cancellables)
@@ -175,10 +175,10 @@ extension FavProductVC: UICollectionViewDelegate, UICollectionViewDataSource, UI
         if let model = viewModel.likedBody?[safe: indexPath.row] {
             cell.setupObj = model
             // Set favorite button state based on product status
-            cell.btnFav.isSelected = model.status == 0
-            cell.btnFav.tag = indexPath.row
+            cell.btnFav?.isSelected = model.status == 0
+            cell.btnFav?.tag = indexPath.row
             // Add target for favorite button tap
-            cell.btnFav.addTarget(self, action: #selector(btnLike(_:)), for: .touchUpInside)
+            cell.btnFav?.addTarget(self, action: #selector(btnLike(_:)), for: .touchUpInside)
         } else {
             cell.setupObj = nil
         }
@@ -200,7 +200,7 @@ extension FavProductVC: UICollectionViewDelegate, UICollectionViewDataSource, UI
     /// Returns size for collection view items
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Two items per row with fixed height
-        return CGSize(width: favProdCollection.frame.width / 2, height: 163)
+        return CGSize(width: (favProdCollection?.frame.width ?? 0) / 2, height: 163)
     }
     
     /// Handles product selection in collection view

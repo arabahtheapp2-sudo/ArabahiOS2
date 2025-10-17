@@ -12,16 +12,16 @@ import UIKit
 class RecentSearchTVC: UITableViewCell {
     
     /// Button to remove the recent search entry
-    @IBOutlet weak var btnCross: UIButton!
+    @IBOutlet weak var btnCross: UIButton?
     
     /// Label to display the recent search term
-    @IBOutlet weak var lblName: UILabel!
+    @IBOutlet weak var lblName: UILabel?
     
     // MARK: - CELL LIFECYCLE
     
     override func prepareForReuse() {
         super.prepareForReuse()
         // Clear label text to avoid stale data when reused
-        lblName.text = nil
+        lblName?.text = nil
     }
 }

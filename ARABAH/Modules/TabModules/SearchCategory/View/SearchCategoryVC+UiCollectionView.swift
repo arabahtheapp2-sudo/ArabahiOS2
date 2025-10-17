@@ -24,11 +24,11 @@ extension SearchCategoryVC: UICollectionViewDelegate, UICollectionViewDataSource
           }
                     
             if let item = viewModel.category?[safe: indexPath.row] {
-                cell.imgView.sd_setImage(with: URL(string: (AppConstants.imageURL) + (item.image ?? "")), placeholderImage: UIImage(named: "Placeholder"))
-                cell.lblName.text = item.categoryName ?? ""
+                cell.imgView?.sd_setImage(with: URL(string: (AppConstants.imageURL) + (item.image ?? "")), placeholderImage: UIImage(named: "Placeholder"))
+                cell.lblName?.text = item.categoryName ?? ""
             } else {
-                cell.imgView.image = UIImage(named: "Placeholder")
-                cell.lblName.text = ""
+                cell.imgView?.image = UIImage(named: "Placeholder")
+                cell.lblName?.text = ""
             }
             
             return cell
@@ -37,13 +37,13 @@ extension SearchCategoryVC: UICollectionViewDelegate, UICollectionViewDataSource
             return UICollectionViewCell()
        }
             if let item = viewModel.product?[safe: indexPath.row] {
-                cell.imgView.sd_setImage(with: URL(string: (AppConstants.imageURL) + (item.image ?? "")), placeholderImage: UIImage(named: "Placeholder"))
-                cell.lblName.text = item.name ?? ""
-                cell.lblPrice.text = viewModel.formattedPrice(for: item)
+                cell.imgView?.sd_setImage(with: URL(string: (AppConstants.imageURL) + (item.image ?? "")), placeholderImage: UIImage(named: "Placeholder"))
+                cell.lblName?.text = item.name ?? ""
+                cell.lblPrice?.text = viewModel.formattedPrice(for: item)
             } else {
-                cell.imgView.image = UIImage(named: "Placeholder")
-                cell.lblName.text = ""
-                cell.lblPrice.text = ""
+                cell.imgView?.image = UIImage(named: "Placeholder")
+                cell.lblName?.text = ""
+                cell.lblPrice?.text = ""
             }
            
             return cell

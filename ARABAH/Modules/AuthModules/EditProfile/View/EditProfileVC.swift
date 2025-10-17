@@ -15,16 +15,16 @@ import MBProgressHUD
 class EditProfileVC: UIViewController {
     
     // MARK: - Outlets
-    @IBOutlet weak var txtFldEmail: UITextField!
-    @IBOutlet weak var txtFldName: UITextField!
-    @IBOutlet weak var viewDotBorder: UIView!
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var countryImg: UIImageView!
-    @IBOutlet weak var coutryCode: UILabel!
-    @IBOutlet weak var numberTF: UITextField!
-    @IBOutlet weak var btnSubmit: UIButton!
-    @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var txtFldEmail: UITextField?
+    @IBOutlet weak var txtFldName: UITextField?
+    @IBOutlet weak var viewDotBorder: UIView?
+    @IBOutlet weak var imgView: UIImageView?
+    @IBOutlet weak var countryImg: UIImageView?
+    @IBOutlet weak var coutryCode: UILabel?
+    @IBOutlet weak var numberTF: UITextField?
+    @IBOutlet weak var btnSubmit: UIButton?
+    @IBOutlet weak var backButton: UIButton?
+    @IBOutlet weak var cameraButton: UIButton?
     
     // MARK: - Variables
     let cntrypicker = CountryPickerView()
@@ -48,33 +48,33 @@ class EditProfileVC: UIViewController {
         
         // Adjust text alignment for RTL (Arabic) or LTR
         if Store.isArabicLang {
-            txtFldName.textAlignment = .right
-            txtFldEmail.textAlignment = .right
-            numberTF.textAlignment = .right
+            txtFldName?.textAlignment = .right
+            txtFldEmail?.textAlignment = .right
+            numberTF?.textAlignment = .right
         } else {
-            txtFldName.textAlignment = .left
-            txtFldEmail.textAlignment = .left
-            numberTF.textAlignment = .left
+            txtFldName?.textAlignment = .left
+            txtFldEmail?.textAlignment = .left
+            numberTF?.textAlignment = .left
         }
         
         // Disable phone number editing
-        numberTF.isUserInteractionEnabled = false
+        numberTF?.isUserInteractionEnabled = false
         
         // Assign country picker delegates
         cntrypicker.delegate = self
         cntrypicker.dataSource = self
         
         // Make profile image rounded
-        imgView.layer.cornerRadius = imgView.frame.size.width / 2
+        imgView?.layer.cornerRadius = (imgView?.frame.size.width ?? 0) / 2
         
         // Populate user data
         if let userData = Store.userDetails?.body {
             let profileURL = (AppConstants.imageURL) + (userData.image ?? "")
-            imgView.sd_imageIndicator = SDWebImageActivityIndicator.gray
-            imgView.sd_setImage(with: URL(string: profileURL), placeholderImage: UIImage(named: "Placeholder"))
-            txtFldName.text = userData.name ?? ""
-            txtFldEmail.text = userData.email ?? ""
-            numberTF.text = userData.phone ?? ""
+            imgView?.sd_imageIndicator = SDWebImageActivityIndicator.gray
+            imgView?.sd_setImage(with: URL(string: profileURL), placeholderImage: UIImage(named: "Placeholder"))
+            txtFldName?.text = userData.name ?? ""
+            txtFldEmail?.text = userData.email ?? ""
+            numberTF?.text = userData.phone ?? ""
             
             // Set flag and code from stored country code
             if let defaultCountry = cntrypicker.getCountryByPhoneCode(userData.countryCode ?? "") {
@@ -91,17 +91,17 @@ class EditProfileVC: UIViewController {
     
     /// Adds accessibility identifiers for UI testing.
     private func setupAccessibility() {
-        txtFldName.accessibilityIdentifier = "editProfile.nameTextField"
-        txtFldEmail.accessibilityIdentifier = "editProfile.emailTextField"
-        btnSubmit.accessibilityIdentifier = "editProfile.submitButton"
-        imgView.accessibilityIdentifier = "profileImageView"
-        numberTF.accessibilityIdentifier = "phoneNumberTextField"
-        countryImg.accessibilityIdentifier = "countryFlag"
-        coutryCode.accessibilityIdentifier = "countryCodeLabel"
+        txtFldName?.accessibilityIdentifier = "editProfile.nameTextField"
+        txtFldEmail?.accessibilityIdentifier = "editProfile.emailTextField"
+        btnSubmit?.accessibilityIdentifier = "editProfile.submitButton"
+        imgView?.accessibilityIdentifier = "profileImageView"
+        numberTF?.accessibilityIdentifier = "phoneNumberTextField"
+        countryImg?.accessibilityIdentifier = "countryFlag"
+        coutryCode?.accessibilityIdentifier = "countryCodeLabel"
         
         // For buttons:
-        backButton.accessibilityIdentifier = "backButton"
-        cameraButton.accessibilityIdentifier = "profileImageButton"
+        backButton?.accessibilityIdentifier = "backButton"
+        cameraButton?.accessibilityIdentifier = "profileImageButton"
 
     }
     
@@ -151,16 +151,16 @@ class EditProfileVC: UIViewController {
     
     /// Triggers the complete profile update process.
     private func updateProfile() {
-        let name = txtFldName.text?.trimmingCharacters(in: .whitespaces) ?? ""
-        let mail = txtFldEmail.text?.trimmingCharacters(in: .whitespaces) ?? ""
-        let image = imgView.image ?? UIImage()
+        let name = txtFldName?.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let mail = txtFldEmail?.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let image = imgView?.image ?? UIImage()
         viewModel.completeProfleAPI(name: name, email: mail, needImageUpdate: self.needProfileUpdate, image: image)
     }
     
     /// Updates the flag and country code UI.
     private func updateCountryInfo(country: Country) {
-        countryImg.image = country.flag
-        coutryCode.text = country.phoneCode
+        countryImg?.image = country.flag
+        coutryCode?.text = country.phoneCode
     }
 
     // MARK: - Actions
@@ -181,7 +181,7 @@ class EditProfileVC: UIViewController {
         ImagePickerManager().pickImage(self) { [weak self] image in
             guard let self = self else { return }
             self.needProfileUpdate = true
-            self.imgView.image = image
+            self.imgView?.image = image
         }
     }
     
@@ -194,10 +194,10 @@ class EditProfileVC: UIViewController {
     @IBAction func didTapImgPickerBtn(_ sender: UIButton) {
         ImagePickerManager().pickImage(self) { [weak self] image in
             guard let self = self else { return }
-            self.imgView.image = image
+            self.imgView?.image = image
             self.needProfileUpdate = true
-            self.imgView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 17)
-            self.imgView.contentMode = .scaleAspectFill
+            self.imgView?.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 17)
+            self.imgView?.contentMode = .scaleAspectFill
         }
     }
 }
@@ -224,8 +224,8 @@ extension UIView {
 
 extension EditProfileVC: CountryPickerViewDelegate, CountryPickerViewDataSource {
     func countryPickerView(_ countryPickerView: CountryPickerView, didSelectCountry country: Country) {
-        self.coutryCode.text = country.phoneCode
-        self.countryImg.image = country.flag
+        self.coutryCode?.text = country.phoneCode
+        self.countryImg?.image = country.flag
     }
 }
 

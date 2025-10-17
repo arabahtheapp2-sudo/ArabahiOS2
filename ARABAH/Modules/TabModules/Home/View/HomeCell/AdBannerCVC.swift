@@ -11,11 +11,11 @@ import UIKit
 class AdBannerCVC: UICollectionViewCell {
     
     /// UIImageView to display the advertisement banner image.
-    @IBOutlet var imgView: UIImageView!
+    @IBOutlet weak var imgView: UIImageView?
     override func prepareForReuse() {
         super.prepareForReuse()
         
         // Reset image to placeholder or nil to avoid showing stale image during reuse
-        imgView.image = nil
+        imgView?.image = nil
     }
 }

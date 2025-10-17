@@ -16,16 +16,16 @@ class ReportVC: UIViewController {
     // MARK: - OUTLETS
     
     /// TextView for user to enter their report message
-    @IBOutlet weak var txtView: IQTextView!
+    @IBOutlet weak var txtView: IQTextView?
     
     /// Main container view with rounded corners
-    @IBOutlet var viewMain: UIView!
+    @IBOutlet weak var viewMain: UIView?
     
     /// Button to dismiss the report view
-    @IBOutlet weak var btnCross: UIButton!
+    @IBOutlet weak var btnCross: UIButton?
     
     /// Button to submit the report
-    @IBOutlet weak var btnSubmit: UIButton!
+    @IBOutlet weak var btnSubmit: UIButton?
 
     // MARK: - VARIABLES
     
@@ -89,20 +89,20 @@ class ReportVC: UIViewController {
 
     /// Sets up accessibility identifiers for UI testing
     private func setupAccessibilityIdentifier() {
-        txtView.accessibilityIdentifier = "txtView"
-        viewMain.accessibilityIdentifier = "viewMain"
-        btnCross.accessibilityIdentifier = "btnCross"
-        btnSubmit.accessibilityIdentifier = "BtnSubmit"
+        txtView?.accessibilityIdentifier = "txtView"
+        viewMain?.accessibilityIdentifier = "viewMain"
+        btnCross?.accessibilityIdentifier = "btnCross"
+        btnSubmit?.accessibilityIdentifier = "BtnSubmit"
     }
 
     /// Configures initial view appearance
     private func setupView() {
         // Set placeholder text for the text view
-        txtView.placeholder = PlaceHolderTitleRegex.writeHere
+        txtView?.placeholder = PlaceHolderTitleRegex.writeHere
         // Configure rounded corners for the main view (top corners only)
-        viewMain.layer.cornerRadius = 26
-        viewMain.layer.masksToBounds = true
-        viewMain.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        viewMain?.layer.cornerRadius = 26
+        viewMain?.layer.masksToBounds = true
+        viewMain?.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
     }
 
     // MARK: - Report Submission
@@ -118,7 +118,7 @@ class ReportVC: UIViewController {
         // Create input model for ViewModel
         let input = ReportViewModel.Input(
             productID: self.productID,
-            message: self.txtView.text
+            message: self.txtView?.text ?? ""
         )
         // Trigger report API call through ViewModel
         viewModel.reportAPI(with: input, isRetry: isRetry)

@@ -12,20 +12,20 @@ import SDWebImage
 class SearchCategoryCVC: UICollectionViewCell {
     
     /// Label to display the category name
-    @IBOutlet weak var lblName: UILabel!
+    @IBOutlet weak var lblName: UILabel?
     
     /// ImageView to display the category image
-    @IBOutlet weak var imgView: UIImageView!
+    @IBOutlet weak var imgView: UIImageView?
     
     // MARK: - Cell Reuse Handling
     override func prepareForReuse() {
         super.prepareForReuse()
         
         // Cancel image loading if using SDWebImage or similar library
-        imgView.sd_cancelCurrentImageLoad()
+        imgView?.sd_cancelCurrentImageLoad()
         
         // Clear image and text to avoid showing old data
-        imgView.image = nil
-        lblName.text = nil
+        imgView?.image = nil
+        lblName?.text = nil
     }
 }

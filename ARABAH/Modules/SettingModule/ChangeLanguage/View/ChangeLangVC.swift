@@ -13,13 +13,13 @@ class ChangeLangVC: UIViewController {
     
     // MARK: - OUTLETS
     
-    @IBOutlet weak var lblEnglish: UILabel!       // Label for English language option
-    @IBOutlet weak var lblArbic: UILabel!         // Label for Arabic language option
-    @IBOutlet weak var viewEng: UIView!           // View container for English selection
-    @IBOutlet weak var viewArabic: UIView!        // View container for Arabic selection
-    @IBOutlet weak var btnArabic: UIButton!       // Arabic language selection button
-    @IBOutlet weak var btnEng: UIButton!          // English language selection button
-    @IBOutlet weak var btnUpdate: UIButton!       // Button to confirm and apply language selection
+    @IBOutlet weak var lblEnglish: UILabel?       // Label for English language option
+    @IBOutlet weak var lblArbic: UILabel?        // Label for Arabic language option
+    @IBOutlet weak var viewEng: UIView?          // View container for English selection
+    @IBOutlet weak var viewArabic: UIView?       // View container for Arabic selection
+    @IBOutlet weak var btnArabic: UIButton?       // Arabic language selection button
+    @IBOutlet weak var btnEng: UIButton?          // English language selection button
+    @IBOutlet weak var btnUpdate: UIButton?       // Button to confirm and apply language selection
     
     // MARK: - VARIABLES
     
@@ -44,19 +44,19 @@ class ChangeLangVC: UIViewController {
         setSelectedLanguage(Store.isArabicLang)
         
         // Localized text (if applicable)
-        lblEnglish.text = PlaceHolderTitleRegex.english
-        lblArbic.text = PlaceHolderTitleRegex.arabic
+        lblEnglish?.text = PlaceHolderTitleRegex.english
+        lblArbic?.text = PlaceHolderTitleRegex.arabic
     }
     
     /// Sets accessibility identifiers for UI test automation
     private func setupAccessibility() {
-        viewArabic.accessibilityIdentifier = "viewArabic"
-        viewEng.accessibilityIdentifier = "viewEng"
-        lblEnglish.accessibilityIdentifier = "English"
-        lblArbic.accessibilityIdentifier = "Arabic"
-        btnArabic.accessibilityIdentifier = "BtnArabic"
-        btnEng.accessibilityIdentifier = "BtnEng"
-        btnUpdate.accessibilityIdentifier = "BtnUpdate"
+        viewArabic?.accessibilityIdentifier = "viewArabic"
+        viewEng?.accessibilityIdentifier = "viewEng"
+        lblEnglish?.accessibilityIdentifier = "English"
+        lblArbic?.accessibilityIdentifier = "Arabic"
+        btnArabic?.accessibilityIdentifier = "BtnArabic"
+        btnEng?.accessibilityIdentifier = "BtnEng"
+        btnUpdate?.accessibilityIdentifier = "BtnUpdate"
     }
     
     // MARK: - VIEW MODEL BINDING
@@ -138,27 +138,27 @@ class ChangeLangVC: UIViewController {
         
         if isArabic {
             // Arabic selected
-            viewArabic.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
-            viewArabic.layer.borderColor = UIColor.clear.cgColor
-            lblArbic.textColor = .white
+            viewArabic?.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            viewArabic?.layer.borderColor = UIColor.clear.cgColor
+            lblArbic?.textColor = .white
             
             // English unselected
-            viewEng.backgroundColor = .clear
-            viewEng.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
-            viewEng.layer.borderWidth = 2
-            lblEnglish.textColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            viewEng?.backgroundColor = .clear
+            viewEng?.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            viewEng?.layer.borderWidth = 2
+            lblEnglish?.textColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
             
         } else {
             // English selected
-            viewEng.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
-            viewEng.layer.borderColor = UIColor.clear.cgColor
-            lblEnglish.textColor = .white
+            viewEng?.backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            viewEng?.layer.borderColor = UIColor.clear.cgColor
+            lblEnglish?.textColor = .white
             
             // Arabic unselected
-            viewArabic.backgroundColor = .clear
-            viewArabic.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
-            viewArabic.layer.borderWidth = 2
-            lblArbic.textColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            viewArabic?.backgroundColor = .clear
+            viewArabic?.layer.borderColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
+            viewArabic?.layer.borderWidth = 2
+            lblArbic?.textColor = #colorLiteral(red: 0.1019607843, green: 0.2078431373, blue: 0.368627451, alpha: 1)
         }
     }
     
